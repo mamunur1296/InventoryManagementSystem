@@ -17,12 +17,12 @@ namespace Project.Application.Features.ValveFeatures.Handlers.CommandHandlers
         {
             try
             {
-                var date = await _unitOfWorkDb.valverQueryRepository.GetByIdAsync(request.Id);
-                if (date == null)
+                var valve= await _unitOfWorkDb.valverQueryRepository.GetByIdAsync(request.Id);
+                if (valve == null)
                 {
                     return "Data not found";
                 }
-                await _unitOfWorkDb.valveCommandRepository.DeleteAsync(date);
+                await _unitOfWorkDb.valveCommandRepository.DeleteAsync(valve);
                 await _unitOfWorkDb.SaveAsync();
                 return "Completed";
             }

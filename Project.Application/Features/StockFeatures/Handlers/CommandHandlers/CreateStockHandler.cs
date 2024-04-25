@@ -21,11 +21,19 @@ namespace Project.Application.Features.StockFeatures.Handlers.CommandHandlers
  
         public async Task<StockModels> Handle(CreateStockCommand request, CancellationToken cancellationToken)
         {
-            var productSizeEntity = _mapper.Map<Stock>(request);
-            await _unitOfWorkDb.stockCommandRepository.AddAsync(productSizeEntity);
-            await _unitOfWorkDb.SaveAsync();
-            var newResponse = _mapper.Map<StockModels>(productSizeEntity);
-            return newResponse;
+            try
+            {
+                var stock = _mapper.Map<Stock>(request);
+                await _unitOfWorkDb.stockCommandRepository.AddAsync(stock);
+                await _unitOfWorkDb.SaveAsync();
+                var stockResponse = _mapper.Map<StockModels>(stock);
+                return stockResponse;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
     }
 }

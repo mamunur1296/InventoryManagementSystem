@@ -18,9 +18,17 @@ namespace Project.Application.Features.ProductFeatures.Handlers.QueryHandlers
         }
         public async Task<IEnumerable<ProductDTO>> Handle(GetAllProductQuery request, CancellationToken cancellationToken)
         {
-            var dataList = await _unitOfWorkDb.productQueryRepository.GetAllAsync();
-            var data = dataList.Select(x => _mapper.Map<ProductDTO>(x));
-            return data;
+            try
+            {
+                var productList = await _unitOfWorkDb.productQueryRepository.GetAllAsync();
+                var result = productList.Select(x => _mapper.Map<ProductDTO>(x));
+                return result;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
     }
 }

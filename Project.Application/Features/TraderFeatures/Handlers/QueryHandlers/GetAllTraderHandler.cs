@@ -19,9 +19,17 @@ namespace Project.Application.Features.TraderFeatures.Handlers.QueryHandlers
 
         public async Task<IEnumerable<TraderDTO>> Handle(GetAllTraderQuery request, CancellationToken cancellationToken)
         {
-            var dataList = await _unitOfWorkDb.traderQueryRepository.GetAllAsync();
-            var data = dataList.Select(x => _mapper.Map<TraderDTO>(x));
-            return data;
+            try
+            {
+                var TraderList = await _unitOfWorkDb.traderQueryRepository.GetAllAsync();
+                var result = TraderList.Select(x => _mapper.Map<TraderDTO>(x));
+                return result;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
     }
 }

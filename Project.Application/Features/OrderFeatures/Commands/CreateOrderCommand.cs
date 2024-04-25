@@ -9,7 +9,7 @@ namespace Project.Application.Features.OrderFeatures.Commands
         public Guid ProductId { get; set; }
         public bool IsHold { get; set; }
         public bool IsCancel { get; set; }
-        public string ReturnProductId { get; set; }
+        public Guid ReturnProductId { get; set; }
         public string CreatedBy { get; set; }
         public DateTime CreationDate { get; set; }
         public string UpdatedBy { get; set; }

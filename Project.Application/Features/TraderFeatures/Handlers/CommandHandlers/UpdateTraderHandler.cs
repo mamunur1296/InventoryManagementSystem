@@ -19,16 +19,24 @@ namespace Project.Application.Features.TraderFeatures.Handlers.CommandHandlers
 
         public async Task<TraderModels> Handle(UpdateTraderCommand request, CancellationToken cancellationToken)
         {
-            var data = await _unitOfWorkDb.traderQueryRepository.GetByIdAsync(request.Id);
-            if (data == null) return default;
-            else
+            try
             {
-                data.Name = request.Name;
+                var Trader = await _unitOfWorkDb.traderQueryRepository.GetByIdAsync(request.Id);
+                if (Trader == null) return default;
+                else
+                {
+                    Trader.Name = request.Name;
+                }
+                await _unitOfWorkDb.traderCommandRepository.UpdateAsync(Trader);
+                await _unitOfWorkDb.SaveAsync();
+                var TraderRes = _mapper.Map<TraderModels>(Trader);
+                return TraderRes;
             }
-            await _unitOfWorkDb.traderCommandRepository.UpdateAsync(data);
-            await _unitOfWorkDb.SaveAsync();
-            var customerRes = _mapper.Map<TraderModels>(data);
-            return customerRes;
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
     }
 }

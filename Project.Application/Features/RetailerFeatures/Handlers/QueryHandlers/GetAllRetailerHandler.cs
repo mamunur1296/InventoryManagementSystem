@@ -18,9 +18,17 @@ namespace Project.Application.Features.RetailerFeatures.Handlers.QueryHandlers
         }
         public async Task<IEnumerable<RetailerDTO>> Handle(GetAllRetailerQuery request, CancellationToken cancellationToken)
         {
-            var dataList = await _unitOfWorkDb.retailerQueryRepository.GetAllAsync();
-            var data = dataList.Select(x => _mapper.Map<RetailerDTO>(x));
-            return data;
+            try
+            {
+                var retailerList = await _unitOfWorkDb.retailerQueryRepository.GetAllAsync();
+                var result = retailerList.Select(x => _mapper.Map<RetailerDTO>(x));
+                return result;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
     }
 }

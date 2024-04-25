@@ -1,4 +1,6 @@
-﻿namespace Project.Application.DTOs
+﻿using Project.Domail.Entities;
+
+namespace Project.Application.DTOs
 {
     public class OrderDTO
     {
@@ -7,7 +9,7 @@
         public Guid ProductId { get; set; }
         public bool IsHold { get; set; }
         public bool IsCancel { get; set; }
-        public string ReturnProductId { get; set; }
+        public Guid ReturnProductId { get; set; }
         public string CreatedBy { get; set; }
         public DateTime CreationDate { get; set; }
         public string UpdatedBy { get; set; }
@@ -17,6 +19,7 @@
         public bool IsDispatched { get; set; }
         public bool IsReadyToDispatch { get; set; }
         public bool IsDelivered { get; set; }
-
+        public virtual User User { get; set; }
+        public virtual Product Product { get; set; }
     }
 }

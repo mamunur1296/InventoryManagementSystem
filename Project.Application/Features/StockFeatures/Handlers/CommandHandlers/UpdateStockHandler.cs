@@ -22,16 +22,24 @@ namespace Project.Application.Features.StockFeatures.Handlers.CommandHandlers
 
         public async Task<StockModels> Handle(UpdateStockCommand request, CancellationToken cancellationToken)
         {
-            var data = await _unitOfWorkDb.stockQueryRepository.GetByIdAsync(request.Id);
-            if (data == null) return default;
-            else
+            try
             {
-                data.UpdatedBy = request.UpdatedBy;
+                var stock = await _unitOfWorkDb.stockQueryRepository.GetByIdAsync(request.Id);
+                if (stock == null) return default;
+                else
+                {
+                    stock.UpdatedBy = request.UpdatedBy;
+                }
+                await _unitOfWorkDb.stockCommandRepository.UpdateAsync(stock);
+                await _unitOfWorkDb.SaveAsync();
+                var stockRes = _mapper.Map<StockModels>(stock);
+                return stockRes;
             }
-            await _unitOfWorkDb.stockCommandRepository.UpdateAsync(data);
-            await _unitOfWorkDb.SaveAsync();
-            var customerRes = _mapper.Map<StockModels>(data);
-            return customerRes;
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
     }
 }

@@ -9,8 +9,8 @@ namespace Project.Domail.Entities
         [ForeignKey("Product")]
         public Guid ProductId { get; set; }
         public string Name { get; set; }
-        public string ProdSizeId { get; set; }
-        public string ProdValveId { get; set; }
+        public Guid ProdSizeId { get; set; }
+        public Guid ProdValveId { get; set; }
 
 
         // Navigation property

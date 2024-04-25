@@ -16,14 +16,22 @@ namespace Project.Application.Features.StockFeatures.Handlers.CommandHandlers
 
         public async Task<string> Handle(DeleteStockCommand request, CancellationToken cancellationToken)
         {
-            var date = await _unitOfWorkDb.stockQueryRepository.GetByIdAsync(request.Id);
-            if (date == null)
+            try
             {
-                return "Data not found";
+                var stock = await _unitOfWorkDb.stockQueryRepository.GetByIdAsync(request.Id);
+                if (stock == null)
+                {
+                    return "Data not found";
+                }
+                await _unitOfWorkDb.stockCommandRepository.DeleteAsync(stock);
+                await _unitOfWorkDb.SaveAsync();
+                return "Completed";
             }
-            await _unitOfWorkDb.stockCommandRepository.DeleteAsync(date);
-            await _unitOfWorkDb.SaveAsync();
-            return "Completed";
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
     }
 }

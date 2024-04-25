@@ -19,9 +19,17 @@ namespace Project.Application.Features.ProdReturnFeatures.Handlers.QueryHandlers
 
         public async Task<ProdReturnDTO> Handle(GetProdReturnByIdQuery request, CancellationToken cancellationToken)
         {
-            var data = await _unitOfWorkDb.prodReturnQueryRepository.GetByIdAsync(request.Id);
-            var newData = _mapper.Map<ProdReturnDTO>(data);
-            return newData;
+            try
+            {
+                var prodReturn = await _unitOfWorkDb.prodReturnQueryRepository.GetByIdAsync(request.Id);
+                var newProdReturn = _mapper.Map<ProdReturnDTO>(prodReturn);
+                return newProdReturn;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
     }
 }

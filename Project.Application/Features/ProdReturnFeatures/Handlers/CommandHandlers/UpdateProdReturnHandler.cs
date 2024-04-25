@@ -19,16 +19,24 @@ namespace Project.Application.Features.ProdReturnFeatures.Handlers.CommandHandle
 
         public async Task<ProdReturnModels> Handle(UpdateProdReturnCommand request, CancellationToken cancellationToken)
         {
-            var data = await _unitOfWorkDb.prodReturnQueryRepository.GetByIdAsync(request.Id);
-            if (data == null) return default;
-            else
+            try
             {
-                data.CreatedBy = request.CreatedBy;
+                var prodReturn = await _unitOfWorkDb.prodReturnQueryRepository.GetByIdAsync(request.Id);
+                if (prodReturn == null) return default;
+                else
+                {
+                    prodReturn.CreatedBy = request.CreatedBy;
+                }
+                await _unitOfWorkDb.prodReturnCommandRepository.UpdateAsync(prodReturn);
+                await _unitOfWorkDb.SaveAsync();
+                var prodReturnRes = _mapper.Map<ProdReturnModels>(prodReturn);
+                return prodReturnRes;
             }
-            await _unitOfWorkDb.prodReturnCommandRepository.UpdateAsync(data);
-            await _unitOfWorkDb.SaveAsync();
-            var customerRes = _mapper.Map<ProdReturnModels>(data);
-            return customerRes;
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
     }
 }

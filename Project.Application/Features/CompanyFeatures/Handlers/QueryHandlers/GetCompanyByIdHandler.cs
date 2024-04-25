@@ -18,9 +18,17 @@ namespace Project.Application.Features.CompanyFeatures.Handlers.QueryHandlers
         }
         public async Task<CompanyDTO> Handle(GetCompanyByIdQuery request, CancellationToken cancellationToken)
         {
-            var company = await _unitOfWorkDb.companyrQueryRepository.GetByIdAsync(request.Id);
-            var getcompany = _mapper.Map<CompanyDTO>(company);
-            return getcompany;
+            try
+            {
+                var company = await _unitOfWorkDb.companyrQueryRepository.GetByIdAsync(request.Id);
+                var getcompany = _mapper.Map<CompanyDTO>(company);
+                return getcompany;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
     }
 }

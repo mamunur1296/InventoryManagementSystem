@@ -20,11 +20,19 @@ namespace Project.Application.Features.UserFeatures.Handlers.CommandHandlers
         }
         public async Task<UserModels> Handle(CreateUserCommand request, CancellationToken cancellationToken)
         {
-            var productSizeEntity = _mapper.Map<User>(request);
-            await _unitOfWorkDb.userCommandRepository.AddAsync(productSizeEntity);
-            await _unitOfWorkDb.SaveAsync();
-            var newResponse = _mapper.Map<UserModels>(productSizeEntity);
-            return newResponse;
+            try
+            {
+                var user = _mapper.Map<User>(request);
+                await _unitOfWorkDb.userCommandRepository.AddAsync(user);
+                await _unitOfWorkDb.SaveAsync();
+                var newUser = _mapper.Map<UserModels>(user);
+                return newUser;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
     }
 }

@@ -22,15 +22,15 @@ namespace Project.Application.Features.ValveFeatures.Handlers.CommandHandlers
         {
             try
             {
-                var data = await _unitOfWorkDb.valverQueryRepository.GetByIdAsync(request.Id);
-                if (data == null) return default;
+                var valve = await _unitOfWorkDb.valverQueryRepository.GetByIdAsync(request.Id);
+                if (valve == null) return default;
                 else
                 {
-                    data.Name = request.Name;
+                    valve.Name = request.Name;
                 }
-                await _unitOfWorkDb.valveCommandRepository.UpdateAsync(data);
+                await _unitOfWorkDb.valveCommandRepository.UpdateAsync(valve);
                 await _unitOfWorkDb.SaveAsync();
-                var customerRes = _mapper.Map<ValveModels>(data);
+                var customerRes = _mapper.Map<ValveModels>(valve);
                 return customerRes;
             }
             catch (Exception)

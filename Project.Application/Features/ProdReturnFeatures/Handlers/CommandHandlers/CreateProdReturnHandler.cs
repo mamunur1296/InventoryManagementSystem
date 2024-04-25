@@ -20,11 +20,19 @@ namespace Project.Application.Features.ProdReturnFeatures.Handlers.CommandHandle
 
         public async Task<ProdReturnModels> Handle(CreateProdReturnCommand request, CancellationToken cancellationToken)
         {
-            var productSizeEntity = _mapper.Map<ProdReturn>(request);
-            await _unitOfWorkDb.prodReturnCommandRepository.AddAsync(productSizeEntity);
-            await _unitOfWorkDb.SaveAsync();
-            var newResponse = _mapper.Map<ProdReturnModels>(productSizeEntity);
-            return newResponse;
+            try
+            {
+                var prodReturn = _mapper.Map<ProdReturn>(request);
+                await _unitOfWorkDb.prodReturnCommandRepository.AddAsync(prodReturn);
+                await _unitOfWorkDb.SaveAsync();
+                var newProdReturn = _mapper.Map<ProdReturnModels>(prodReturn);
+                return newProdReturn;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
     }
 }

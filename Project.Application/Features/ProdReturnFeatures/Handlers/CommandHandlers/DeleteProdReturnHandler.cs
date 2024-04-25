@@ -16,14 +16,22 @@ namespace Project.Application.Features.ProdReturnFeatures.Handlers.CommandHandle
 
         public async Task<string> Handle(DeleteProdReturnCommand request, CancellationToken cancellationToken)
         {
-            var date = await _unitOfWorkDb.prodReturnQueryRepository.GetByIdAsync(request.id);
-            if (date == null)
+            try
             {
-                return "Data not found";
+                var prodReturn = await _unitOfWorkDb.prodReturnQueryRepository.GetByIdAsync(request.id);
+                if (prodReturn == null)
+                {
+                    return "Data not found";
+                }
+                await _unitOfWorkDb.prodReturnCommandRepository.DeleteAsync(prodReturn);
+                await _unitOfWorkDb.SaveAsync();
+                return "Completed";
             }
-            await _unitOfWorkDb.prodReturnCommandRepository.DeleteAsync(date);
-            await _unitOfWorkDb.SaveAsync();
-            return "Completed";
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
     }
 }

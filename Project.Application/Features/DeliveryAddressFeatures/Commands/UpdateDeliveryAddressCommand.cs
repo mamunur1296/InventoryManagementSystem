@@ -1,12 +1,13 @@
 ﻿using MediatR;
 using Project.Application.Models;
+using Project.Domail.Entities;
 
 namespace Project.Application.Features.DeliveryAddressFeatures.Commands
 {
     public class UpdateDeliveryAddressCommand : IRequest<DeliveryAddressModels>
     {
         public Guid Id { get; set; }
-        public int UserId { get; set; }
+        public Guid UserId { get; set; }
         public string Address { get; set; }
         public string Phone { get; set; }
         public string Mobile { get; set; }
@@ -18,5 +19,6 @@ namespace Project.Application.Features.DeliveryAddressFeatures.Commands
         public DateTime? DeactivatedDate { get; set; }
         public string ? DeactiveBy { get; set; }
         public bool? IsDefault { get; set; }
+        
     }
 }

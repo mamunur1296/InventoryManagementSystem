@@ -19,9 +19,17 @@ namespace Project.Application.Features.DeliveryAddressFeatures.Handlers.QueryHan
 
         public async Task<DeliveryAddressDTO> Handle(GetDeliveryAddressByIdQuery request, CancellationToken cancellationToken)
         {
-            var data = await _unitOfWorkDb.deliveryAddressQueryRepository.GetByIdAsync(request.Id);
-            var newData = _mapper.Map<DeliveryAddressDTO>(data);
-            return newData;
+            try
+            {
+                var deliveryAddress = await _unitOfWorkDb.deliveryAddressQueryRepository.GetByIdAsync(request.Id);
+                var newdeliveryAddress = _mapper.Map<DeliveryAddressDTO>(deliveryAddress);
+                return newdeliveryAddress;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
     }
 }

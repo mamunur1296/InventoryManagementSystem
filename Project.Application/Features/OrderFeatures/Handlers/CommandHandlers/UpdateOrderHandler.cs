@@ -20,18 +20,20 @@ namespace Project.Application.Features.OrderFeatures.Handlers.CommandHandlers
         {
             try
             {
-                var data = await _unitOfWorkDb.orderQueryRepository.GetByIdAsync(request.Id);
-                if (data == null) return default;
+                var order = await _unitOfWorkDb.orderQueryRepository.GetByIdAsync(request.Id);
+                if (order == null) return default;
                 else
                 {
-                    data.IsCancel = true;
-                    data.CreatedBy = request.CreatedBy;
+                    order.IsCancel = true;
+                    order.CreatedBy = request.CreatedBy;
+                    order.CreationDate = request.CreationDate;
+                    order.IsCancel = request.IsCancel;
                     // extand 
                 }
-                await _unitOfWorkDb.orderCommandRepository.UpdateAsync(data);
+                await _unitOfWorkDb.orderCommandRepository.UpdateAsync(order);
                 await _unitOfWorkDb.SaveAsync();
-                var customerRes = _mapper.Map<OrderModels>(data);
-                return customerRes;
+                var orderRes = _mapper.Map<OrderModels>(order);
+                return orderRes;
             }
             catch (Exception)
             {

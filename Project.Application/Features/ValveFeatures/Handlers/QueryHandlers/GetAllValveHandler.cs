@@ -21,9 +21,9 @@ namespace Project.Application.Features.ValveFeatures.Handlers.QueryHandlers
         {
             try
             {
-                var dataList = await _unitOfWorkDb.valverQueryRepository.GetAllAsync();
-                var data = dataList.Select(x => _mapper.Map<ValveDTO>(x));
-                return data;
+                var valveList = await _unitOfWorkDb.valverQueryRepository.GetAllAsync();
+                var result = valveList.Select(x => _mapper.Map<ValveDTO>(x));
+                return result;
             }
             catch (Exception)
             {

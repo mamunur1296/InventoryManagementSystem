@@ -20,11 +20,19 @@ namespace Project.Application.Features.ProductSizeFeatures.Handlers.CommandHandl
 
         public async Task<ProductSizeModels> Handle(CreateProductSizeCommand request, CancellationToken cancellationToken)
         {
-            var productSizeEntity = _mapper.Map<ProductSize>(request);
-            await _unitOfWorkDb.productSizeCommandRepository.AddAsync(productSizeEntity);
-            await _unitOfWorkDb.SaveAsync();
-            var newResponse = _mapper.Map<ProductSizeModels>(productSizeEntity);
-            return newResponse;
+            try
+            {
+                var productSize = _mapper.Map<ProductSize>(request);
+                await _unitOfWorkDb.productSizeCommandRepository.AddAsync(productSize);
+                await _unitOfWorkDb.SaveAsync();
+                var newProductSize = _mapper.Map<ProductSizeModels>(productSize);
+                return newProductSize;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
     }
 }

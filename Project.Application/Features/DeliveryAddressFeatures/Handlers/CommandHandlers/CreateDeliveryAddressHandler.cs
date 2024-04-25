@@ -19,11 +19,19 @@ namespace Project.Application.Features.DeliveryAddressFeatures.Handlers.CommandH
         }
         public async Task<DeliveryAddressModels> Handle(CreateDeliveryAddressCommand request, CancellationToken cancellationToken)
         {
-            var productSizeEntity = _mapper.Map<DeliveryAddress>(request);
-            await _unitOfWorkDb.deliveryAddressCommandRepository.AddAsync(productSizeEntity);
-            await _unitOfWorkDb.SaveAsync();
-            var newResponse = _mapper.Map<DeliveryAddressModels>(productSizeEntity);
-            return newResponse;
+            try
+            {
+                var deliveryAddress = _mapper.Map<DeliveryAddress>(request);
+                await _unitOfWorkDb.deliveryAddressCommandRepository.AddAsync(deliveryAddress);
+                await _unitOfWorkDb.SaveAsync();
+                var newdeliveryAddress = _mapper.Map<DeliveryAddressModels>(deliveryAddress);
+                return newdeliveryAddress;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
     }
 }

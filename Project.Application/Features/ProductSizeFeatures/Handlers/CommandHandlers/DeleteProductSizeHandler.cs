@@ -15,14 +15,22 @@ namespace Project.Application.Features.ProductSizeFeatures.Handlers.CommandHandl
 
         public async Task<string> Handle(DeleteProductSizeCommand request, CancellationToken cancellationToken)
         {
-            var date = await _unitOfWorkDb.productSizeQueryRepository.GetByIdAsync(request.Id);
-            if (date == null)
+            try
             {
-                return "Data not found";
+                var productSize = await _unitOfWorkDb.productSizeQueryRepository.GetByIdAsync(request.Id);
+                if (productSize == null)
+                {
+                    return "Data not found";
+                }
+                await _unitOfWorkDb.productSizeCommandRepository.DeleteAsync(productSize);
+                await _unitOfWorkDb.SaveAsync();
+                return "Completed";
             }
-            await _unitOfWorkDb.productSizeCommandRepository.DeleteAsync(date);
-            await _unitOfWorkDb.SaveAsync();
-            return "Completed";
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
     }
 }

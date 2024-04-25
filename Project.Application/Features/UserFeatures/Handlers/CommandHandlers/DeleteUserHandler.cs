@@ -16,14 +16,22 @@ namespace Project.Application.Features.UserFeatures.Handlers.CommandHandlers
 
         public async Task<string> Handle(DeleteUserCommand request, CancellationToken cancellationToken)
         {
-            var date = await _unitOfWorkDb.userQueryRepository.GetByIdAsync(request.Id);
-            if (date == null)
+            try
             {
-                return "Data not found";
+                var user = await _unitOfWorkDb.userQueryRepository.GetByIdAsync(request.Id);
+                if (user == null)
+                {
+                    return "Data not found";
+                }
+                await _unitOfWorkDb.userCommandRepository.DeleteAsync(user);
+                await _unitOfWorkDb.SaveAsync();
+                return "Completed";
             }
-            await _unitOfWorkDb.userCommandRepository.DeleteAsync(date);
-            await _unitOfWorkDb.SaveAsync();
-            return "Completed";
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
     }
 }

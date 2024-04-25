@@ -22,9 +22,9 @@ namespace Project.Application.Features.ValveFeatures.Handlers.QueryHandlers
         {
             try
             {
-                var data = await _unitOfWorkDb.valverQueryRepository.GetByIdAsync(request.Id);
-                var newData = _mapper.Map<ValveDTO>(data);
-                return newData;
+                var valve = await _unitOfWorkDb.valverQueryRepository.GetByIdAsync(request.Id);
+                var newvalve = _mapper.Map<ValveDTO>(valve);
+                return newvalve;
             }
             catch (Exception)
             {

@@ -24,11 +24,11 @@ namespace Project.Application.Features.ValveFeatures.Handlers.CommandHandlers
         {
             try
             {
-                var productSizeEntity = _mapper.Map<Valve>(request);
-                await _unitOfWorkDb.valveCommandRepository.AddAsync(productSizeEntity);
+                var valve = _mapper.Map<Valve>(request);
+                await _unitOfWorkDb.valveCommandRepository.AddAsync(valve);
                 await _unitOfWorkDb.SaveAsync();
-                var newResponse = _mapper.Map<ValveModels>(productSizeEntity);
-                return newResponse;
+                var valveResponse = _mapper.Map<ValveModels>(valve);
+                return valveResponse;
             }
             catch (Exception)
             {

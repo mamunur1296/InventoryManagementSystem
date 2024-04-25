@@ -20,9 +20,17 @@ namespace Project.Application.Features.ProductFeatures.Handlers.QueryHandlers
   
         public async Task<ProductDTO> Handle(GetProductByIdQuery request, CancellationToken cancellationToken)
         {
-            var data = await _unitOfWorkDb.productQueryRepository.GetByIdAsync(request.id);
-            var newData = _mapper.Map<ProductDTO>(data);
-            return newData;
+            try
+            {
+                var product = await _unitOfWorkDb.productQueryRepository.GetByIdAsync(request.id);
+                var newProduct = _mapper.Map<ProductDTO>(product);
+                return newProduct;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
     }
 }

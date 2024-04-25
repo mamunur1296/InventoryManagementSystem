@@ -19,9 +19,17 @@ namespace Project.Application.Features.StockFeatures.Handlers.QueryHandlers
         }
         public async Task<StockDTO> Handle(GetStockByIdQuery request, CancellationToken cancellationToken)
         {
-            var data = await _unitOfWorkDb.stockQueryRepository.GetByIdAsync(request.Id);
-            var newData = _mapper.Map<StockDTO>(data);
-            return newData;
+            try
+            {
+                var stock = await _unitOfWorkDb.stockQueryRepository.GetByIdAsync(request.Id);
+                var newStock = _mapper.Map<StockDTO>(stock);
+                return newStock;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
     }
 }

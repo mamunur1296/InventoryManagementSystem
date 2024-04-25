@@ -6,5 +6,7 @@ namespace Project.Domail.Abstractions.CommandRepositories
     public interface ICompanyCommandRepository : ICommandRepository<Company>
     {
         // Add specific command methods here if needed
+
+
     }
 }

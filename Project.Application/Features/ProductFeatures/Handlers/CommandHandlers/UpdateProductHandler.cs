@@ -19,16 +19,16 @@ namespace Project.Application.Features.ProductFeatures.Handlers.CommandHandlers
 
         public async Task<ProductModels> Handle(UpdateProductCommand request, CancellationToken cancellationToken)
         {
-            var data = await _unitOfWorkDb.productQueryRepository.GetByIdAsync(request.Id);
-            if (data == null) return default;
+            var product = await _unitOfWorkDb.productQueryRepository.GetByIdAsync(request.Id);
+            if (product == null) return default;
             else
             {
-                data.Name = request.Name;
+                product.Name = request.Name;
             }
-            await _unitOfWorkDb.productCommandRepository.UpdateAsync(data);
+            await _unitOfWorkDb.productCommandRepository.UpdateAsync(product);
             await _unitOfWorkDb.SaveAsync();
-            var customerRes = _mapper.Map<ProductModels>(data);
-            return customerRes;
+            var productRes = _mapper.Map<ProductModels>(product);
+            return productRes;
         }
     }
 }

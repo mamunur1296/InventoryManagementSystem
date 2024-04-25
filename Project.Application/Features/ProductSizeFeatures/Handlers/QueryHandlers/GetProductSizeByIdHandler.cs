@@ -19,9 +19,17 @@ namespace Project.Application.Features.ProductSizeFeatures.Handlers.QueryHandler
        
         public async Task<ProductSizeDTO> Handle(GetProductSizeByIdQuery request, CancellationToken cancellationToken)
         {
-            var data = await _unitOfWorkDb.productSizeQueryRepository.GetByIdAsync(request.Id);
-            var newData = _mapper.Map<ProductSizeDTO>(data);
-            return newData;
+            try
+            {
+                var productSize = await _unitOfWorkDb.productSizeQueryRepository.GetByIdAsync(request.Id);
+                var newProductSize = _mapper.Map<ProductSizeDTO>(productSize);
+                return newProductSize;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
     }
 }

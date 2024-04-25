@@ -19,9 +19,17 @@ namespace Project.Application.Features.RetailerFeatures.Handlers.QueryHandlers
 
         public async Task<RetailerDTO> Handle(GetRetailerByIdQuery request, CancellationToken cancellationToken)
         {
-            var data = await _unitOfWorkDb.retailerQueryRepository.GetByIdAsync(request.Id);
-            var newData = _mapper.Map<RetailerDTO>(data);
-            return newData;
+            try
+            {
+                var retailer = await _unitOfWorkDb.retailerQueryRepository.GetByIdAsync(request.Id);
+                var newretailer = _mapper.Map<RetailerDTO>(retailer);
+                return newretailer;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
     }
 }

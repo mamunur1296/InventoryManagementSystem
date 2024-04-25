@@ -12,7 +12,7 @@ using Project.Infrastructure.DataContext;
 namespace Project.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240401204137_init")]
+    [Migration("20240425032320_init")]
     partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -161,9 +161,8 @@ namespace Project.Infrastructure.Migrations
                     b.Property<Guid>("ProductId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("ReturnProductId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<Guid>("ReturnProductId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("UpdateDate")
                         .HasColumnType("datetime2");
@@ -201,13 +200,11 @@ namespace Project.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("ProdSizeId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<Guid>("ProdSizeId")
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("ProdValveId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<Guid>("ProdValveId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("ProductId")
                         .HasColumnType("uniqueidentifier");
@@ -654,11 +651,13 @@ namespace Project.Infrastructure.Migrations
 
             modelBuilder.Entity("Project.Domail.Entities.Trader", b =>
                 {
-                    b.HasOne("Project.Domail.Entities.Company", null)
+                    b.HasOne("Project.Domail.Entities.Company", "Company")
                         .WithMany("Traders")
                         .HasForeignKey("CompanyId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Company");
                 });
 
             modelBuilder.Entity("Project.Domail.Entities.Company", b =>

@@ -15,14 +15,22 @@ namespace Project.Application.Features.DeliveryAddressFeatures.Handlers.CommandH
  
         public async Task<string> Handle(DeleteDeliveryAddressCommand request, CancellationToken cancellationToken)
         {
-            var date = await _unitOfWorkDb.deliveryAddressQueryRepository.GetByIdAsync(request.Id);
-            if (date == null)
+            try
             {
-                return "Data not found";
+                var deliveryAddress = await _unitOfWorkDb.deliveryAddressQueryRepository.GetByIdAsync(request.Id);
+                if (deliveryAddress == null)
+                {
+                    return "Data not found";
+                }
+                await _unitOfWorkDb.deliveryAddressCommandRepository.DeleteAsync(deliveryAddress);
+                await _unitOfWorkDb.SaveAsync();
+                return "Completed";
             }
-            await _unitOfWorkDb.deliveryAddressCommandRepository.DeleteAsync(date);
-            await _unitOfWorkDb.SaveAsync();
-            return "Completed";
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
     }
 }

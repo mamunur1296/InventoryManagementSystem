@@ -3,6 +3,7 @@ using MediatR;
 using Project.Application.DTOs;
 using Project.Application.Features.OrderFeatures.Queries;
 using Project.Domail.Abstractions;
+using Project.Domail.Entities;
 
 namespace Project.Application.Features.OrderFeatures.Handlers.QueryHandlers
 {
@@ -20,15 +21,26 @@ namespace Project.Application.Features.OrderFeatures.Handlers.QueryHandlers
         {
             try
             {
-                var dataList = await _unitOfWorkDb.orderQueryRepository.GetAllAsync();
-                var data = dataList.Select(x => _mapper.Map<OrderDTO>(x));
-                return data;
+                var orderList = await _unitOfWorkDb.orderQueryRepository.GetAllAsync();
+                var userList = await _unitOfWorkDb.userQueryRepository.GetAllAsync();
+                var productList = await _unitOfWorkDb.productQueryRepository.GetAllAsync();
+
+                var orderDtoTasks = orderList.Select(async order =>
+                {
+                    var orderDto = _mapper.Map<OrderDTO>(order);
+                    orderDto.User = await _unitOfWorkDb.userQueryRepository.GetByIdAsync(order.UserId);
+                    orderDto.Product = await _unitOfWorkDb.productQueryRepository.GetByIdAsync(order.ProductId);
+                    return orderDto;
+                });
+
+                var result = await Task.WhenAll(orderDtoTasks);
+                return result;
             }
             catch (Exception)
             {
-
                 throw;
             }
         }
+
     }
 }

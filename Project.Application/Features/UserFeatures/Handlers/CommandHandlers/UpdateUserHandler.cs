@@ -20,16 +20,24 @@ namespace Project.Application.Features.UserFeatures.Handlers.CommandHandlers
 
         public async Task<UserModels> Handle(UpdateUserCommand request, CancellationToken cancellationToken)
         {
-            var data = await _unitOfWorkDb.userQueryRepository.GetByIdAsync(request.Id);
-            if (data == null) return default;
-            else
+            try
             {
-                data.Name = request.Name;
+                var user = await _unitOfWorkDb.userQueryRepository.GetByIdAsync(request.Id);
+                if (user == null) return default;
+                else
+                {
+                    user.Name = request.Name;
+                }
+                await _unitOfWorkDb.userCommandRepository.UpdateAsync(user);
+                await _unitOfWorkDb.SaveAsync();
+                var userRes = _mapper.Map<UserModels>(user);
+                return userRes;
             }
-            await _unitOfWorkDb.userCommandRepository.UpdateAsync(data);
-            await _unitOfWorkDb.SaveAsync();
-            var customerRes = _mapper.Map<UserModels>(data);
-            return customerRes;
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
     }
 }

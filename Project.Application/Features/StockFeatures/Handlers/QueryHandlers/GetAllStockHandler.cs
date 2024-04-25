@@ -19,9 +19,17 @@ namespace Project.Application.Features.StockFeatures.Handlers.QueryHandlers
 
         public async Task<IEnumerable<StockDTO>> Handle(GetAllStockQuery request, CancellationToken cancellationToken)
         {
-            var dataList = await _unitOfWorkDb.stockQueryRepository.GetAllAsync();
-            var data = dataList.Select(x => _mapper.Map<StockDTO>(x));
-            return data;
+            try
+            {
+                var stockList = await _unitOfWorkDb.stockQueryRepository.GetAllAsync();
+                var stockResp = stockList.Select(x => _mapper.Map<StockDTO>(x));
+                return stockResp;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
     }
 }

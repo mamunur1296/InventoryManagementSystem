@@ -20,9 +20,17 @@ namespace Project.Application.Features.UserFeatures.Handlers.QueryHandlers
 
         public async Task<UserDTO> Handle(GetUserByIdQuery request, CancellationToken cancellationToken)
         {
-            var data = await _unitOfWorkDb.userQueryRepository.GetByIdAsync(request.Id);
-            var newData = _mapper.Map<UserDTO>(data);
-            return newData;
+            try
+            {
+                var user = await _unitOfWorkDb.userQueryRepository.GetByIdAsync(request.Id);
+                var newUser = _mapper.Map<UserDTO>(user);
+                return newUser;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
     }
 }

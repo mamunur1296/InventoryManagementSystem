@@ -18,19 +18,34 @@ namespace Project.Application.Features.DeliveryAddressFeatures.Handlers.CommandH
 
         public async Task<DeliveryAddressModels> Handle(UpdateDeliveryAddressCommand request, CancellationToken cancellationToken)
         {
-            var data = await _unitOfWorkDb.deliveryAddressQueryRepository.GetByIdAsync(request.Id);
-            if (data == null) return default;
-            else
+            try
             {
-                data.Address = request.Address;
-                data.Phone = request.Phone;
-                data.IsDefault = request.IsDefault;
-                // add more fildes
+                var deliveryAddress = await _unitOfWorkDb.deliveryAddressQueryRepository.GetByIdAsync(request.Id);
+                if (deliveryAddress == null) return default;
+                else
+                {
+                    deliveryAddress.UserId = request.UserId;
+                    deliveryAddress.Address = request.Address;
+                    deliveryAddress.Phone = request.Phone;
+                    deliveryAddress.Mobile = request.Mobile;
+                    deliveryAddress.CreatedBy = request.CreatedBy;
+                    deliveryAddress.UpdatedBy = request.UpdatedBy;
+                    deliveryAddress.IsActive = request.IsActive;
+                    deliveryAddress.DeactivatedDate = request.DeactivatedDate;
+                    deliveryAddress.DeactiveBy = request.DeactiveBy;
+                    deliveryAddress.IsDefault = request.IsDefault;
+                    // add more fildes
+                }
+                await _unitOfWorkDb.deliveryAddressCommandRepository.UpdateAsync(deliveryAddress);
+                await _unitOfWorkDb.SaveAsync();
+                var deliveryAddressRes = _mapper.Map<DeliveryAddressModels>(deliveryAddress);
+                return deliveryAddressRes;
             }
-            await _unitOfWorkDb.deliveryAddressCommandRepository.UpdateAsync(data);
-            await _unitOfWorkDb.SaveAsync();
-            var customerRes = _mapper.Map<DeliveryAddressModels>(data);
-            return customerRes;
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
     }
 }

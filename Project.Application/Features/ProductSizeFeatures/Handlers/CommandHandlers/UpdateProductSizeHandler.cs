@@ -17,19 +17,27 @@ namespace Project.Application.Features.ProductSizeFeatures.Handlers.CommandHandl
         }
         public async Task<ProductSizeModels> Handle(UpdateProductSizeCommand request, CancellationToken cancellationToken)
         {
-            var data = await _unitOfWorkDb.productSizeQueryRepository.GetByIdAsync(request.Id);
-            if (data == null) return default;
-            else
+            try
             {
-                
-                data.Unit=request.Unit;
-                data.UpdatedBy=request.UpdatedBy;
-                data.CreatedBy=request.CreatedBy;
+                var productSize = await _unitOfWorkDb.productSizeQueryRepository.GetByIdAsync(request.Id);
+                if (productSize == null) return default;
+                else
+                {
+
+                    productSize.Unit = request.Unit;
+                    productSize.UpdatedBy = request.UpdatedBy;
+                    productSize.CreatedBy = request.CreatedBy;
+                }
+                await _unitOfWorkDb.productSizeCommandRepository.UpdateAsync(productSize);
+                await _unitOfWorkDb.SaveAsync();
+                var productSizeRes = _mapper.Map<ProductSizeModels>(productSize);
+                return productSizeRes;
             }
-            await _unitOfWorkDb.productSizeCommandRepository.UpdateAsync(data);
-            await _unitOfWorkDb.SaveAsync();
-            var customerRes = _mapper.Map<ProductSizeModels>(data);
-            return customerRes;
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
     }
 }

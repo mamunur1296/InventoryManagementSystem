@@ -21,11 +21,19 @@ namespace Project.Application.Features.TraderFeatures.Handlers.CommandHandlers
 
         public async Task<TraderModels> Handle(CreateTraderCommand request, CancellationToken cancellationToken)
         {
-            var productSizeEntity = _mapper.Map<Trader>(request);
-            await _unitOfWorkDb.traderCommandRepository.AddAsync(productSizeEntity);
-            await _unitOfWorkDb.SaveAsync();
-            var newResponse = _mapper.Map<TraderModels>(productSizeEntity);
-            return newResponse;
+            try
+            {
+                var Trader = _mapper.Map<Trader>(request);
+                await _unitOfWorkDb.traderCommandRepository.AddAsync(Trader);
+                await _unitOfWorkDb.SaveAsync();
+                var newTrader = _mapper.Map<TraderModels>(Trader);
+                return newTrader;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
     }
 }

@@ -19,9 +19,17 @@ namespace Project.Application.Features.ProductSizeFeatures.Handlers.QueryHandler
 
         public async Task<IEnumerable<ProductSizeDTO>> Handle(GetAllProductSizeQuery request, CancellationToken cancellationToken)
         {
-            var dataList = await _unitOfWorkDb.productSizeQueryRepository.GetAllAsync();
-            var data = dataList.Select(x => _mapper.Map<ProductSizeDTO>(x));
-            return data;
+            try
+            {
+                var productSizesList = await _unitOfWorkDb.productSizeQueryRepository.GetAllAsync();
+                var restult = productSizesList.Select(x => _mapper.Map<ProductSizeDTO>(x));
+                return restult;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
     }
 }

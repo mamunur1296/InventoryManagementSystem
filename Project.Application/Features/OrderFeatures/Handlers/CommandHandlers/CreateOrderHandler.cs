@@ -23,11 +23,11 @@ namespace Project.Application.Features.OrderFeatures.Handlers.CommandHandlers
         {
             try
             {
-                var productSizeEntity = _mapper.Map<Order>(request);
-                await _unitOfWorkDb.orderCommandRepository.AddAsync(productSizeEntity);
+                var order = _mapper.Map<Order>(request);
+                await _unitOfWorkDb.orderCommandRepository.AddAsync(order);
                 await _unitOfWorkDb.SaveAsync();
-                var newResponse = _mapper.Map<OrderModels>(productSizeEntity);
-                return newResponse;
+                var newOrder = _mapper.Map<OrderModels>(order);
+                return newOrder;
             }
             catch (Exception)
             {

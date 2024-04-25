@@ -20,9 +20,9 @@ namespace Project.Application.Features.OrderFeatures.Handlers.QueryHandlers
         {
             try
             {
-                var data = await _unitOfWorkDb.orderQueryRepository.GetByIdAsync(request.Id);
-                var newData = _mapper.Map<OrderDTO>(data);
-                return newData;
+                var order = await _unitOfWorkDb.orderQueryRepository.GetByIdAsync(request.Id);
+                var neworder = _mapper.Map<OrderDTO>(order);
+                return neworder;
             }
             catch (Exception)
             {

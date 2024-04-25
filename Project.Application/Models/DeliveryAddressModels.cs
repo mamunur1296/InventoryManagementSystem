@@ -1,4 +1,6 @@
-﻿namespace Project.Application.Models
+﻿using Project.Domail.Entities;
+
+namespace Project.Application.Models
 {
     public class DeliveryAddressModels
     {
@@ -13,5 +15,6 @@
         public DateTime? DeactivatedDate { get; set; }
         public string? DeactiveBy { get; set; }
         public bool? IsDefault { get; set; }
+        public virtual User User { get; set; }
     }
 }

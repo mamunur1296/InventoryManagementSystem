@@ -16,14 +16,22 @@ namespace Project.Application.Features.TraderFeatures.Handlers.CommandHandlers
 
         public async Task<string> Handle(DeleteTraderCommand request, CancellationToken cancellationToken)
         {
-            var date = await _unitOfWorkDb.traderQueryRepository.GetByIdAsync(request.Id);
-            if (date == null)
+            try
             {
-                return "Data not found";
+                var Trader = await _unitOfWorkDb.traderQueryRepository.GetByIdAsync(request.Id);
+                if (Trader == null)
+                {
+                    return "Data not found";
+                }
+                await _unitOfWorkDb.traderCommandRepository.DeleteAsync(Trader);
+                await _unitOfWorkDb.SaveAsync();
+                return "Completed";
             }
-            await _unitOfWorkDb.traderCommandRepository.DeleteAsync(date);
-            await _unitOfWorkDb.SaveAsync();
-            return "Completed";
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
     }
 }

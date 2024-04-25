@@ -17,21 +17,29 @@ namespace Project.Application.Features.RetailerFeatures.Handlers.CommandHandlers
         }
         public async Task<RetailerModel> Handle(UpdateRetailerCommand request, CancellationToken cancellationToken)
         {
-            var data = await _unitOfWorkDb.retailerQueryRepository.GetByIdAsync(request.Id);
-            if (data == null) return default;
-            else
+            try
             {
-                data.BIN=request.BIN;
-                data.Name=request.Name;
-                data.ContactPerNum=request.ContactPerNum;
-                data.ContactNumber=request.ContactNumber;
-                data.ContactPerNum = request.ContactPerNum;
-                data.DeactiveBy=request.DeactiveBy;
+                var retailer = await _unitOfWorkDb.retailerQueryRepository.GetByIdAsync(request.Id);
+                if (retailer == null) return default;
+                else
+                {
+                    retailer.BIN = request.BIN;
+                    retailer.Name = request.Name;
+                    retailer.ContactPerNum = request.ContactPerNum;
+                    retailer.ContactNumber = request.ContactNumber;
+                    retailer.ContactPerNum = request.ContactPerNum;
+                    retailer.DeactiveBy = request.DeactiveBy;
+                }
+                await _unitOfWorkDb.retailerCommandRepository.UpdateAsync(retailer);
+                await _unitOfWorkDb.SaveAsync();
+                var retailerRes = _mapper.Map<RetailerModel>(retailer);
+                return retailerRes;
             }
-            await _unitOfWorkDb.retailerCommandRepository.UpdateAsync(data);
-            await _unitOfWorkDb.SaveAsync();
-            var customerRes = _mapper.Map<RetailerModel>(data);
-            return customerRes;
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
     }
 }

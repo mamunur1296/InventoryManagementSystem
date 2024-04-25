@@ -14,14 +14,22 @@ namespace Project.Application.Features.RetailerFeatures.Handlers.CommandHandlers
         }
         public async Task<string> Handle(DeleteRetailerCommand request, CancellationToken cancellationToken)
         {
-            var date = await _unitOfWorkDb.retailerQueryRepository.GetByIdAsync(request.Id);
-            if (date == null)
+            try
             {
-                return "Data not found";
+                var retailer = await _unitOfWorkDb.retailerQueryRepository.GetByIdAsync(request.Id);
+                if (retailer == null)
+                {
+                    return "Data not found";
+                }
+                await _unitOfWorkDb.retailerCommandRepository.DeleteAsync(retailer);
+                await _unitOfWorkDb.SaveAsync();
+                return "Completed";
             }
-            await _unitOfWorkDb.retailerCommandRepository.DeleteAsync(date);
-            await _unitOfWorkDb.SaveAsync();
-            return "Completed";
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
     }
 }

@@ -19,11 +19,19 @@ namespace Project.Application.Features.RetailerFeatures.Handlers.CommandHandlers
         }
         public async Task<RetailerModel> Handle(CreateRetailerCommand request, CancellationToken cancellationToken)
         {
-            var productSizeEntity = _mapper.Map<Retailer>(request);
-            await _unitOfWorkDb.retailerCommandRepository.AddAsync(productSizeEntity);
-            await _unitOfWorkDb.SaveAsync();
-            var newResponse = _mapper.Map<RetailerModel>(productSizeEntity);
-            return newResponse;
+            try
+            {
+                var Retailer = _mapper.Map<Retailer>(request);
+                await _unitOfWorkDb.retailerCommandRepository.AddAsync(Retailer);
+                await _unitOfWorkDb.SaveAsync();
+                var RetailerResponse = _mapper.Map<RetailerModel>(Retailer);
+                return RetailerResponse;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
     }
 }

@@ -18,6 +18,7 @@ namespace Projects.Api.Controllers
         [HttpPost("CreateDeliveryAddress")]
         public async Task<IActionResult> Create(CreateDeliveryAddressCommand commend)
         {
+            if (commend == null) return BadRequest();
             return Ok(await _mediator.Send(commend));
         }
         [HttpGet("getAllDeliveryAddress")]

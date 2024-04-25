@@ -20,9 +20,17 @@ namespace Project.Application.Features.TraderFeatures.Handlers.QueryHandlers
 
         public async Task<TraderDTO> Handle(GetTraderByIdQuery request, CancellationToken cancellationToken)
         {
-            var data = await _unitOfWorkDb.traderQueryRepository.GetByIdAsync(request.Id);
-            var newData = _mapper.Map<TraderDTO>(data);
-            return newData;
+            try
+            {
+                var trader = await _unitOfWorkDb.traderQueryRepository.GetByIdAsync(request.Id);
+                var newTrader = _mapper.Map<TraderDTO>(trader);
+                return newTrader;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
     }
 }

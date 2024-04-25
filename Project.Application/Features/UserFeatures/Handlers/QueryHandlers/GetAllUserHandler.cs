@@ -25,9 +25,17 @@ namespace Project.Application.Features.UserFeatures.Handlers.QueryHandlers
 
         public async Task<IEnumerable<UserDTO>> Handle(GetAllUserQuery request, CancellationToken cancellationToken)
         {
-            var dataList = await _unitOfWorkDb.userQueryRepository.GetAllAsync();
-            var data = dataList.Select(x => _mapper.Map<UserDTO>(x));
-            return data;
+            try
+            {
+                var UserList = await _unitOfWorkDb.userQueryRepository.GetAllAsync();
+                var result = UserList.Select(x => _mapper.Map<UserDTO>(x));
+                return result;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
     }
 }

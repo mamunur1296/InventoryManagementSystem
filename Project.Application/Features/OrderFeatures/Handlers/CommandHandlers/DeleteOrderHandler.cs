@@ -18,12 +18,12 @@ namespace Project.Application.Features.OrderFeatures.Handlers.CommandHandlers
         {
             try
             {
-                var date = await _unitOfWorkDb.orderQueryRepository.GetByIdAsync(request.id);
-                if (date == null)
+                var order = await _unitOfWorkDb.orderQueryRepository.GetByIdAsync(request.id);
+                if (order == null)
                 {
                     return "Data not found";
                 }
-                await _unitOfWorkDb.orderCommandRepository.DeleteAsync(date);
+                await _unitOfWorkDb.orderCommandRepository.DeleteAsync(order);
                 await _unitOfWorkDb.SaveAsync();
                 return "Completed";
             }

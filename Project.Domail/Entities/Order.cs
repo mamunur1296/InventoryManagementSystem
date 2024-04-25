@@ -11,7 +11,7 @@ namespace Project.Domail.Entities
         public Guid ProductId { get; set; }
         public bool IsHold { get; set; }
         public bool IsCancel { get; set; }
-        public string ReturnProductId { get; set; }
+        public Guid ReturnProductId { get; set; }
         public bool IsPlaced { get; set; }
         public bool IsConfirmed { get; set; }
         public bool IsDispatched { get; set; }

@@ -17,14 +17,22 @@ namespace Project.Application.Features.ProductFeatures.Handlers.CommandHandlers
 
         public async Task<string> Handle(DeleteProductCommand request, CancellationToken cancellationToken)
         {
-            var date = await _unitOfWorkDb.productQueryRepository.GetByIdAsync(request.Id);
-            if (date == null)
+            try
             {
-                return "Data not found";
+                var product = await _unitOfWorkDb.productQueryRepository.GetByIdAsync(request.Id);
+                if (product == null)
+                {
+                    return "Data not found";
+                }
+                await _unitOfWorkDb.productCommandRepository.DeleteAsync(product);
+                await _unitOfWorkDb.SaveAsync();
+                return "Completed";
             }
-            await _unitOfWorkDb.productCommandRepository.DeleteAsync(date);
-            await _unitOfWorkDb.SaveAsync();
-            return "Completed";
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
     }
 }
