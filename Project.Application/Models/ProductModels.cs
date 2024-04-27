@@ -1,4 +1,6 @@
-﻿namespace Project.Application.Models
+﻿using Project.Domail.Entities;
+
+namespace Project.Application.Models
 {
     public class ProductModels
     {
@@ -11,6 +13,11 @@
         public string CreatedBy { get; set; }
         public string UpdatedBy { get; set; }
         public bool IsActive { get; set; }
+        public virtual Company Company { get; set; }
+        public virtual ProductSize Size { get; set; }
+        public virtual Valve Valve { get; set; }
+        public virtual ICollection<Order> Orders { get; set; }
+        public virtual ICollection<ProdReturn> Returns { get; set; }
 
     }
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Project.Domail.Entities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -22,6 +23,8 @@ namespace Project.Application.DTOs
         public DateTime? DeactivatedDate { get; set; }
         public string DeactiveBy { get; set; }
         public string BIN { get; set; }
+        public virtual ICollection<Stock>? Stocks { get; set; }
+        public virtual Company? Company { get; set; }
 
     }
 }

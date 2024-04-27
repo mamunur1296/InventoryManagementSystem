@@ -1,4 +1,6 @@
-﻿namespace Project.Application.DTOs
+﻿using Project.Domail.Entities;
+
+namespace Project.Application.DTOs
 {
     public class ProdReturnDTO
     {
@@ -9,6 +11,6 @@
         public Guid ProdValveId { get; set; }
         public string CreatedBy { get; set; }
         public string UpdatedBy { get; set; }
-
+        public virtual Product Product { get; set; }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using Project.Application.Models;
+using Project.Domail.Entities;
 
 namespace Project.Application.Features.ProdReturnFeatures.Commands
 {
@@ -11,6 +12,6 @@ namespace Project.Application.Features.ProdReturnFeatures.Commands
         public Guid ProdValveId { get; set; }
         public string CreatedBy { get; set; }
         public string UpdatedBy { get; set; }
-
+       
     }
 }
