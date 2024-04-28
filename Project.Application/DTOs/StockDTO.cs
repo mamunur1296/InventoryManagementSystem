@@ -1,5 +1,7 @@
 ﻿
 
+using Project.Domail.Entities;
+
 namespace Project.Application.DTOs
 {
     public class StockDTO
@@ -14,5 +16,7 @@ namespace Project.Application.DTOs
         public string UpdatedBy { get; set; }
         public DateTime? UpdateDate { get; set; }
         public bool IsActive { get; set; }
+        public virtual Product? Product { get; set; }
+        public virtual Trader? Trader { get; set; }
     }
 }
