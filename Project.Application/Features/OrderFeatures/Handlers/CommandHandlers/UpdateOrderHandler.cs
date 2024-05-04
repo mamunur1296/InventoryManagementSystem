@@ -28,7 +28,7 @@ namespace Project.Application.Features.OrderFeatures.Handlers.CommandHandlers
                     order.CreatedBy = request.CreatedBy;
                     order.CreationDate = request.CreationDate;
                     order.IsCancel = request.IsCancel;
-                    order.Name = request.Name
+                    
                     // extand 
                 }
                 await _unitOfWorkDb.orderCommandRepository.UpdateAsync(order);
