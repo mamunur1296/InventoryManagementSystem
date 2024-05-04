@@ -1,26 +1,36 @@
 ﻿using MediatR;
-using Project.Application.Models;
+using Project.Application.Interfaces;
 
 namespace Project.Application.Features.UserFeatures.Commands
 {
-    public class CreateUserCommand : IRequest<UserModels>
+    public class CreateUserCommand : IRequest<string>
     {
-
-        public string Name { get; set; }
-        public string EmailAddress { get; set; }
+        public string FirstName { get; set; }
+        public string LaststName { get; set; }
+        public string UserName { get; set; }
+        public string Email { get; set; }
+        public string UserImg {  get; set; }
         public string Password { get; set; }
-        public string ConfirmPassword { get; set; }
-        public string UserImg { get; set; }
-        public string Phone { get; set; }
-        public string Mobile { get; set; }
-        public string CreatedBy { get; set; }
-        public DateTime? CreationDate { get; set; }
-        public string UpdatedBy { get; set; }
-        public DateTime? UpdateDate { get; set; }
-        public bool? IsActive { get; set; }
-        public DateTime? DeactivatedDate { get; set; }
-        public string DeactiveBy { get; set; }
-        public string TIN { get; set; }
-        public bool? IsBlocked { get; set; }
+        public string PhoneNumber { get; set; }
+        public string ConfirmationPassword { get; set; }
+        public List<string> Roles { get; set; }
+        public string? TIN { get; set; }
+    }
+    public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, string>
+    {
+        private readonly IIdentityService _identityService;
+
+        public CreateUserCommandHandler(IIdentityService identityService)
+        {
+            _identityService = identityService;
+        }
+
+        public async Task<string> Handle(CreateUserCommand request, CancellationToken cancellationToken)
+        {
+            var result = await _identityService.CreateUserAsync(request.UserName, request.Password, request.Email,request.FirstName,request.LaststName, request.Roles);
+            return result.isSucceed ? result.userId : "User not created .....";
+        }
     }
 }
+
+
