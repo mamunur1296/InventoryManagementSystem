@@ -17,5 +17,8 @@ namespace Project.Application.DTOs
         public string? BIN { get; set; }
         public virtual ICollection<Product>? Products { get; set; }
         public virtual ICollection<Trader>? Traders { get; set; }
+
+
+
     }
 }
