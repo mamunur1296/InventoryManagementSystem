@@ -10,7 +10,6 @@ namespace Project.Application.Mapper
     {
         public CompanyMappingProfile() {
             CreateMap<Company, CompanyModels>().ReverseMap();
-            CreateMap<Company, CreateCompanyCommand>().ReverseMap();
             CreateMap<Company, UpdateCompanyCommand>().ReverseMap();
             CreateMap<Company, CompanyDTO>().ReverseMap();
         }

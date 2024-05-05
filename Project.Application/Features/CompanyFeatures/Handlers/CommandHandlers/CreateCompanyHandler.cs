@@ -1,43 +1,82 @@
 ﻿using AutoMapper;
 using MediatR;
-using Project.Application.Features.CompanyFeatures.Commands;
-using Project.Application.Models;
+using Project.Application.ApiResponse;
 using Project.Domail.Abstractions;
 using Project.Domail.Entities;
+using System.ComponentModel.DataAnnotations;
+using System.Net;
 
 namespace Project.Application.Features.CompanyFeatures.Handlers.CommandHandlers
 {
-    public class CreateCompanyHandler : IRequestHandler<CreateCompanyCommand, CompanyModels>
+    public class CreateCompanyCommand : IRequest<ApiResponse<string>>
+    {
+      
+        public string Name { get; set; }
+        public string Contactperson { get; set; }
+        public string ContactPerNum { get; set; }
+        public string ContactNumber { get; set; }
+        public string BIN { get; set; }
+
+    }
+    public class CreateCompanyHandler : IRequestHandler<CreateCompanyCommand, ApiResponse<string>>
     {
         private readonly IUnitOfWorkDb _unitOfWorkDb;
-        private readonly IMapper _mapper;
 
-        public CreateCompanyHandler(IUnitOfWorkDb unitOfWorkDb, IMapper mapper)
+        public CreateCompanyHandler(IUnitOfWorkDb unitOfWorkDb)
         {
             _unitOfWorkDb = unitOfWorkDb;
-            _mapper = mapper;
         }
-        public async Task<CompanyModels> Handle(CreateCompanyCommand request, CancellationToken cancellationToken)
+        public async Task<ApiResponse<string>> Handle(CreateCompanyCommand request, CancellationToken cancellationToken)
         {
-            var newCompany = new Company
+            var response = new ApiResponse<string>();
+            try
             {
-                Id = Guid.NewGuid(),
-                Name = request.Name,
-                Contactperson = request.Contactperson,
-                ContactNumber = request.ContactNumber,
-                BIN = request.BIN,
-                IsActive = request.IsActive,
-                UpdatedBy = "Admin",
-                ContactPerNum = request.ContactPerNum,
-                CreatedBy = "User1",
-                CreationDate = DateTime.Now,
-                DeactiveBy="Admin",  
-            };
+                var newCompany = new Company
+                {
+                    Id = Guid.NewGuid(),
+                    CreationDate = DateTime.Now,
+                    CreatedBy = "Login User ",
+                    Name = request.Name,
+                    Contactperson = request.Contactperson,
+                    ContactPerNum = request.ContactPerNum,
+                    ContactNumber = request.ContactNumber,
+                    IsActive = true,
+                    BIN = request.BIN,
+                };
 
-            await _unitOfWorkDb.companyCommandRepository.AddAsync(newCompany);
-            await _unitOfWorkDb.SaveAsync();
-            var createdCompany = _mapper.Map<CompanyModels>(newCompany);
-            return createdCompany;
+                // Validate the Company model
+                var validationResults = new List<ValidationResult>();
+                var isValid = Validator.TryValidateObject(newCompany, new ValidationContext(newCompany), validationResults, true);
+
+                // If the model is not valid, format error messages
+                if (!isValid)
+                {
+                    var errorMessage = string.Join("; ", validationResults.Select(v => v.ErrorMessage));
+                    response.Success = false;
+                    response.Data = errorMessage;
+                    response.StatusCode = HttpStatusCode.BadRequest; // Set status code to 400 (Bad Request)
+                    return response;
+                }
+
+                await _unitOfWorkDb.companyCommandRepository.AddAsync(newCompany);
+                await _unitOfWorkDb.SaveAsync();
+                response.Success = true;
+                response.Data = "Company Created Successfully!";
+                response.StatusCode = HttpStatusCode.OK; // Set status code to 200 (OK)
+            }
+            catch (Exception ex)
+            {
+                response.Success = false;
+                response.Data = "Server Error";
+                response.ErrorMessage = ex.Message;
+                response.StatusCode = HttpStatusCode.InternalServerError; // Set status code to 500 (Internal Server Error)
+            }
+
+            return response;
         }
+
+
+
+
     }
 }

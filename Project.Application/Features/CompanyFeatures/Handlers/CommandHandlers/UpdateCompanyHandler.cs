@@ -33,7 +33,7 @@ namespace Project.Application.Features.CompanyFeatures.Handlers.CommandHandlers
                     company.UpdatedBy = request.UpdatedBy;
                     company.DeactivatedDate = request.DeactivatedDate;
                     company.DeactiveBy = request.DeactiveBy;
-                    company.IsActive = request.IsActive;
+                    company.IsActive = true;
 
                 }
                 await _unitOfWorkDb.companyCommandRepository.UpdateAsync(company);
