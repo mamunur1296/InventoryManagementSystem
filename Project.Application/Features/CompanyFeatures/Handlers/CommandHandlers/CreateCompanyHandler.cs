@@ -1,21 +1,39 @@
-﻿using AutoMapper;
+﻿
 using MediatR;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Project.Application.ApiResponse;
 using Project.Domail.Abstractions;
 using Project.Domail.Entities;
 using System.ComponentModel.DataAnnotations;
 using System.Net;
+using System.Security.Claims;
 
 namespace Project.Application.Features.CompanyFeatures.Handlers.CommandHandlers
 {
     public class CreateCompanyCommand : IRequest<ApiResponse<string>>
     {
-      
+
+        [Required(ErrorMessage = "Name is required.")]
+        [StringLength(50, MinimumLength = 2, ErrorMessage = "Name must be between 2 and 50 characters.")]
         public string Name { get; set; }
+
+        [Required(ErrorMessage = "Contact Person is required.")]
+        [StringLength(50, MinimumLength = 2, ErrorMessage = "Contact Person must be between 2 and 50 characters.")]
         public string Contactperson { get; set; }
+
+        [Required(ErrorMessage = "Contact Person Number is required.")]
+        [RegularExpression("^[0-9]{11}$", ErrorMessage = "Contact Person Number must be 11 digits.")]
         public string ContactPerNum { get; set; }
+
+        [Required(ErrorMessage = "Contact Number is required.")]
+        [RegularExpression("^[0-9]{11}$", ErrorMessage = "Contact  Number must be 11 digits.")]
         public string ContactNumber { get; set; }
+
+        [Required(ErrorMessage = "BIN is required.")]
         public string BIN { get; set; }
+
+        public string createdBy { get; set; }
 
     }
     public class CreateCompanyHandler : IRequestHandler<CreateCompanyCommand, ApiResponse<string>>
@@ -29,13 +47,14 @@ namespace Project.Application.Features.CompanyFeatures.Handlers.CommandHandlers
         public async Task<ApiResponse<string>> Handle(CreateCompanyCommand request, CancellationToken cancellationToken)
         {
             var response = new ApiResponse<string>();
+
             try
             {
                 var newCompany = new Company
                 {
                     Id = Guid.NewGuid(),
-                    CreationDate = DateTime.Now,
-                    CreatedBy = "Login User ",
+                    CreationDate = DateTime.Now.Date,
+                    CreatedBy = request.createdBy,
                     Name = request.Name,
                     Contactperson = request.Contactperson,
                     ContactPerNum = request.ContactPerNum,
@@ -44,24 +63,10 @@ namespace Project.Application.Features.CompanyFeatures.Handlers.CommandHandlers
                     BIN = request.BIN,
                 };
 
-                // Validate the Company model
-                var validationResults = new List<ValidationResult>();
-                var isValid = Validator.TryValidateObject(newCompany, new ValidationContext(newCompany), validationResults, true);
-
-                // If the model is not valid, format error messages
-                if (!isValid)
-                {
-                    var errorMessage = string.Join("; ", validationResults.Select(v => v.ErrorMessage));
-                    response.Success = false;
-                    response.Data = errorMessage;
-                    response.StatusCode = HttpStatusCode.BadRequest; // Set status code to 400 (Bad Request)
-                    return response;
-                }
-
                 await _unitOfWorkDb.companyCommandRepository.AddAsync(newCompany);
                 await _unitOfWorkDb.SaveAsync();
                 response.Success = true;
-                response.Data = "Company Created Successfully!";
+                response.Data = $"Company id = {newCompany.Id} Created Successfully!";
                 response.StatusCode = HttpStatusCode.OK; // Set status code to 200 (OK)
             }
             catch (Exception ex)

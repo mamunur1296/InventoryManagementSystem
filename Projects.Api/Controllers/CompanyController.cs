@@ -1,8 +1,8 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Project.Application.Features.CompanyFeatures.Commands;
 using Project.Application.Features.CompanyFeatures.Handlers.CommandHandlers;
-using Project.Application.Features.CompanyFeatures.Queries;
+using Project.Application.Features.CompanyFeatures.Handlers.QueryHandlers;
+using System.Security.Claims;
 namespace Projects.Api.Controllers
 {
     [Route("api/[controller]")]
@@ -18,6 +18,8 @@ namespace Projects.Api.Controllers
         [HttpPost("CreateCompany")]
         public async Task<IActionResult> Create(CreateCompanyCommand commend)
         {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            commend.createdBy = userId ?? "Unnone ";
             return Ok(await _mediator.Send(commend));
         }
         [HttpGet("getAllCompany")]
@@ -38,6 +40,8 @@ namespace Projects.Api.Controllers
         [HttpPut("UpdateCompany/{id}")]
         public async Task<IActionResult> Update(Guid id, UpdateCompanyCommand commend)
         {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            commend.UpdatedBy = userId ?? "Unnone ";
             if (id != commend.Id)
             {
                 return BadRequest();

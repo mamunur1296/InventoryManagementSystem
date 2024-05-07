@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using MediatR;
-using Project.Application.Features.CompanyFeatures.Commands;
 using Project.Application.Features.StockFeatures.Commands;
 using Project.Application.Models;
 using Project.Domail.Abstractions;

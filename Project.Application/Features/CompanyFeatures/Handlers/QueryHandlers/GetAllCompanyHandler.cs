@@ -1,11 +1,13 @@
 ﻿using AutoMapper;
 using MediatR;
 using Project.Application.DTOs;
-using Project.Application.Features.CompanyFeatures.Queries;
 using Project.Domail.Abstractions;
 
 namespace Project.Application.Features.CompanyFeatures.Handlers.QueryHandlers
 {
+    public class GetAllCompanyQuery : IRequest<IEnumerable<CompanyDTO>>
+    {
+    }
     public class GetAllCompanyHandler : IRequestHandler<GetAllCompanyQuery, IEnumerable<CompanyDTO>>
     {
         private readonly IUnitOfWorkDb _unitOfWorkDb;
@@ -19,22 +21,32 @@ namespace Project.Application.Features.CompanyFeatures.Handlers.QueryHandlers
         {
             try
             {
+                // Get all companies
                 var companyList = await _unitOfWorkDb.companyrQueryRepository.GetAllAsync();
+
+                // Get all products and traders
                 var productList = await _unitOfWorkDb.productQueryRepository.GetAllAsync();
                 var tradersList = await _unitOfWorkDb.traderQueryRepository.GetAllAsync();
+
+                // Iterate through each company
                 foreach (var company in companyList)
                 {
+                    // Assign products and traders to the company
                     company.Products = productList.Where(x => x.CompanyId == company.Id).ToList();
                     company.Traders = tradersList.Where(x => x.CompanyId == company.Id).ToList();
                 }
+
+                // Map companies to DTOs
                 var companyDtos = companyList.Select(item => _mapper.Map<CompanyDTO>(item));
+
                 return companyDtos;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                // Log the exception or handle it accordingly
+                throw new Exception("An error occurred while retrieving companies", ex);
             }
         }
+
     }
 }

@@ -1,11 +1,21 @@
 ﻿using AutoMapper;
 using MediatR;
 using Project.Application.DTOs;
-using Project.Application.Features.CompanyFeatures.Queries;
+using Project.Application.Exceptions;
 using Project.Domail.Abstractions;
 
 namespace Project.Application.Features.CompanyFeatures.Handlers.QueryHandlers
 {
+    public class GetCompanyByIdQuery : IRequest<CompanyDTO>
+    {
+        public GetCompanyByIdQuery(Guid id)
+        {
+            Id = id;
+        }
+
+        public Guid Id { get; private set; }
+    }
+
     public class GetCompanyByIdHandler : IRequestHandler<GetCompanyByIdQuery, CompanyDTO>
     {
         private readonly IUnitOfWorkDb _unitOfWorkDb;
@@ -21,14 +31,21 @@ namespace Project.Application.Features.CompanyFeatures.Handlers.QueryHandlers
             try
             {
                 var company = await _unitOfWorkDb.companyrQueryRepository.GetByIdAsync(request.Id);
-                var getcompany = _mapper.Map<CompanyDTO>(company);
-                return getcompany;
-            }
-            catch (Exception)
-            {
 
-                throw;
+                if (company == null)
+                {
+                    throw new NotFoundException($"Company with id = {request.Id} not found");
+                }
+
+                var companyDto = _mapper.Map<CompanyDTO>(company);
+                return companyDto;
+            }
+            catch (Exception ex)
+            {
+                // Log the exception or handle it accordingly
+                throw new Exception("An error occurred while retrieving company by id", ex);
             }
         }
+
     }
 }
