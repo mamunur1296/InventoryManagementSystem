@@ -12,8 +12,8 @@ using Project.Infrastructure.DataContext;
 namespace Project.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240505055947_companyValidate")]
-    partial class companyValidate
+    [Migration("20240507175646_com")]
+    partial class com
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -180,10 +180,9 @@ namespace Project.Infrastructure.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("CreatedBy")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("CreationDate")
+                    b.Property<DateTime?>("CreationDate")
                         .HasColumnType("datetime2");
 
                     b.Property<DateTime?>("DeactivatedDate")
@@ -217,16 +216,16 @@ namespace Project.Infrastructure.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Address")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ApplicationUserId")
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("CreatedBy")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("CreationDate")
+                    b.Property<DateTime?>("CreationDate")
                         .HasColumnType("datetime2");
 
                     b.Property<DateTime?>("DeactivatedDate")
@@ -235,16 +234,18 @@ namespace Project.Infrastructure.Migrations
                     b.Property<string>("DeactiveBy")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool?>("IsActive")
+                    b.Property<bool>("IsActive")
                         .HasColumnType("bit");
 
                     b.Property<bool?>("IsDefault")
                         .HasColumnType("bit");
 
                     b.Property<string>("Mobile")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Phone")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("UpdateDate")
@@ -275,10 +276,9 @@ namespace Project.Infrastructure.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("CreatedBy")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("CreationDate")
+                    b.Property<DateTime?>("CreationDate")
                         .HasColumnType("datetime2");
 
                     b.Property<bool>("IsCancel")
@@ -335,10 +335,9 @@ namespace Project.Infrastructure.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("CreatedBy")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("CreationDate")
+                    b.Property<DateTime?>("CreationDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Name")
@@ -377,10 +376,9 @@ namespace Project.Infrastructure.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("CreatedBy")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("CreationDate")
+                    b.Property<DateTime?>("CreationDate")
                         .HasColumnType("datetime2");
 
                     b.Property<bool>("IsActive")
@@ -422,10 +420,9 @@ namespace Project.Infrastructure.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("CreatedBy")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("CreationDate")
+                    b.Property<DateTime?>("CreationDate")
                         .HasColumnType("datetime2");
 
                     b.Property<bool>("IsActive")
@@ -467,10 +464,9 @@ namespace Project.Infrastructure.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("CreatedBy")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("CreationDate")
+                    b.Property<DateTime?>("CreationDate")
                         .HasColumnType("datetime2");
 
                     b.Property<DateTime?>("DeactivatedDate")
@@ -503,10 +499,9 @@ namespace Project.Infrastructure.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("CreatedBy")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("CreationDate")
+                    b.Property<DateTime?>("CreationDate")
                         .HasColumnType("datetime2");
 
                     b.Property<bool>("IsActive")
@@ -566,10 +561,9 @@ namespace Project.Infrastructure.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("CreatedBy")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("CreationDate")
+                    b.Property<DateTime?>("CreationDate")
                         .HasColumnType("datetime2");
 
                     b.Property<DateTime?>("DeactivatedDate")
@@ -608,10 +602,9 @@ namespace Project.Infrastructure.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("CreatedBy")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("CreationDate")
+                    b.Property<DateTime?>("CreationDate")
                         .HasColumnType("datetime2");
 
                     b.Property<DateTime?>("DeactivatedDate")
@@ -669,10 +662,9 @@ namespace Project.Infrastructure.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("CreatedBy")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("CreationDate")
+                    b.Property<DateTime?>("CreationDate")
                         .HasColumnType("datetime2");
 
                     b.Property<bool>("IsActive")
@@ -855,13 +847,11 @@ namespace Project.Infrastructure.Migrations
                         .WithMany("DeliveryAddresses")
                         .HasForeignKey("ApplicationUserId");
 
-                    b.HasOne("Project.Domail.Entities.User", "User")
+                    b.HasOne("Project.Domail.Entities.User", null)
                         .WithMany("DeliveryAddresses")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Project.Domail.Entities.Order", b =>

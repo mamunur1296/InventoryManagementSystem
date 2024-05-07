@@ -12,8 +12,8 @@ using Project.Infrastructure.DataContext;
 namespace Project.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240504102203_addAuth")]
-    partial class addAuth
+    [Migration("20240507141747_DeliveryAddress")]
+    partial class DeliveryAddress
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -164,15 +164,19 @@ namespace Project.Infrastructure.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("BIN")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ContactNumber")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ContactPerNum")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Contactperson")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("CreatedBy")
@@ -188,17 +192,17 @@ namespace Project.Infrastructure.Migrations
                     b.Property<string>("DeactiveBy")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool?>("IsActive")
+                    b.Property<bool>("IsActive")
                         .HasColumnType("bit");
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("UpdateDate")
+                    b.Property<DateTime?>("UpdateDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("UpdatedBy")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -213,6 +217,7 @@ namespace Project.Infrastructure.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Address")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ApplicationUserId")
@@ -231,23 +236,24 @@ namespace Project.Infrastructure.Migrations
                     b.Property<string>("DeactiveBy")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool?>("IsActive")
+                    b.Property<bool>("IsActive")
                         .HasColumnType("bit");
 
                     b.Property<bool?>("IsDefault")
                         .HasColumnType("bit");
 
                     b.Property<string>("Mobile")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Phone")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("UpdateDate")
+                    b.Property<DateTime?>("UpdateDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("UpdatedBy")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<Guid>("UserId")
@@ -305,11 +311,10 @@ namespace Project.Infrastructure.Migrations
                     b.Property<Guid>("ReturnProductId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime>("UpdateDate")
+                    b.Property<DateTime?>("UpdateDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("UpdatedBy")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<Guid>("UserId")
@@ -352,11 +357,10 @@ namespace Project.Infrastructure.Migrations
                     b.Property<Guid>("ProductId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime>("UpdateDate")
+                    b.Property<DateTime?>("UpdateDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("UpdatedBy")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -397,11 +401,10 @@ namespace Project.Infrastructure.Migrations
                     b.Property<Guid>("ProdValveId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime>("UpdateDate")
+                    b.Property<DateTime?>("UpdateDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("UpdatedBy")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -437,11 +440,10 @@ namespace Project.Infrastructure.Migrations
                     b.Property<string>("Unit")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("UpdateDate")
+                    b.Property<DateTime?>("UpdateDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("UpdatedBy")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -486,11 +488,10 @@ namespace Project.Infrastructure.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("UpdateDate")
+                    b.Property<DateTime?>("UpdateDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("UpdatedBy")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -529,11 +530,10 @@ namespace Project.Infrastructure.Migrations
                     b.Property<Guid?>("TraderId1")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime>("UpdateDate")
+                    b.Property<DateTime?>("UpdateDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("UpdatedBy")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -587,11 +587,10 @@ namespace Project.Infrastructure.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("UpdateDate")
+                    b.Property<DateTime?>("UpdateDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("UpdatedBy")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -651,11 +650,10 @@ namespace Project.Infrastructure.Migrations
                     b.Property<string>("TIN")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("UpdateDate")
+                    b.Property<DateTime?>("UpdateDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("UpdatedBy")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UserImg")
@@ -689,11 +687,10 @@ namespace Project.Infrastructure.Migrations
                     b.Property<string>("Unit")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("UpdateDate")
+                    b.Property<DateTime?>("UpdateDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("UpdatedBy")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -714,7 +711,6 @@ namespace Project.Infrastructure.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("CreatedBy")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CreationDate")
@@ -779,15 +775,13 @@ namespace Project.Infrastructure.Migrations
                     b.Property<bool>("TwoFactorEnabled")
                         .HasColumnType("bit");
 
-                    b.Property<DateTime>("UpdateDate")
+                    b.Property<DateTime?>("UpdateDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("UpdatedBy")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UserImg")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UserName")
@@ -864,13 +858,11 @@ namespace Project.Infrastructure.Migrations
                         .WithMany("DeliveryAddresses")
                         .HasForeignKey("ApplicationUserId");
 
-                    b.HasOne("Project.Domail.Entities.User", "User")
+                    b.HasOne("Project.Domail.Entities.User", null)
                         .WithMany("DeliveryAddresses")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Project.Domail.Entities.Order", b =>

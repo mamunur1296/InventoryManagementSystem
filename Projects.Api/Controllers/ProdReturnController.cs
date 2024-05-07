@@ -1,7 +1,5 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Project.Application.Features.DeliveryAddressFeatures.Commands;
-using Project.Application.Features.DeliveryAddressFeatures.Queries;
 using Project.Application.Features.ProdReturnFeatures.Commands;
 using Project.Application.Features.ProdReturnFeatures.Queries;
 

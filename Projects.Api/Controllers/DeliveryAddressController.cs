@@ -1,7 +1,8 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Project.Application.Features.DeliveryAddressFeatures.Commands;
-using Project.Application.Features.DeliveryAddressFeatures.Queries;
+using Project.Application.Features.DeliveryAddressFeatures.Handlers.CommandHandlers;
+using Project.Application.Features.DeliveryAddressFeatures.Handlers.QueryHandlers;
+using System.Security.Claims;
 
 namespace Projects.Api.Controllers
 {
@@ -18,6 +19,8 @@ namespace Projects.Api.Controllers
         [HttpPost("CreateDeliveryAddress")]
         public async Task<IActionResult> Create(CreateDeliveryAddressCommand commend)
         {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            commend.CreatedBy = userId ?? "Anonymous ";
             if (commend == null) return BadRequest();
             return Ok(await _mediator.Send(commend));
         }
@@ -39,6 +42,8 @@ namespace Projects.Api.Controllers
         [HttpPut("UpdateDeliveryAddress/{id}")]
         public async Task<IActionResult> Update(Guid id, UpdateDeliveryAddressCommand commend)
         {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            commend.UpdatedBy = userId ?? "Anonymous ";
             if (id != commend.Id)
             {
                 return BadRequest();

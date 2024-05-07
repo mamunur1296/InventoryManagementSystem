@@ -1,8 +1,6 @@
 ﻿using MediatR;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Project.Application.Features.DeliveryAddressFeatures.Commands;
-using Project.Application.Features.DeliveryAddressFeatures.Queries;
+
 using Project.Application.Features.OrderFeatures.Commands;
 using Project.Application.Features.OrderFeatures.Queries;
 

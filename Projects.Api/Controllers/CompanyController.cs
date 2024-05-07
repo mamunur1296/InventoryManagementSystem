@@ -19,7 +19,7 @@ namespace Projects.Api.Controllers
         public async Task<IActionResult> Create(CreateCompanyCommand commend)
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            commend.createdBy = userId ?? "Unnone ";
+            commend.CreatedBy = userId ?? "Anonymous ";
             return Ok(await _mediator.Send(commend));
         }
         [HttpGet("getAllCompany")]
@@ -41,7 +41,7 @@ namespace Projects.Api.Controllers
         public async Task<IActionResult> Update(Guid id, UpdateCompanyCommand commend)
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            commend.UpdatedBy = userId ?? "Unnone ";
+            commend.UpdatedBy = userId ?? "Anonymous ";
             if (id != commend.Id)
             {
                 return BadRequest();

@@ -1,13 +1,10 @@
-﻿
-using MediatR;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using MediatR;
 using Project.Application.ApiResponse;
 using Project.Domail.Abstractions;
 using Project.Domail.Entities;
 using System.ComponentModel.DataAnnotations;
 using System.Net;
-using System.Security.Claims;
+
 
 namespace Project.Application.Features.CompanyFeatures.Handlers.CommandHandlers
 {
@@ -33,7 +30,7 @@ namespace Project.Application.Features.CompanyFeatures.Handlers.CommandHandlers
         [Required(ErrorMessage = "BIN is required.")]
         public string BIN { get; set; }
 
-        public string createdBy { get; set; }
+        public string CreatedBy { get; set; }
 
     }
     public class CreateCompanyHandler : IRequestHandler<CreateCompanyCommand, ApiResponse<string>>
@@ -54,7 +51,7 @@ namespace Project.Application.Features.CompanyFeatures.Handlers.CommandHandlers
                 {
                     Id = Guid.NewGuid(),
                     CreationDate = DateTime.Now.Date,
-                    CreatedBy = request.createdBy,
+                    CreatedBy = request.CreatedBy,
                     Name = request.Name,
                     Contactperson = request.Contactperson,
                     ContactPerNum = request.ContactPerNum,

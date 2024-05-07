@@ -1,11 +1,19 @@
 ﻿using AutoMapper;
 using MediatR;
 using Project.Application.DTOs;
-using Project.Application.Features.DeliveryAddressFeatures.Queries;
 using Project.Domail.Abstractions;
 
 namespace Project.Application.Features.DeliveryAddressFeatures.Handlers.QueryHandlers
 {
+    public class GetDeliveryAddressByIdQuery : IRequest<DeliveryAddressDTO>
+    {
+        public GetDeliveryAddressByIdQuery(Guid id)
+        {
+            Id = id;
+        }
+
+        public Guid Id { get; private set; }
+    }
     public class GetDeliveryAddressByIdHandler : IRequestHandler<GetDeliveryAddressByIdQuery, DeliveryAddressDTO>
     {
         private readonly IUnitOfWorkDb _unitOfWorkDb;
