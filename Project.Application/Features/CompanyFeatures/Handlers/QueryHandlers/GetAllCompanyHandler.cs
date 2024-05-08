@@ -24,18 +24,6 @@ namespace Project.Application.Features.CompanyFeatures.Handlers.QueryHandlers
                 // Get all companies
                 var companyList = await _unitOfWorkDb.companyrQueryRepository.GetAllAsync();
 
-                // Get all products and traders
-                var productList = await _unitOfWorkDb.productQueryRepository.GetAllAsync();
-                var tradersList = await _unitOfWorkDb.traderQueryRepository.GetAllAsync();
-
-                // Iterate through each company
-                foreach (var company in companyList)
-                {
-                    // Assign products and traders to the company
-                    company.Products = productList.Where(x => x.CompanyId == company.Id).ToList();
-                    company.Traders = tradersList.Where(x => x.CompanyId == company.Id).ToList();
-                }
-
                 // Map companies to DTOs
                 var companyDtos = companyList.Select(item => _mapper.Map<CompanyDTO>(item));
 

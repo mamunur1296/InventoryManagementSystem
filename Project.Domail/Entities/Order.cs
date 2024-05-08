@@ -5,9 +5,8 @@ namespace Project.Domail.Entities
 {
     public class Order : BaseEntity
     {
-        [ForeignKey("User")]
+
         public Guid UserId { get; set; }
-        [ForeignKey("Product")]
         public Guid ProductId { get; set; }
         public bool IsHold { get; set; }
         public bool IsCancel { get; set; }
@@ -19,8 +18,7 @@ namespace Project.Domail.Entities
         public bool IsDelivered { get; set; }
 
         // Navigation properties
-        public virtual User User { get; set; }
-        public virtual Product Product { get; set; }
+        public virtual Product ? Product { get; set; }
 
     }
 }

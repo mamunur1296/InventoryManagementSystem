@@ -129,7 +129,18 @@ builder.Services.AddSwaggerGen(options =>
     });
 });
 builder.Services.AddTransient<GlobalExceptionHandlingMiddleware>();
+
+
+
+
+
+
 var app = builder.Build();
+
+
+
+
+
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -137,7 +148,6 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
 app.UseCors("CorsPolicy");
 app.UseHttpsRedirection();
 

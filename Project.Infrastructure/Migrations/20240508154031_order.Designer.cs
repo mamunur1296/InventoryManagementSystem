@@ -12,8 +12,8 @@ using Project.Infrastructure.DataContext;
 namespace Project.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240507175646_com")]
-    partial class com
+    [Migration("20240508154031_order")]
+    partial class order
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -866,15 +866,13 @@ namespace Project.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Project.Domail.Entities.User", "User")
+                    b.HasOne("Project.Domail.Entities.User", null)
                         .WithMany("Orders")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Product");
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Project.Domail.Entities.ProdReturn", b =>

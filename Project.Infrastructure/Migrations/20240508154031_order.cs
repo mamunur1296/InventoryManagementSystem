@@ -5,14 +5,35 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Project.Infrastructure.Migrations
 {
-    public partial class DeliveryAddress : Migration
+    public partial class order : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-           
-                
-
             
+
+            migrationBuilder.CreateTable(
+                name: "orders",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ProductId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    IsHold = table.Column<bool>(type: "bit", nullable: false),
+                    IsCancel = table.Column<bool>(type: "bit", nullable: false),
+                    ReturnProductId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    IsPlaced = table.Column<bool>(type: "bit", nullable: false),
+                    IsConfirmed = table.Column<bool>(type: "bit", nullable: false),
+                    IsDispatched = table.Column<bool>(type: "bit", nullable: false),
+                    IsReadyToDispatch = table.Column<bool>(type: "bit", nullable: false),
+                    IsDelivered = table.Column<bool>(type: "bit", nullable: false),
+                    ApplicationUserId = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    CreationDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    UpdateDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    UpdatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                }
+                );
+
             
         }
 

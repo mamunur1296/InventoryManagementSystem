@@ -1,39 +1,78 @@
 ﻿using AutoMapper;
 using MediatR;
-using Project.Application.Features.OrderFeatures.Commands;
+using Project.Application.ApiResponse;
 using Project.Application.Models;
 using Project.Domail.Abstractions;
 using Project.Domail.Entities;
+using System.ComponentModel.DataAnnotations;
+using System.Net;
 
 namespace Project.Application.Features.OrderFeatures.Handlers.CommandHandlers
 {
-    public class CreateOrderHandler : IRequestHandler<CreateOrderCommand, OrderModels>
+    public class CreateOrderCommand : IRequest<ApiResponse<string>>
+    {
+        [Required]
+        public Guid UserId { get; set; }
+        [Required]
+        public Guid ProductId { get; set; }
+        [Required]
+        public Guid ReturnProductId { get; set; }
+        [Required]
+        public string? CreatedBy { get; set; }
+    }
+    public class CreateOrderHandler : IRequestHandler<CreateOrderCommand, ApiResponse<string>>
     {
         private readonly IUnitOfWorkDb _unitOfWorkDb;
-        private readonly IMapper _mapper;
+      
 
-        public CreateOrderHandler(IUnitOfWorkDb unitOfWorkDb, IMapper mapper)
+        public CreateOrderHandler(IUnitOfWorkDb unitOfWorkDb)
         {
             _unitOfWorkDb = unitOfWorkDb;
-            _mapper = mapper;
+           
         }
  
 
-        public async Task<OrderModels> Handle(CreateOrderCommand request, CancellationToken cancellationToken)
+        public async Task<ApiResponse<string>> Handle(CreateOrderCommand request, CancellationToken cancellationToken)
         {
+            var response = new ApiResponse<string>();
+
             try
             {
-                var order = _mapper.Map<Order>(request);
-                await _unitOfWorkDb.orderCommandRepository.AddAsync(order);
-                await _unitOfWorkDb.SaveAsync();
-                var newOrder = _mapper.Map<OrderModels>(order);
-                return newOrder;
-            }
-            catch (Exception)
-            {
+                var newOrder = new Order
+                {
+                    Id = Guid.NewGuid(),
+                    CreationDate = DateTime.Now.Date,
+                    CreatedBy = request.CreatedBy,
+                    UserId = request.UserId,
+                    ProductId = request.ProductId,
+                    ReturnProductId = request.ReturnProductId,
+                    IsHold = true,
+                    IsCancel = false,
+                    IsDelivered = false,
+                    IsConfirmed = false,
+                    IsPlaced = false,
+                    IsDispatched = false,
+                    IsReadyToDispatch = false,
 
-                throw;
+
+                };
+
+                await _unitOfWorkDb.orderCommandRepository.AddAsync(newOrder);
+                await _unitOfWorkDb.SaveAsync();
+
+                response.Success = true;
+                response.Data = $" Order id = {newOrder.Id} created successfully!";
+                response.StatusCode = HttpStatusCode.OK; // Set status code to 200 (OK)
             }
+            catch (Exception ex)
+            {
+                response.Success = false;
+                response.Data = "An error occurred while creating the Order";
+                response.ErrorMessage = ex.Message;
+                response.StatusCode = HttpStatusCode.InternalServerError; // Set status code to 500 (Internal Server Error)
+            }
+
+            return response;
         }
     }
 }

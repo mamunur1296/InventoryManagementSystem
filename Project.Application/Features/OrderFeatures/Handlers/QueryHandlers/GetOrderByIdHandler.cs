@@ -1,11 +1,19 @@
 ﻿using AutoMapper;
 using MediatR;
 using Project.Application.DTOs;
-using Project.Application.Features.OrderFeatures.Queries;
 using Project.Domail.Abstractions;
 
 namespace Project.Application.Features.OrderFeatures.Handlers.QueryHandlers
 {
+    public class GetOrderByIdQuery : IRequest<OrderDTO>
+    {
+        public GetOrderByIdQuery(Guid id)
+        {
+            Id = id;
+        }
+
+        public Guid Id { get; private set; }
+    }
     public class GetOrderByIdHandler : IRequestHandler<GetOrderByIdQuery, OrderDTO>
     {
         private readonly IUnitOfWorkDb _unitOfWorkDb;

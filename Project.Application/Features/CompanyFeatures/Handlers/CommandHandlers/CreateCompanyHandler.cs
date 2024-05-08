@@ -44,9 +44,10 @@ namespace Project.Application.Features.CompanyFeatures.Handlers.CommandHandlers
         public async Task<ApiResponse<string>> Handle(CreateCompanyCommand request, CancellationToken cancellationToken)
         {
             var response = new ApiResponse<string>();
-
+            
             try
             {
+                
                 var newCompany = new Company
                 {
                     Id = Guid.NewGuid(),
