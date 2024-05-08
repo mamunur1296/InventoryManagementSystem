@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using MediatR;
 using Project.Application.DTOs;
+using Project.Application.Interfaces;
 using Project.Domail.Abstractions;
 
 namespace Project.Application.Features.DeliveryAddressFeatures.Handlers.QueryHandlers

@@ -25,7 +25,9 @@ namespace Project.Application.Features.UserFeatures.Queries
             {
                 Id = x.id,
                 UserName = x.userName,
-                Email = x.email
+                Email = x.email,
+                FirstName=x.FirstName,
+                LastName=x.LastName,
             }).ToList();
         }
     }

@@ -64,8 +64,7 @@ namespace Project.Application.Features.DeliveryAddressFeatures.Handlers.CommandH
                 deliveryAddress.Phone = request.Phone;
                 deliveryAddress.Mobile = request.Mobile;
                 deliveryAddress.UpdatedBy = request.UpdatedBy;
-                deliveryAddress.IsActive = true;
-                deliveryAddress.IsDefault = true;
+
 
                 // Perform the update operation
                 await _unitOfWorkDb.deliveryAddressCommandRepository.UpdateAsync(deliveryAddress);
