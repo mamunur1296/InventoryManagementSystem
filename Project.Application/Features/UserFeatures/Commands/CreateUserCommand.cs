@@ -27,7 +27,7 @@ namespace Project.Application.Features.UserFeatures.Commands
 
         public async Task<string> Handle(CreateUserCommand request, CancellationToken cancellationToken)
         {
-            var result = await _identityService.CreateUserAsync(request.UserName, request.Password, request.Email,request.FirstName,request.LaststName, request.Roles);
+            var result = await _identityService.CreateUserAsync(request.UserName, request.Password, request.Email,request.FirstName,request.LaststName,request.PhoneNumber, request.Roles);
             return result.isSucceed ? result.userId : "User not created .....";
         }
     }

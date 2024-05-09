@@ -29,6 +29,8 @@ namespace Project.Application.Features.UserFeatures.Queries
                 FirstName=x.FirstName,
                 LastName=x.LastName,
                 CreatedBy = x.userName,
+                PhoneNumber=x.Phone,
+                
             }).ToList();
 
             foreach (var user in userDetails)

@@ -44,14 +44,15 @@ namespace Project.Infrastructure.Services
 
 
         // Return multiple value
-        public async Task<(bool isSucceed, string userId)> CreateUserAsync(string userName, string password, string email, string FirstName, string LastName, List<string> roles)
+        public async Task<(bool isSucceed, string userId)> CreateUserAsync(string userName, string password, string email, string FirstName, string LastName, string phoneNumber, List<string> roles)
         {
             var user = new ApplicationUser()
             {
                 FirstName = FirstName,
                 LastName = LastName,
                 UserName = userName,
-                Email = email
+                Email = email,
+                PhoneNumber = phoneNumber,
             };
 
             var result = await _userManager.CreateAsync(user, password);
@@ -107,18 +108,20 @@ namespace Project.Infrastructure.Services
             return result.Succeeded;
         }
 
-        public async Task<List<(string id, string FirstName, string LastName, string userName, string email)>> GetAllUsersAsync()
+        public async Task<List<(string id, string FirstName, string LastName, string Phone, string userName, string email)>> GetAllUsersAsync()
         {
             var users = await _userManager.Users.Select(x => new
             {
                 x.Id,
                 x.FirstName,
                 x.LastName,
+                x.PhoneNumber,
                 x.UserName,
-                x.Email
+                x.Email,
+                
             }).ToListAsync();
 
-            return users.Select(user => (user.Id, user.FirstName,user.LastName, user.UserName, user.Email)).ToList();
+            return users.Select(user => (user.Id, user.FirstName,user.LastName, user.PhoneNumber, user.UserName, user.Email)).ToList();
         }
 
         public Task<List<(string id, string userName, string email, IList<string> roles)>> GetAllUsersDetailsAsync()

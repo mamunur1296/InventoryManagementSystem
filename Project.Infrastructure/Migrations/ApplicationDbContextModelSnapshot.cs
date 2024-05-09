@@ -259,8 +259,6 @@ namespace Project.Infrastructure.Migrations
 
                     b.HasIndex("ApplicationUserId");
 
-                    b.HasIndex("UserId");
-
                     b.ToTable("deliveryAddresses");
                 });
 
@@ -320,8 +318,6 @@ namespace Project.Infrastructure.Migrations
                     b.HasIndex("ApplicationUserId");
 
                     b.HasIndex("ProductId");
-
-                    b.HasIndex("UserId");
 
                     b.ToTable("orders");
                 });
@@ -589,70 +585,6 @@ namespace Project.Infrastructure.Migrations
                     b.ToTable("traders");
                 });
 
-            modelBuilder.Entity("Project.Domail.Entities.User", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("ConfirmPassword")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("CreationDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("DeactivatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("DeactiveBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("EmailAddress")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool?>("IsActive")
-                        .HasColumnType("bit");
-
-                    b.Property<bool?>("IsBlocked")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Mobile")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Password")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Phone")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("TIN")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("UpdateDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("UpdatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("UserImg")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("users");
-                });
-
             modelBuilder.Entity("Project.Domail.Entities.Valve", b =>
                 {
                     b.Property<Guid>("Id")
@@ -844,12 +776,6 @@ namespace Project.Infrastructure.Migrations
                     b.HasOne("Project.Infrastructure.Identity.ApplicationUser", null)
                         .WithMany("DeliveryAddresses")
                         .HasForeignKey("ApplicationUserId");
-
-                    b.HasOne("Project.Domail.Entities.User", null)
-                        .WithMany("DeliveryAddresses")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("Project.Domail.Entities.Order", b =>
@@ -861,12 +787,6 @@ namespace Project.Infrastructure.Migrations
                     b.HasOne("Project.Domail.Entities.Product", "Product")
                         .WithMany("Orders")
                         .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Project.Domail.Entities.User", null)
-                        .WithMany("Orders")
-                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -962,13 +882,6 @@ namespace Project.Infrastructure.Migrations
             modelBuilder.Entity("Project.Domail.Entities.Trader", b =>
                 {
                     b.Navigation("Stocks");
-                });
-
-            modelBuilder.Entity("Project.Domail.Entities.User", b =>
-                {
-                    b.Navigation("DeliveryAddresses");
-
-                    b.Navigation("Orders");
                 });
 
             modelBuilder.Entity("Project.Infrastructure.Identity.ApplicationUser", b =>

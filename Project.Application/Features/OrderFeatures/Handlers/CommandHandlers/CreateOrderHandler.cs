@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using MediatR;
 using Project.Application.ApiResponse;
-using Project.Application.Models;
 using Project.Domail.Abstractions;
 using Project.Domail.Entities;
 using System.ComponentModel.DataAnnotations;
@@ -18,7 +17,7 @@ namespace Project.Application.Features.OrderFeatures.Handlers.CommandHandlers
         [Required]
         public Guid ReturnProductId { get; set; }
         [Required]
-        public string? CreatedBy { get; set; }
+        public string ? CreatedBy { get; set; }
     }
     public class CreateOrderHandler : IRequestHandler<CreateOrderCommand, ApiResponse<string>>
     {
@@ -53,7 +52,6 @@ namespace Project.Application.Features.OrderFeatures.Handlers.CommandHandlers
                     IsPlaced = false,
                     IsDispatched = false,
                     IsReadyToDispatch = false,
-
 
                 };
 
