@@ -1,10 +1,21 @@
 ﻿using MediatR;
-using Project.Application.Features.ProdReturnFeatures.Commands;
+using Project.Application.ApiResponse;
+using Project.Application.Exceptions;
 using Project.Domail.Abstractions;
+using System.Net;
 
 namespace Project.Application.Features.ProdReturnFeatures.Handlers.CommandHandlers
 {
-    public class DeleteProdReturnHandler : IRequestHandler<DeleteProdReturnCommand, string>
+    public class DeleteProdReturnCommand : IRequest<ApiResponse<string>>
+    {
+        public DeleteProdReturnCommand(Guid id)
+        {
+            this.id = id;
+        }
+
+        public Guid id { get; private set; }
+    }
+    public class DeleteProdReturnHandler : IRequestHandler<DeleteProdReturnCommand, ApiResponse<string>>
     {
         private readonly IUnitOfWorkDb _unitOfWorkDb;
 
@@ -14,24 +25,37 @@ namespace Project.Application.Features.ProdReturnFeatures.Handlers.CommandHandle
         }
 
 
-        public async Task<string> Handle(DeleteProdReturnCommand request, CancellationToken cancellationToken)
+        public async Task<ApiResponse<string>> Handle(DeleteProdReturnCommand request, CancellationToken cancellationToken)
         {
-            try
-            {
-                var prodReturn = await _unitOfWorkDb.prodReturnQueryRepository.GetByIdAsync(request.id);
-                if (prodReturn == null)
-                {
-                    return "Data not found";
-                }
-                await _unitOfWorkDb.prodReturnCommandRepository.DeleteAsync(prodReturn);
-                await _unitOfWorkDb.SaveAsync();
-                return "Completed";
-            }
-            catch (Exception)
-            {
+            var response = new ApiResponse<string>();
+            var productReturn = await _unitOfWorkDb.prodReturnQueryRepository.GetByIdAsync(request.id);
 
-                throw;
+            if (productReturn == null)
+            {
+                throw new NotFoundException($"product Return with id = {request.id} not found");
             }
+            else
+            {
+                try
+                {
+                    await _unitOfWorkDb.prodReturnCommandRepository.DeleteAsync(productReturn);
+                    await _unitOfWorkDb.SaveAsync();
+
+                    response.Success = true;
+                    response.Data = $"product Return with id = {productReturn.Id} deleted successfully";
+                    response.StatusCode = HttpStatusCode.OK; // Set status code to 200 (OK)
+                }
+                catch (Exception ex)
+                {
+                    response.Success = false;
+                    response.Data = "An error occurred while deleting the product Return ";
+                    response.ErrorMessage = ex.Message;
+                    response.StatusCode = HttpStatusCode.InternalServerError;  // Set status code to 500 (Internal Server Error)
+                }
+
+            }
+            return response;
         }
     }
+    
 }

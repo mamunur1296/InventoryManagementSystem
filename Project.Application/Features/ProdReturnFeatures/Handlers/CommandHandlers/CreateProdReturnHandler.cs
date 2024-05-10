@@ -1,38 +1,71 @@
-﻿using AutoMapper;
-using MediatR;
-using Project.Application.Features.ProdReturnFeatures.Commands;
-using Project.Application.Models;
+﻿using MediatR;
+using Project.Application.ApiResponse;
 using Project.Domail.Abstractions;
 using Project.Domail.Entities;
+using System.ComponentModel.DataAnnotations;
+using System.Net;
 
 namespace Project.Application.Features.ProdReturnFeatures.Handlers.CommandHandlers
 {
-    public class CreateProdReturnHandler : IRequestHandler<CreateProdReturnCommand, ProdReturnModels>
+    public class CreateProdReturnCommand : IRequest<ApiResponse<string>>
+    {
+        [Required]
+        public Guid ProductId { get; set; }
+        [Required(ErrorMessage ="Name Is required")]
+        public string Name { get; set; }
+        [Required]
+        public Guid ProdSizeId { get; set; }
+        [Required]
+        public Guid ProdValveId { get; set; }
+        [Required]
+        public string CreatedBy { get; set; }
+
+
+    }
+    public class CreateProdReturnHandler : IRequestHandler<CreateProdReturnCommand, ApiResponse<string>>
     {
         private readonly IUnitOfWorkDb _unitOfWorkDb;
-        private readonly IMapper _mapper;
 
-        public CreateProdReturnHandler(IUnitOfWorkDb unitOfWorkDb, IMapper mapper)
+        public CreateProdReturnHandler(IUnitOfWorkDb unitOfWorkDb)
         {
             _unitOfWorkDb = unitOfWorkDb;
-            _mapper = mapper;
         }
 
-        public async Task<ProdReturnModels> Handle(CreateProdReturnCommand request, CancellationToken cancellationToken)
+        public async Task<ApiResponse<string>> Handle(CreateProdReturnCommand request, CancellationToken cancellationToken)
         {
+            var response = new ApiResponse<string>();
+
             try
             {
-                var prodReturn = _mapper.Map<ProdReturn>(request);
-                await _unitOfWorkDb.prodReturnCommandRepository.AddAsync(prodReturn);
-                await _unitOfWorkDb.SaveAsync();
-                var newProdReturn = _mapper.Map<ProdReturnModels>(prodReturn);
-                return newProdReturn;
-            }
-            catch (Exception)
-            {
+                var newProdReturn = new ProdReturn
+                {
+                    Id = Guid.NewGuid(),
+                    CreationDate = DateTime.Now.Date,
+                    CreatedBy = request.CreatedBy,
+                    ProdSizeId = request.ProdSizeId,
+                    ProductId = request.ProductId,
+                    Name=request.Name,
+                    ProdValveId=request.ProdValveId
 
-                throw;
+                };
+
+                await _unitOfWorkDb.prodReturnCommandRepository.AddAsync(newProdReturn);
+                await _unitOfWorkDb.SaveAsync();
+
+                response.Success = true;
+                response.Data = $" Product Return id = {newProdReturn.Id} created successfully!";
+                response.StatusCode = HttpStatusCode.OK; // Set status code to 200 (OK)
             }
+            catch (Exception ex)
+            {
+                response.Success = false;
+                response.Data = "An error occurred while creating the Product Return";
+                response.ErrorMessage = ex.Message;
+                response.StatusCode = HttpStatusCode.InternalServerError; // Set status code to 500 (Internal Server Error)
+            }
+
+            return response;
         }
     }
+    
 }

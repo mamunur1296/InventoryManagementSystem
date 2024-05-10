@@ -1,7 +1,8 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Project.Application.Features.ProdReturnFeatures.Commands;
-using Project.Application.Features.ProdReturnFeatures.Queries;
+using Project.Application.Features.ProdReturnFeatures.Handlers.CommandHandlers;
+using Project.Application.Features.ProdReturnFeatures.Handlers.QueryHandlers;
+
 
 namespace Projects.Api.Controllers
 {

@@ -1,11 +1,13 @@
 ﻿using AutoMapper;
 using MediatR;
 using Project.Application.DTOs;
-using Project.Application.Features.ProdReturnFeatures.Queries;
 using Project.Domail.Abstractions;
 
 namespace Project.Application.Features.ProdReturnFeatures.Handlers.QueryHandlers
 {
+    public class GetAllProdReturnQuery : IRequest<IEnumerable<ProdReturnDTO>>
+    {
+    }
     public class GetAllProdReturnHandler : IRequestHandler<GetAllProdReturnQuery, IEnumerable<ProdReturnDTO>>
     {
         private readonly IUnitOfWorkDb _unitOfWorkDb;
