@@ -1,43 +1,77 @@
-﻿using AutoMapper;
-using MediatR;
-using Project.Application.Features.ProductSizeFeatures.Commands;
-using Project.Application.Models;
+﻿using MediatR;
+using Project.Application.ApiResponse;
+using Project.Application.Exceptions;
 using Project.Domail.Abstractions;
+using System.ComponentModel.DataAnnotations;
+using System.Net;
 
 namespace Project.Application.Features.ProductSizeFeatures.Handlers.CommandHandlers
 {
-    public class UpdateProductSizeHandler : IRequestHandler<UpdateProductSizeCommand, ProductSizeModels>
+    public class UpdateProductSizeCommand : IRequest<ApiResponse<string>>
+    {
+        public Guid Id { get; set; }
+        [Required]
+        public decimal Size { get; set; }
+        [Required]
+        public string? Unit { get; set; }
+        [Required]
+        public string? UpdatedBy { get; set; }
+    }
+    public class UpdateProductSizeHandler : IRequestHandler<UpdateProductSizeCommand, ApiResponse<string>>
     {
         private readonly IUnitOfWorkDb _unitOfWorkDb;
-        private readonly IMapper _mapper;
-        public UpdateProductSizeHandler(IUnitOfWorkDb unitOfWorkDb, IMapper mapper)
+        public UpdateProductSizeHandler(IUnitOfWorkDb unitOfWorkDb)
         {
             _unitOfWorkDb = unitOfWorkDb;
-            _mapper = mapper;
         }
-        public async Task<ProductSizeModels> Handle(UpdateProductSizeCommand request, CancellationToken cancellationToken)
+        public async Task<ApiResponse<string>> Handle(UpdateProductSizeCommand request, CancellationToken cancellationToken)
         {
+            // Initialize response object
+            var response = new ApiResponse<string>();
+
+            // Retrieve the delivery address by id
+            var productSize = await _unitOfWorkDb.productSizeQueryRepository.GetByIdAsync(request.Id);
+
+            // Check if the delivery address exists
+            if (productSize == null)
+            {
+                throw new NotFoundException($"product Size  with id = {request.Id} not found");
+            }
+
+
             try
             {
-                var productSize = await _unitOfWorkDb.productSizeQueryRepository.GetByIdAsync(request.Id);
-                if (productSize == null) return default;
-                else
-                {
 
-                    productSize.Unit = request.Unit;
-                    productSize.UpdatedBy = request.UpdatedBy;
-                    productSize.CreatedBy = request.CreatedBy;
-                }
+
+                // Update delivery address properties
+                productSize.UpdatedBy = request.UpdatedBy;
+                productSize.Size = request.Size;
+                productSize.Unit = request.Unit;
+
+
+
+
+
+                // Perform the update operation
                 await _unitOfWorkDb.productSizeCommandRepository.UpdateAsync(productSize);
                 await _unitOfWorkDb.SaveAsync();
-                var productSizeRes = _mapper.Map<ProductSizeModels>(productSize);
-                return productSizeRes;
-            }
-            catch (Exception)
-            {
 
-                throw;
+                // Set success response
+                response.Success = true;
+                response.Data = $"product Size  with id = {productSize.Id} updated successfully";
+                response.StatusCode = HttpStatusCode.OK; // Set status code to 200 (OK)
             }
+            catch (Exception ex)
+            {
+                // Handle other exceptions
+                response.Success = false;
+                response.Data = "An error occurred while updating the product Size ";
+                response.ErrorMessage = ex.Message;
+                response.StatusCode = HttpStatusCode.InternalServerError; // Set status code to 500 (Internal Server Error)
+            }
+
+            // Return the response
+            return response;
         }
     }
 }

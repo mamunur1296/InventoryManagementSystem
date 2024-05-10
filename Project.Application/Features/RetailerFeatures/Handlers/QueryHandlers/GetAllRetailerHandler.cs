@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using MediatR;
 using Project.Application.DTOs;
-using Project.Application.Features.ProductSizeFeatures.Queries;
 using Project.Application.Features.RetailerFeatures.Queries;
 using Project.Domail.Abstractions;
 
