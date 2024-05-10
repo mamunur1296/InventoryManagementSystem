@@ -1,12 +1,14 @@
 ﻿using AutoMapper;
 using MediatR;
 using Project.Application.DTOs;
-using Project.Application.Features.ProductFeatures.Queries;
 using Project.Domail.Abstractions;
 
 
 namespace Project.Application.Features.ProductFeatures.Handlers.QueryHandlers
 {
+    public class GetAllProductQuery : IRequest<IEnumerable<ProductDTO>>
+    {
+    }
     public class GetAllProductHandler : IRequestHandler<GetAllProductQuery, IEnumerable<ProductDTO>>
     {
         private readonly IUnitOfWorkDb _unitOfWorkDb;

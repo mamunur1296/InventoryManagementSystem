@@ -26,11 +26,9 @@ namespace Project.Application.Features.ProdReturnFeatures.Handlers.CommandHandle
     public class UpdateProdReturnHandler : IRequestHandler<UpdateProdReturnCommand, ApiResponse<string>>
     {
         private readonly IUnitOfWorkDb _unitOfWorkDb;
-        private readonly IMapper _mapper;
-        public UpdateProdReturnHandler(IUnitOfWorkDb unitOfWorkDb, IMapper mapper)
+        public UpdateProdReturnHandler(IUnitOfWorkDb unitOfWorkDb)
         {
             _unitOfWorkDb = unitOfWorkDb;
-            _mapper = mapper;
         }
 
 

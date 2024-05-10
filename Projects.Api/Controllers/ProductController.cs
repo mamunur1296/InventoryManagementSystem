@@ -1,7 +1,7 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Project.Application.Features.ProductFeatures.Commands;
-using Project.Application.Features.ProductFeatures.Queries;
+using Project.Application.Features.ProductFeatures.Handlers.CommandHandlers;
+using Project.Application.Features.ProductFeatures.Handlers.QueryHandlers;
 
 namespace Projects.Api.Controllers
 {
