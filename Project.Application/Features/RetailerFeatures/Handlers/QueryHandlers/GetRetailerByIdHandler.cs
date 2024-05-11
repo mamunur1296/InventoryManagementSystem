@@ -1,11 +1,19 @@
 ﻿using AutoMapper;
 using MediatR;
 using Project.Application.DTOs;
-using Project.Application.Features.RetailerFeatures.Queries;
 using Project.Domail.Abstractions;
 
 namespace Project.Application.Features.RetailerFeatures.Handlers.QueryHandlers
 {
+    public class GetRetailerByIdQuery : IRequest<RetailerDTO>
+    {
+        public GetRetailerByIdQuery(Guid id)
+        {
+            Id = id;
+        }
+
+        public Guid Id { get; private set; }
+    }
     public class GetRetailerByIdHandler : IRequestHandler<GetRetailerByIdQuery, RetailerDTO>
     {
         private readonly IUnitOfWorkDb _unitOfWorkDb;
