@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Project.Domail.Entities;
-using System.ComponentModel.DataAnnotations;
 
 
 namespace Project.Infrastructure.Identity

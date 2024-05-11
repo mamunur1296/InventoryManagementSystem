@@ -46,10 +46,6 @@ namespace Project.Infrastructure.Implementation
 
         public ITraderQueryRepository traderQueryRepository { get; private set; }
 
-        public IUserCommandRepository userCommandRepository { get; private set; }
-
-        public IUserQueryRepository userQueryRepository { get; private set; }
-
         public IValveCommandRepository valveCommandRepository { get; private set; }
 
         public IValverQueryRepository valverQueryRepository { get; private set; }
@@ -75,8 +71,6 @@ namespace Project.Infrastructure.Implementation
             stockQueryRepository = new StockQueryRepository(applicationDbContext);
             traderCommandRepository = new TraderCommandRepository(applicationDbContext);
             traderQueryRepository = new TraderQueryRepository(applicationDbContext);
-            userCommandRepository = new UserCommandRepository(applicationDbContext);
-            userQueryRepository = new UserQueryRepository(applicationDbContext);
             valveCommandRepository = new ValveCommandRepository(applicationDbContext);
             valverQueryRepository = new ValveQueryRepository(applicationDbContext);
         }

@@ -15,6 +15,6 @@ namespace Project.Application.DTOs
         public DateTime? DeactivatedDate { get; set; }
         public string? DeactiveBy { get; set; }
         public bool? IsDefault { get; set; }
-        public virtual User User { get; set; }
+        
     }
 }

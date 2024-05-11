@@ -19,7 +19,6 @@ namespace Project.Application.DTOs
         public bool IsDispatched { get; set; }
         public bool IsReadyToDispatch { get; set; }
         public bool IsDelivered { get; set; }
-        public virtual User User { get; set; }
         public virtual Product Product { get; set; }
     }
 }
