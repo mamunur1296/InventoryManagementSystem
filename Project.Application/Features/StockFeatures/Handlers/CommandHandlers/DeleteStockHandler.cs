@@ -1,11 +1,22 @@
 ﻿using MediatR;
-using Project.Application.Features.StockFeatures.Commands;
+using Project.Application.ApiResponse;
+using Project.Application.Exceptions;
 using Project.Domail.Abstractions;
+using System.Net;
 
 
 namespace Project.Application.Features.StockFeatures.Handlers.CommandHandlers
 {
-    public class DeleteStockHandler : IRequestHandler<DeleteStockCommand, string>
+    public class DeleteStockCommand : IRequest<ApiResponse<string>>
+    {
+        public DeleteStockCommand(Guid id)
+        {
+            Id = id;
+        }
+
+        public Guid Id { get; private set; }
+    }
+    public class DeleteStockHandler : IRequestHandler<DeleteStockCommand, ApiResponse<string>>
     {
         private readonly IUnitOfWorkDb _unitOfWorkDb;
 
@@ -14,24 +25,36 @@ namespace Project.Application.Features.StockFeatures.Handlers.CommandHandlers
             _unitOfWorkDb = unitOfWorkDb;
         }
 
-        public async Task<string> Handle(DeleteStockCommand request, CancellationToken cancellationToken)
+        public async Task<ApiResponse<string>> Handle(DeleteStockCommand request, CancellationToken cancellationToken)
         {
-            try
-            {
-                var stock = await _unitOfWorkDb.stockQueryRepository.GetByIdAsync(request.Id);
-                if (stock == null)
-                {
-                    return "Data not found";
-                }
-                await _unitOfWorkDb.stockCommandRepository.DeleteAsync(stock);
-                await _unitOfWorkDb.SaveAsync();
-                return "Completed";
-            }
-            catch (Exception)
-            {
+            var response = new ApiResponse<string>();
+            var stock = await _unitOfWorkDb.stockQueryRepository.GetByIdAsync(request.Id);
 
-                throw;
+            if (stock == null)
+            {
+                throw new NotFoundException($"stock with id = {request.Id} not found");
             }
+            else
+            {
+                try
+                {
+                    await _unitOfWorkDb.stockCommandRepository.DeleteAsync(stock);
+                    await _unitOfWorkDb.SaveAsync();
+
+                    response.Success = true;
+                    response.Data = $"stock with id = {stock.Id} deleted successfully";
+                    response.StatusCode = HttpStatusCode.OK; // Set status code to 200 (OK)
+                }
+                catch (Exception ex)
+                {
+                    response.Success = false;
+                    response.Data = "An error occurred while deleting the stock  ";
+                    response.ErrorMessage = ex.Message;
+                    response.StatusCode = HttpStatusCode.InternalServerError;  // Set status code to 500 (Internal Server Error)
+                }
+
+            }
+            return response;
         }
     }
 }
