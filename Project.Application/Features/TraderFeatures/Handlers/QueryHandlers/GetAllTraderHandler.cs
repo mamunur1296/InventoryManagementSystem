@@ -1,12 +1,14 @@
 ﻿using AutoMapper;
 using MediatR;
 using Project.Application.DTOs;
-using Project.Application.Features.TraderFeatures.Queries;
 using Project.Domail.Abstractions;
 
 
 namespace Project.Application.Features.TraderFeatures.Handlers.QueryHandlers
 {
+    public class GetAllTraderQuery : IRequest<IEnumerable<TraderDTO>>
+    {
+    }
     public class GetAllTraderHandler : IRequestHandler<GetAllTraderQuery, IEnumerable<TraderDTO>>
     {
         private readonly IUnitOfWorkDb _unitOfWorkDb;

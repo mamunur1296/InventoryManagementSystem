@@ -1,11 +1,22 @@
 ﻿using MediatR;
-using Project.Application.Features.TraderFeatures.Commands;
+using Project.Application.ApiResponse;
+using Project.Application.Exceptions;
 using Project.Domail.Abstractions;
+using System.Net;
 
 
 namespace Project.Application.Features.TraderFeatures.Handlers.CommandHandlers
 {
-    public class DeleteTraderHandler : IRequestHandler<DeleteTraderCommand, string>
+    public class DeleteTraderCommand : IRequest<ApiResponse<string>>
+    {
+        public DeleteTraderCommand(Guid id)
+        {
+            Id = id;
+        }
+
+        public Guid Id { get; private set; }
+    }
+    public class DeleteTraderHandler : IRequestHandler<DeleteTraderCommand, ApiResponse<string>>
     {
         private readonly IUnitOfWorkDb _unitOfWorkDb;
 
@@ -14,24 +25,36 @@ namespace Project.Application.Features.TraderFeatures.Handlers.CommandHandlers
             _unitOfWorkDb = unitOfWorkDb;
         }
 
-        public async Task<string> Handle(DeleteTraderCommand request, CancellationToken cancellationToken)
+        public async Task<ApiResponse<string>> Handle(DeleteTraderCommand request, CancellationToken cancellationToken)
         {
-            try
-            {
-                var Trader = await _unitOfWorkDb.traderQueryRepository.GetByIdAsync(request.Id);
-                if (Trader == null)
-                {
-                    return "Data not found";
-                }
-                await _unitOfWorkDb.traderCommandRepository.DeleteAsync(Trader);
-                await _unitOfWorkDb.SaveAsync();
-                return "Completed";
-            }
-            catch (Exception)
-            {
+            var response = new ApiResponse<string>();
+            var trader = await _unitOfWorkDb.traderQueryRepository.GetByIdAsync(request.Id);
 
-                throw;
+            if (trader == null)
+            {
+                throw new NotFoundException($"trader with id = {request.Id} not found");
             }
+            else
+            {
+                try
+                {
+                    await _unitOfWorkDb.traderCommandRepository.DeleteAsync(trader);
+                    await _unitOfWorkDb.SaveAsync();
+
+                    response.Success = true;
+                    response.Data = $"trader with id = {trader.Id} deleted successfully";
+                    response.StatusCode = HttpStatusCode.OK; // Set status code to 200 (OK)
+                }
+                catch (Exception ex)
+                {
+                    response.Success = false;
+                    response.Data = "An error occurred while deleting the trader  ";
+                    response.ErrorMessage = ex.Message;
+                    response.StatusCode = HttpStatusCode.InternalServerError;  // Set status code to 500 (Internal Server Error)
+                }
+
+            }
+            return response;
         }
     }
 }

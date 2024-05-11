@@ -1,7 +1,8 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Project.Application.Features.TraderFeatures.Commands;
-using Project.Application.Features.TraderFeatures.Queries;
+using Project.Application.Features.TraderFeatures.Handlers.CommandHandlers;
+using Project.Application.Features.TraderFeatures.Handlers.QueryHandlers;
+
 
 namespace Projects.Api.Controllers
 {
