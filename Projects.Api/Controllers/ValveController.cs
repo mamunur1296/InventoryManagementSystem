@@ -1,7 +1,7 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Project.Application.Features.CompanyFeatures.Queries;
-using Project.Application.Features.ValveFeatures.Commands;
+using Project.Application.Features.ValveFeatures.Handlers.CommandHandlers;
+using Project.Application.Features.ValveFeatures.Handlers.QueryHandlers;
 
 namespace Projects.Api.Controllers
 {

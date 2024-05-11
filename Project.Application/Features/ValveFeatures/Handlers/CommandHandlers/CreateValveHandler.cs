@@ -1,40 +1,64 @@
-﻿using AutoMapper;
-using MediatR;
-using Project.Application.Features.ValveFeatures.Commands;
-using Project.Application.Models;
+﻿using MediatR;
+using Project.Application.ApiResponse;
 using Project.Domail.Abstractions;
 using Project.Domail.Entities;
+using System.ComponentModel.DataAnnotations;
+using System.Net;
 
 
 namespace Project.Application.Features.ValveFeatures.Handlers.CommandHandlers
 {
-    public class CreateValveHandler : IRequestHandler<CreateValveCommand, ValveModels>
+    public class CreateValveCommand : IRequest<ApiResponse<string>>
+    {
+        [Required]
+        public string? Name { get; set; }
+        [Required]
+        public string? Unit { get; set; }
+        [Required]
+        public string CreatedBy { get; set; }
+    }
+    public class CreateValveHandler : IRequestHandler<CreateValveCommand, ApiResponse<string>>
     {
         private readonly IUnitOfWorkDb _unitOfWorkDb;
-        private readonly IMapper _mapper;
 
-        public CreateValveHandler(IUnitOfWorkDb unitOfWorkDb, IMapper mapper)
+        public CreateValveHandler(IUnitOfWorkDb unitOfWorkDb)
         {
             _unitOfWorkDb = unitOfWorkDb;
-            _mapper = mapper;
         }
 
 
-        public async Task<ValveModels> Handle(CreateValveCommand request, CancellationToken cancellationToken)
+        public async Task<ApiResponse<string>> Handle(CreateValveCommand request, CancellationToken cancellationToken)
         {
+            var response = new ApiResponse<string>();
+
             try
             {
-                var valve = _mapper.Map<Valve>(request);
-                await _unitOfWorkDb.valveCommandRepository.AddAsync(valve);
-                await _unitOfWorkDb.SaveAsync();
-                var valveResponse = _mapper.Map<ValveModels>(valve);
-                return valveResponse;
-            }
-            catch (Exception)
-            {
 
-                throw;
+                var newValve = new Valve
+                {
+                    Id = Guid.NewGuid(),
+                    CreationDate = DateTime.Now.Date,
+                    CreatedBy = request.CreatedBy,
+                    Name = request.Name,
+                    Unit = request.Unit,
+                    IsActive = true,
+                };
+
+                await _unitOfWorkDb.valveCommandRepository.AddAsync(newValve);
+                await _unitOfWorkDb.SaveAsync();
+                response.Success = true;
+                response.Data = $"Valve id = {newValve.Id} Created Successfully!";
+                response.StatusCode = HttpStatusCode.OK; // Set status code to 200 (OK)
             }
+            catch (Exception ex)
+            {
+                response.Success = false;
+                response.Data = "Server Error";
+                response.ErrorMessage = ex.Message;
+                response.StatusCode = HttpStatusCode.InternalServerError; // Set status code to 500 (Internal Server Error)
+            }
+
+            return response;
         }
     }
 }

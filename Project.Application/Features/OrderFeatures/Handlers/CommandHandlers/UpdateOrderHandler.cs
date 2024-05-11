@@ -2,7 +2,6 @@
 using MediatR;
 using Project.Application.ApiResponse;
 using Project.Application.Exceptions;
-using Project.Application.Models;
 using Project.Domail.Abstractions;
 using System.Net;
 
@@ -19,11 +18,9 @@ namespace Project.Application.Features.OrderFeatures.Handlers.CommandHandlers
     public class UpdateOrderHandler : IRequestHandler<UpdateOrderCommand, ApiResponse<string>>
     {
         private readonly IUnitOfWorkDb _unitOfWorkDb;
-        private readonly IMapper _mapper;
-        public UpdateOrderHandler(IUnitOfWorkDb unitOfWorkDb, IMapper mapper)
+        public UpdateOrderHandler(IUnitOfWorkDb unitOfWorkDb)
         {
             _unitOfWorkDb = unitOfWorkDb;
-            _mapper = mapper;
         }
 
         public async Task<ApiResponse<string>> Handle(UpdateOrderCommand request, CancellationToken cancellationToken)

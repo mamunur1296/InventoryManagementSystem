@@ -1,8 +1,6 @@
-﻿using AutoMapper;
-using MediatR;
+﻿using MediatR;
 using Project.Application.ApiResponse;
 using Project.Application.Exceptions;
-using Project.Application.Models;
 using Project.Domail.Abstractions;
 using System.ComponentModel.DataAnnotations;
 using System.Net;
@@ -39,11 +37,9 @@ namespace Project.Application.Features.TraderFeatures.Handlers.CommandHandlers
     public class UpdateTraderHandler : IRequestHandler<UpdateTraderCommand, ApiResponse<string>>
     {
         private readonly IUnitOfWorkDb _unitOfWorkDb;
-        private readonly IMapper _mapper;
-        public UpdateTraderHandler(IUnitOfWorkDb unitOfWorkDb, IMapper mapper)
+        public UpdateTraderHandler(IUnitOfWorkDb unitOfWorkDb)
         {
             _unitOfWorkDb = unitOfWorkDb;
-            _mapper = mapper;
         }
 
         public async Task<ApiResponse<string>> Handle(UpdateTraderCommand request, CancellationToken cancellationToken)

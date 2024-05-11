@@ -1,12 +1,20 @@
 ﻿using AutoMapper;
 using MediatR;
 using Project.Application.DTOs;
-using Project.Application.Features.CompanyFeatures.Queries;
 using Project.Domail.Abstractions;
 
 
 namespace Project.Application.Features.ValveFeatures.Handlers.QueryHandlers
 {
+    public class GetValveByIdQuery : IRequest<ValveDTO>
+    {
+        public GetValveByIdQuery(Guid id)
+        {
+            Id = id;
+        }
+
+        public Guid Id { get; private set; }
+    }
     public class GetValveByIdHandler : IRequestHandler<GetValveByIdQuery, ValveDTO>
     {
         private readonly IUnitOfWorkDb _unitOfWorkDb;

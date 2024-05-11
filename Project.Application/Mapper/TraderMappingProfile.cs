@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using Project.Application.DTOs;
-using Project.Application.Models;
 using Project.Domail.Entities;
 
 namespace Project.Application.Mapper
@@ -9,7 +8,6 @@ namespace Project.Application.Mapper
     {
         public TraderMappingProfile()
         {
-            CreateMap<Trader, TraderModels>().ReverseMap();
             CreateMap<Trader, TraderDTO>().ReverseMap();
         }
     }

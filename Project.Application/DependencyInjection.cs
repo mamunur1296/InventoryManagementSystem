@@ -1,4 +1,4 @@
-﻿using FluentValidation;
+﻿
 using Microsoft.Extensions.DependencyInjection;
 using Project.Application.Mapper;
 namespace Project.Application
