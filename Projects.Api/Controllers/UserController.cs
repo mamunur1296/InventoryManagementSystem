@@ -18,8 +18,7 @@ namespace Projects.Api.Controllers
         }
 
         [HttpPost("Create")]
-        [ProducesDefaultResponseType(typeof(int))]
-        public async Task<ActionResult> CreateUser(CreateUserCommand command)
+        public async Task<IActionResult> CreateUser(CreateUserCommand command)
         {
             return Ok(await _mediator.Send(command));
         }

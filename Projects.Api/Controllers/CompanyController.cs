@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Project.Application.Features.CompanyFeatures.Handlers.CommandHandlers;
 using Project.Application.Features.CompanyFeatures.Handlers.QueryHandlers;
@@ -7,6 +8,7 @@ namespace Projects.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class CompanyController : ControllerBase
     {
         private readonly IMediator _mediator;
