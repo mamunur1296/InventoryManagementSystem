@@ -21,7 +21,10 @@ namespace Project.Application.Features.ProductFeatures.Handlers.CommandHandlers
         [Required]
         public Guid ProdValveId { get; set; }
         [Required]
+
         public string ProdImage { get; set; }
+        [Required]
+        public int ProdPrice { get; set; }
         [Required]
         public string UpdatedBy { get; set; }
     }
@@ -59,7 +62,11 @@ namespace Project.Application.Features.ProductFeatures.Handlers.CommandHandlers
                 product.CompanyId = request.CompanyId;
                 product.ProdValveId = request.ProdValveId;
                 product.ProdSizeId = request.ProdSizeId;
-                product.ProdImage = request.ProdImage;
+                if(request.ProdImage != null)
+                {
+                  product.ProdImage = request.ProdImage;
+                }
+                product.ProdPrice = request.ProdPrice;
 
 
 

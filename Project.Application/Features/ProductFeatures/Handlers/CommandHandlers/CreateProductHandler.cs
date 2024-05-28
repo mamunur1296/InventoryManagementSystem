@@ -21,6 +21,8 @@ namespace Project.Application.Features.ProductFeatures.Handlers.CommandHandlers
         public Guid ProdValveId { get; set; }
         public string ProdImage { get; set; }
         [Required]
+        public int ProdPrice { get; set; }
+        [Required]
         public string CreatedBy { get; set; }
     }
     public class CreateProductHandler : IRequestHandler<CreateProductCommand, ApiResponse<string>>
@@ -48,6 +50,7 @@ namespace Project.Application.Features.ProductFeatures.Handlers.CommandHandlers
                     ProdValveId = request.ProdValveId,
                     CompanyId= request.CompanyId,
                     ProdImage = request.ProdImage,
+                    ProdPrice = request.ProdPrice,
                 };
 
                 await _unitOfWorkDb.productCommandRepository.AddAsync(newProduct);

@@ -13,6 +13,7 @@ namespace Project.Domail.Entities
         [ForeignKey("Valve")]
         public Guid ProdValveId { get; set; }
         public string? ProdImage { get; set; }
+        public int  ProdPrice { get; set; }  
         public bool IsActive { get; set; }
 
         // Navigation properties
