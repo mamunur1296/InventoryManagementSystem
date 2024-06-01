@@ -19,6 +19,7 @@ namespace Project.Infrastructure.DataContext
         public DbSet<Stock> ? stacks {  get; set; }
         public DbSet<Trader> ? traders { get; set; }
         public DbSet<Valve> ? valves { get; set; }
+        public DbSet<ProductDiscunt> ? productDiscunts { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);

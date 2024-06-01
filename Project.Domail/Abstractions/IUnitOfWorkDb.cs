@@ -25,6 +25,8 @@ namespace Project.Domail.Abstractions
         ITraderQueryRepository traderQueryRepository { get; }
         IValveCommandRepository valveCommandRepository { get; }
         IValverQueryRepository valverQueryRepository { get; }
+        IProductDiscuntCommandRepository productDiscuntCommandRepository { get; }
+        IProductDiscuntQueryRepository productDiscuntQueryRepository { get; }
         Task SaveAsync();
     }
 }

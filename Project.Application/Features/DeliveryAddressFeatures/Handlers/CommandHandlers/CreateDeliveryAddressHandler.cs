@@ -13,7 +13,7 @@ namespace Project.Application.Features.DeliveryAddressFeatures.Handlers.CommandH
         public Guid UserId { get; set; }
 
         [Required(ErrorMessage = "Address is required.")]
-        [StringLength(50, MinimumLength = 5, ErrorMessage = "Address must be between 5 and 50 characters.")]
+        [StringLength(500, MinimumLength = 5, ErrorMessage = "Address must be between 5 and 50 characters.")]
         public string? Address { get; set; }
 
         [Required(ErrorMessage = "Phone is required.")]

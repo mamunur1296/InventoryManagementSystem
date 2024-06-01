@@ -17,7 +17,8 @@ namespace Project.Application
                         typeof(ProductMappingProfile),
                         typeof(StockMappingProfile),
                         typeof(TraderMappingProfile),
-                        typeof(ValveMappingProfile)
+                        typeof(ValveMappingProfile),
+                        typeof(ProductDiscountMappingProfile)
                         );
             var assembly = typeof(DependencyInjection).Assembly;
 
