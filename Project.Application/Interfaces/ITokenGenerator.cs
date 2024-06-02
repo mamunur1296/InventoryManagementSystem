@@ -9,5 +9,6 @@ namespace Project.Application.Interfaces
     public interface ITokenGenerator
     {
         public string GenerateJWTToken((string userId, string userName, IList<string> roles) userDetails);
+        public string GenerateSuparAdminJWTToken((string userName, IList<string> roles) userDetails);
     }
 }

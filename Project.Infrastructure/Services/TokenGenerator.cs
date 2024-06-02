@@ -50,6 +50,33 @@ namespace Project.Infrastructure.Services
             var encodedToken = new JwtSecurityTokenHandler().WriteToken(token);
             return encodedToken;
         }
+
+        public string GenerateSuparAdminJWTToken((string userName, IList<string> roles) userDetails)
+        {
+            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_key));
+            var signingCredentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
+
+            var ( userName, roles) = userDetails;
+
+            var claims = new List<Claim>()
+            {
+                new Claim(JwtRegisteredClaimNames.Sub, userName),
+                new Claim(ClaimTypes.Name, userName),
+            };
+            claims.AddRange(roles.Select(role => new Claim(ClaimTypes.Role, role)));
+
+
+            var token = new JwtSecurityToken(
+                issuer: _issuer,
+                audience: _audience,
+                claims: claims,
+                expires: DateTime.Now.AddMinutes(Convert.ToDouble(_expiryMinutes)),
+                signingCredentials: signingCredentials
+           );
+
+            var encodedToken = new JwtSecurityTokenHandler().WriteToken(token);
+            return encodedToken;
+        }
     }
     
 }
