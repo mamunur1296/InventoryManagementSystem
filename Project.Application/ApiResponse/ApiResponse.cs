@@ -12,7 +12,7 @@ namespace Project.Application.ApiResponse
         public bool Success { get; set; }
         public T Data { get; set; }
         public string ErrorMessage { get; set; }
-        public HttpStatusCode StatusCode { get; set; }
+        public HttpStatusCode Status { get; set; }
         public ApiResponse()
         {
             Success = true;

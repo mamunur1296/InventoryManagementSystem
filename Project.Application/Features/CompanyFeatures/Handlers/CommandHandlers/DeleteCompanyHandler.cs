@@ -41,7 +41,7 @@ namespace Project.Application.Features.CompanyFeatures.Handlers.CommandHandlers
 
                 response.Success = true;
                 response.Data = $"Company with id = {deleteCompany.Id} deleted successfully";
-                response.StatusCode = HttpStatusCode.OK;
+                response.Status = HttpStatusCode.OK;
             }
             catch (Exception ex)
             {
@@ -49,7 +49,7 @@ namespace Project.Application.Features.CompanyFeatures.Handlers.CommandHandlers
                 response.Success = false;
                 response.Data = "An error occurred while deleting the company";
                 response.ErrorMessage = ex.Message;
-                response.StatusCode = HttpStatusCode.InternalServerError;
+                response.Status = HttpStatusCode.InternalServerError;
             }
 
             return response;

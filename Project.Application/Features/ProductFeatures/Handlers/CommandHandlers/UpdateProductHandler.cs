@@ -78,7 +78,7 @@ namespace Project.Application.Features.ProductFeatures.Handlers.CommandHandlers
                 // Set success response
                 response.Success = true;
                 response.Data = $"product  with id = {product.Id} updated successfully";
-                response.StatusCode = HttpStatusCode.OK; // Set status code to 200 (OK)
+                response.Status = HttpStatusCode.OK; // Set status code to 200 (OK)
             }
             catch (Exception ex)
             {
@@ -86,7 +86,7 @@ namespace Project.Application.Features.ProductFeatures.Handlers.CommandHandlers
                 response.Success = false;
                 response.Data = "An error occurred while updating the product ";
                 response.ErrorMessage = ex.Message;
-                response.StatusCode = HttpStatusCode.InternalServerError; // Set status code to 500 (Internal Server Error)
+                response.Status = HttpStatusCode.InternalServerError; // Set status code to 500 (Internal Server Error)
             }
 
             // Return the response

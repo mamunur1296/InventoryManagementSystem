@@ -55,7 +55,7 @@ namespace Project.Application.Features.ValveFeatures.Handlers.CommandHandlers
                 // Map the updated company to your DTO model if needed
                 response.Success = true;
                 response.Data = $"valve with id = {valve.Id} updated successfully";
-                response.StatusCode = HttpStatusCode.OK;
+                response.Status = HttpStatusCode.OK;
             }
             catch (Exception ex)
             {
@@ -63,7 +63,7 @@ namespace Project.Application.Features.ValveFeatures.Handlers.CommandHandlers
                 response.Success = false;
                 response.Data = "An error occurred while updating the trader";
                 response.ErrorMessage = ex.Message;
-                response.StatusCode = HttpStatusCode.InternalServerError;
+                response.Status = HttpStatusCode.InternalServerError;
             }
 
             return response;

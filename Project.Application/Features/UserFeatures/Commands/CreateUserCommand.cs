@@ -1,9 +1,11 @@
 ﻿using MediatR;
+using Project.Application.ApiResponse;
 using Project.Application.Interfaces;
+using System.Net;
 
 namespace Project.Application.Features.UserFeatures.Commands
 {
-    public class CreateUserCommand : IRequest<string>
+    public class CreateUserCommand : IRequest<ApiResponse<string>>
     {
         public string FirstName { get; set; }
         public string LaststName { get; set; }
@@ -14,7 +16,7 @@ namespace Project.Application.Features.UserFeatures.Commands
         public string ConfirmationPassword { get; set; }
         public List<string> Roles { get; set; }
     }
-    public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, string>
+    public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, ApiResponse<string>>
     {
         private readonly IIdentityService _identityService;
 
@@ -23,10 +25,27 @@ namespace Project.Application.Features.UserFeatures.Commands
             _identityService = identityService;
         }
 
-        public async Task<string> Handle(CreateUserCommand request, CancellationToken cancellationToken)
+        public async Task<ApiResponse<string>> Handle(CreateUserCommand request, CancellationToken cancellationToken)
         {
-            var result = await _identityService.CreateUserAsync(request.UserName, request.Password, request.Email,request.FirstName,request.LaststName,request.PhoneNumber, request.Roles);
-            return result.isSucceed ? result.userId : "User not created .....";
+            var response = new ApiResponse<string>();
+            try
+            {
+                var result = await _identityService.CreateUserAsync(request.UserName, request.Password, request.Email, request.FirstName, request.LaststName, request.PhoneNumber, request.Roles);
+                if (result.isSucceed)
+                {
+                    response.Success = true;
+                    response.Data = $"User id = {result.userId} Created Successfully!";
+                    response.Status = HttpStatusCode.OK; // Set status code to 200 (OK)
+                } 
+            }
+            catch (Exception ex)
+            {
+                response.Success = false;
+                response.Data = "Server Error";
+                response.ErrorMessage = ex.Message;
+                response.Status = HttpStatusCode.InternalServerError; // Set status code to 500 (Internal Server Error)
+            }
+            return response;
         }
     }
 }

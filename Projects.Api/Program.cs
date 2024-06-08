@@ -128,7 +128,7 @@ builder.Services.AddSwaggerGen(options =>
         }
     });
 });
-builder.Services.AddTransient<GlobalExceptionHandlingMiddleware>();
+//builder.Services.AddTransient<GlobalExceptionHandlingMiddleware>();
 
 
 
@@ -153,7 +153,7 @@ app.UseHttpsRedirection();
 
 app.UseAuthentication();
 app.UseAuthorization();
-app.UseMiddleware<GlobalExceptionHandlingMiddleware>();
+//app.UseMiddleware<GlobalExceptionHandlingMiddleware>();
 app.MapControllers();
 
 app.Run();

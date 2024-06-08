@@ -53,14 +53,14 @@ namespace Project.Application.Features.ProductDiscuntFeatures.Handlers.CommandHa
 
                 response.Success = true;
                 response.Data = $" Product Discount id = {newProductDiscunt.Id} created successfully!";
-                response.StatusCode = HttpStatusCode.OK; // Set status code to 200 (OK)
+                response.Status = HttpStatusCode.OK; // Set status code to 200 (OK)
             }
             catch (Exception ex)
             {
                 response.Success = false;
                 response.Data = "An error occurred while creating the Product Discount";
                 response.ErrorMessage = ex.Message;
-                response.StatusCode = HttpStatusCode.InternalServerError; // Set status code to 500 (Internal Server Error)
+                response.Status = HttpStatusCode.InternalServerError; // Set status code to 500 (Internal Server Error)
             }
 
             return response;

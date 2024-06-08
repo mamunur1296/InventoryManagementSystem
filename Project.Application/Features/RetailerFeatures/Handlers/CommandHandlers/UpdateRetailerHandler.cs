@@ -80,7 +80,7 @@ namespace Project.Application.Features.RetailerFeatures.Handlers.CommandHandlers
                 // Set success response
                 response.Success = true;
                 response.Data = $"retailer with id = {retailer.Id} updated successfully";
-                response.StatusCode = HttpStatusCode.OK; // Set status code to 200 (OK)
+                response.Status = HttpStatusCode.OK; // Set status code to 200 (OK)
             }
             catch (Exception ex)
             {
@@ -88,7 +88,7 @@ namespace Project.Application.Features.RetailerFeatures.Handlers.CommandHandlers
                 response.Success = false;
                 response.Data = "An error occurred while updating the retailer ";
                 response.ErrorMessage = ex.Message;
-                response.StatusCode = HttpStatusCode.InternalServerError; // Set status code to 500 (Internal Server Error)
+                response.Status = HttpStatusCode.InternalServerError; // Set status code to 500 (Internal Server Error)
             }
 
             // Return the response
