@@ -40,6 +40,28 @@ namespace Project.Application.Features.ProductFeatures.Handlers.CommandHandlers
 
             try
             {
+                var ExjistingProductList = await _unitOfWorkDb.productQueryRepository.GetAllAsync();
+                foreach (var product in ExjistingProductList)
+                {
+                    if (product?.Name?.Trim() == request.Name.Trim())
+                    {
+                        response.Success = false;
+                        response.Data = "An error occurred while creating the Product";
+                        response.ErrorMessage = "DuplicateProductName: Product name already exists.";
+                        response.Status = HttpStatusCode.InternalServerError;
+
+                        return response;
+                    }
+                    if (product?.ProdSizeId == request.ProdSizeId && product?.CompanyId == request.CompanyId)
+                    {
+                        response.Success = false;
+                        response.Data = "An error occurred while creating the Product";
+                        response.ErrorMessage = "DuplicateProductSize: Product Size already exists.";
+                        response.Status = HttpStatusCode.InternalServerError;
+
+                        return response;
+                    }
+                }
                 var newProduct = new Product
                 {
                     Id = Guid.NewGuid(),

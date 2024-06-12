@@ -33,7 +33,19 @@ namespace Project.Application.Features.ValveFeatures.Handlers.CommandHandlers
 
             try
             {
+                var ExjistingValveList = await _unitOfWorkDb.valverQueryRepository.GetAllAsync();
+                foreach (var valve in ExjistingValveList)
+                {
+                    if (valve?.Name?.Trim() == request?.Name?.Trim())
+                    {
+                        response.Success = false;
+                        response.Data = "An error occurred while creating the Valve";
+                        response.ErrorMessage = "DuplicateValveName: Valve name already exists.";
+                        response.Status = HttpStatusCode.InternalServerError;
 
+                        return response;
+                    }
+                }
                 var newValve = new Valve
                 {
                     Id = Guid.NewGuid(),

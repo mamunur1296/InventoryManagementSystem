@@ -31,6 +31,19 @@ namespace Project.Application.Features.ProductSizeFeatures.Handlers.CommandHandl
 
             try
             {
+                var ExjistingProductSizeList = await _unitOfWorkDb.productSizeQueryRepository.GetAllAsync();
+                foreach (var productSize in ExjistingProductSizeList)
+                {
+                    if (productSize?.Size == request.Size)
+                    {
+                        response.Success = false;
+                        response.Data = "An error occurred while creating the Product Size";
+                        response.ErrorMessage = "DuplicateProductSize: Product  Size  already exists.";
+                        response.Status = HttpStatusCode.InternalServerError;
+
+                        return response;
+                    }
+                }
                 var newProductSize = new ProductSize
                 {
                     Id = Guid.NewGuid(),
