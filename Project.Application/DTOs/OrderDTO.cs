@@ -16,6 +16,8 @@ namespace Project.Application.DTOs
         public DateTime? UpdateDate { get; set; }
         public bool IsPlaced { get; set; }
         public bool IsConfirmed { get; set; }
+        public string TransactionNumber { get; set; } 
+        public string Comments { get; set; }
         public bool IsDispatched { get; set; }
         public bool IsReadyToDispatch { get; set; }
         public bool IsDelivered { get; set; }

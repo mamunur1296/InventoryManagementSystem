@@ -13,6 +13,8 @@ namespace Project.Application.Features.OrderFeatures.Handlers.CommandHandlers
         public Guid UserId { get; set; }
         public Guid ProductId { get; set; }
         public Guid ReturnProductId { get; set; }
+        public string TransactionNumber { get; set; } 
+        public string Comments { get; set; }
         public string UpdatedBy { get; set; }
     }
     public class UpdateOrderHandler : IRequestHandler<UpdateOrderCommand, ApiResponse<string>>
@@ -47,6 +49,8 @@ namespace Project.Application.Features.OrderFeatures.Handlers.CommandHandlers
                 order.ProductId=request.ProductId;
                 order.ReturnProductId = request.ReturnProductId;
                 order.UpdatedBy = request.UpdatedBy;
+                order.Comments = request.Comments;
+                order.TransactionNumber = request.TransactionNumber;
 
 
 

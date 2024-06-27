@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using MediatR;
+﻿using MediatR;
 using Project.Application.ApiResponse;
 using Project.Domail.Abstractions;
 using Project.Domail.Entities;
@@ -16,6 +15,8 @@ namespace Project.Application.Features.OrderFeatures.Handlers.CommandHandlers
         public Guid ProductId { get; set; }
         [Required]
         public Guid ReturnProductId { get; set; }
+        public string TransactionNumber { get; set; } //
+        public string Comments { get; set; }//
         [Required]
         public string ? CreatedBy { get; set; }
     }
@@ -45,6 +46,8 @@ namespace Project.Application.Features.OrderFeatures.Handlers.CommandHandlers
                     UserId = request.UserId,
                     ProductId = request.ProductId,
                     ReturnProductId = request.ReturnProductId,
+                    TransactionNumber = request.TransactionNumber,
+                    Comments = request.Comments,
                     IsHold = true,
                     IsCancel = false,
                     IsDelivered = false,
