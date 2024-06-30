@@ -1,7 +1,10 @@
 ﻿using MediatR;
+using Newtonsoft.Json.Linq;
+using Project.Application.ApiResponse;
 using Project.Application.DTOs;
 using Project.Application.Exceptions;
 using Project.Application.Interfaces;
+using System.Net;
 
 
 namespace Project.Application.Features.AuthFeatures.Commands
@@ -24,7 +27,7 @@ namespace Project.Application.Features.AuthFeatures.Commands
 
         public async Task<AuthDTO> Handle(AuthCommand request, CancellationToken cancellationToken)
         {
-
+            
             try
             {
                 if (request.UserName == "ad@123" || request.Password == "ad@123")
@@ -45,7 +48,7 @@ namespace Project.Application.Features.AuthFeatures.Commands
 
                 if (!result)
                 {
-                    throw new BadRequestException("Invalid username or password");
+                    throw new Exception("Invalid username or password");
                 }
 
                 var (userId, FirstName, LastName, userName, email, roles) = await _identityService.GetUserDetailsAsync(await _identityService.GetUserIdAsync(request.UserName));
@@ -56,13 +59,19 @@ namespace Project.Application.Features.AuthFeatures.Commands
                 {
                     UserId = userId,
                     Name = userName,
-                    Token = token
+                    Token = token,
+                    Success = true,
+                    Status = HttpStatusCode.OK // Set status code to 200 (OK)
                 };
             }
-            catch (Exception Ex)
+            catch (Exception ex)
             {
-
-                throw;
+                return new AuthDTO()
+                {
+                    Success = false,
+                    Status = HttpStatusCode.InternalServerError,
+                    ErrorMessage= ex.Message
+                };
             }
         }
     }

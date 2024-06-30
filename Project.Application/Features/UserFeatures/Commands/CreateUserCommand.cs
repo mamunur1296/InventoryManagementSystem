@@ -30,6 +30,13 @@ namespace Project.Application.Features.UserFeatures.Commands
             var response = new ApiResponse<string>();
             try
             {
+                if(request.Password == request.ConfirmationPassword)
+                {
+                    response.Success = false;
+                    response.Data = "Server Error";
+                    response.ErrorMessage = "ConfirmationPassword : Password and confirmation password do not match";
+                    response.Status = HttpStatusCode.InternalServerError; // Set status code to 500 (Internal Server Error)
+                }
                 var result = await _identityService.CreateUserAsync(request.UserName, request.Password, request.Email, request.FirstName, request.LaststName, request.PhoneNumber, request.Roles);
                 if (result.isSucceed)
                 {
