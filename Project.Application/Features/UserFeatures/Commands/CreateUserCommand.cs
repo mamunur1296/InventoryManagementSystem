@@ -8,7 +8,6 @@ namespace Project.Application.Features.UserFeatures.Commands
     public class CreateUserCommand : IRequest<ApiResponse<string>>
     {
         public string FirstName { get; set; }
-
         public string LaststName { get; set; }
         public string UserName { get; set; }
         public string Email { get; set; }
