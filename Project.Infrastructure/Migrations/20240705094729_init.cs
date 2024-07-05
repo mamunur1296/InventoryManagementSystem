@@ -106,10 +106,10 @@ namespace Project.Infrastructure.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Contactperson = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ContactPerNum = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ContactNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Contactperson = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ContactPerNum = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ContactNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     IsActive = table.Column<bool>(type: "bit", nullable: true),
                     DeactivatedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     DeactiveBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -283,10 +283,10 @@ namespace Project.Infrastructure.Migrations
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     CompanyId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Contactperson = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ContactPerNum = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ContactNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Contactperson = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ContactPerNum = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ContactNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     IsActive = table.Column<bool>(type: "bit", nullable: true),
                     DeactivatedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     DeactiveBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -317,6 +317,7 @@ namespace Project.Infrastructure.Migrations
                     ProdSizeId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     ProdValveId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     ProdImage = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ProdPrice = table.Column<int>(type: "int", nullable: false),
                     IsActive = table.Column<bool>(type: "bit", nullable: false),
                     CreationDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     UpdateDate = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -358,6 +359,8 @@ namespace Project.Infrastructure.Migrations
                     ReturnProductId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     IsPlaced = table.Column<bool>(type: "bit", nullable: false),
                     IsConfirmed = table.Column<bool>(type: "bit", nullable: false),
+                    TransactionNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Comments = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     IsDispatched = table.Column<bool>(type: "bit", nullable: false),
                     IsReadyToDispatch = table.Column<bool>(type: "bit", nullable: false),
                     IsDelivered = table.Column<bool>(type: "bit", nullable: false),
@@ -402,6 +405,31 @@ namespace Project.Infrastructure.Migrations
                     table.PrimaryKey("PK_prodReturns", x => x.Id);
                     table.ForeignKey(
                         name: "FK_prodReturns_products_ProductId",
+                        column: x => x.ProductId,
+                        principalTable: "products",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "productDiscunts",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ProductId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    DiscountedPrice = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    IsActive = table.Column<bool>(type: "bit", nullable: false),
+                    ValidTill = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CreationDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    UpdateDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    UpdatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_productDiscunts", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_productDiscunts_products_ProductId",
                         column: x => x.ProductId,
                         principalTable: "products",
                         principalColumn: "Id",
@@ -505,6 +533,11 @@ namespace Project.Infrastructure.Migrations
                 column: "ProductId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_productDiscunts_ProductId",
+                table: "productDiscunts",
+                column: "ProductId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_products_CompanyId",
                 table: "products",
                 column: "CompanyId");
@@ -565,6 +598,9 @@ namespace Project.Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "prodReturns");
+
+            migrationBuilder.DropTable(
+                name: "productDiscunts");
 
             migrationBuilder.DropTable(
                 name: "railers");

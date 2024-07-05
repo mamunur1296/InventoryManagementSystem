@@ -139,7 +139,12 @@ var app = builder.Build();
 
 
 
-
+// Seed data
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    SeedData.Initialize(services).Wait();
+}
 
 
 // Configure the HTTP request pipeline.

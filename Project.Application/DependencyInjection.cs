@@ -26,6 +26,7 @@ namespace Project.Application
                 configuration.RegisterServicesFromAssembly(assembly));
 
             //object value = services.AddValidatorsFromAssembly(assembly);
+            
 
             return services;
         }
