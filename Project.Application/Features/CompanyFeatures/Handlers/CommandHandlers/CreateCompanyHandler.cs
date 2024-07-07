@@ -1,5 +1,7 @@
 ﻿using MediatR;
+using Microsoft.Extensions.FileProviders;
 using Project.Application.ApiResponse;
+using Project.Application.Exceptions;
 using Project.Domail.Abstractions;
 using Project.Domail.Entities;
 using System.ComponentModel.DataAnnotations;
@@ -12,11 +14,11 @@ namespace Project.Application.Features.CompanyFeatures.Handlers.CommandHandlers
     {
 
         [Required(ErrorMessage = "Name is required.")]
-        [StringLength(50, MinimumLength = 2, ErrorMessage = "Name must be between 2 and 50 characters.")]
+        [StringLength(50, MinimumLength = 2, ErrorMessage = "Name must be between 2 To 50 characters.")]
         public string Name { get; set; }
 
         [Required(ErrorMessage = "Contact Person is required.")]
-        [StringLength(50, MinimumLength = 2, ErrorMessage = "Contact Person must be between 2 and 50 characters.")]
+        [StringLength(50, MinimumLength = 2, ErrorMessage = "Contact Person must be between 2 To 50 characters.")]
         public string Contactperson { get; set; }
 
         [Required(ErrorMessage = "Contact Person Number is required.")]
@@ -29,7 +31,7 @@ namespace Project.Application.Features.CompanyFeatures.Handlers.CommandHandlers
 
         [Required(ErrorMessage = "BIN is required.")]
         public string BIN { get; set; }
-
+        public bool IsActive { get; set; }
         public string CreatedBy { get; set; }
 
     }
@@ -51,16 +53,16 @@ namespace Project.Application.Features.CompanyFeatures.Handlers.CommandHandlers
                 var newCompany = new Company
                 {
                     Id = Guid.NewGuid(),
-                    CreationDate = DateTime.Now.Date,
+                    CreationDate = DateTime.Now,
                     CreatedBy = request.CreatedBy,
                     Name = request.Name,
                     Contactperson = request.Contactperson,
                     ContactPerNum = request.ContactPerNum,
                     ContactNumber = request.ContactNumber,
-                    IsActive = true,
+                    IsActive = request.IsActive,
                     BIN = request.BIN,
-                };
 
+                };
                 await _unitOfWorkDb.companyCommandRepository.AddAsync(newCompany);
                 await _unitOfWorkDb.SaveAsync();
                 response.Success = true;

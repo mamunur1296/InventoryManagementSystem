@@ -1,6 +1,5 @@
 ﻿using MediatR;
 using Project.Application.ApiResponse;
-using Project.Application.Exceptions;
 using Project.Domail.Abstractions;
 using System.Net;
 
@@ -31,7 +30,11 @@ namespace Project.Application.Features.CompanyFeatures.Handlers.CommandHandlers
 
             if (deleteCompany == null)
             {
-                throw new NotFoundException($"Company with id = {request.Id} not found");
+                response.Success = false;
+                response.Data = "An error occurred while deleting the company";
+                response.ErrorMessage = $"Company with id = {request.Id} not found";
+                response.Status = HttpStatusCode.NotFound;
+                return response;
             }
 
             try

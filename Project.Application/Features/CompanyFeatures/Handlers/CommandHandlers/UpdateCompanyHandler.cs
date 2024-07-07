@@ -29,8 +29,10 @@ namespace Project.Application.Features.CompanyFeatures.Handlers.CommandHandlers
 
         [Required(ErrorMessage = "BIN is required.")]
         public string BIN { get; set; }
+        public string DeactiveBy { get; set; }
         public string? UpdatedBy { get; set; }
-        
+        public bool IsActive { get; set; }
+
 
     }
     public class UpdateCompanyHandler : IRequestHandler<UpdateCompanyCommand, ApiResponse<string>>
@@ -50,7 +52,12 @@ namespace Project.Application.Features.CompanyFeatures.Handlers.CommandHandlers
 
             if (company == null || company.Id != request.Id)
             {
-                throw new NotFoundException($"Company with id = {request.Id} not found");
+                
+                response.Success = false;
+                response.Data = "An error occurred while updating the company";
+                response.ErrorMessage = $"Company with id = {request.Id} not found";
+                response.Status = HttpStatusCode.NotFound;
+                return response;
             }
 
             try
@@ -62,6 +69,11 @@ namespace Project.Application.Features.CompanyFeatures.Handlers.CommandHandlers
                 company.ContactPerNum = request.ContactPerNum;
                 company.ContactNumber = request.ContactNumber;
                 company.UpdatedBy = request.UpdatedBy;
+                company.UpdateDate = DateTime.Now;
+                company.DeactiveBy = request.DeactiveBy; 
+                company.IsActive = request.IsActive;
+                if(!request.IsActive) company.DeactivatedDate = DateTime.Now;
+                else company.DeactivatedDate = null;
 
                 // Perform update operation
                 await _unitOfWorkDb.companyCommandRepository.UpdateAsync(company);

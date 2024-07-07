@@ -1,12 +1,13 @@
 ﻿using AutoMapper;
 using MediatR;
+using Project.Application.ApiResponse;
 using Project.Application.DTOs;
-using Project.Application.Exceptions;
 using Project.Domail.Abstractions;
+using System.Net;
 
 namespace Project.Application.Features.CompanyFeatures.Handlers.QueryHandlers
 {
-    public class GetCompanyByIdQuery : IRequest<CompanyDTO>
+    public class GetCompanyByIdQuery : IRequest<ApiResponse<CompanyDTO>>
     {
         public GetCompanyByIdQuery(Guid id)
         {
@@ -16,7 +17,7 @@ namespace Project.Application.Features.CompanyFeatures.Handlers.QueryHandlers
         public Guid Id { get; private set; }
     }
 
-    public class GetCompanyByIdHandler : IRequestHandler<GetCompanyByIdQuery, CompanyDTO>
+    public class GetCompanyByIdHandler : IRequestHandler<GetCompanyByIdQuery, ApiResponse<CompanyDTO>>
     {
         private readonly IUnitOfWorkDb _unitOfWorkDb;
         private readonly IMapper _mapper;
@@ -26,25 +27,35 @@ namespace Project.Application.Features.CompanyFeatures.Handlers.QueryHandlers
             _unitOfWorkDb = unitOfWorkDb;
             _mapper = mapper;
         }
-        public async Task<CompanyDTO> Handle(GetCompanyByIdQuery request, CancellationToken cancellationToken)
+        public async Task<ApiResponse<CompanyDTO>> Handle(GetCompanyByIdQuery request, CancellationToken cancellationToken)
         {
+            var response = new ApiResponse<CompanyDTO>();
+
             try
             {
                 var company = await _unitOfWorkDb.companyrQueryRepository.GetByIdAsync(request.Id);
 
                 if (company == null)
                 {
-                    throw new NotFoundException($"Company with id = {request.Id} not found");
+                    response.Success = false;
+                    response.ErrorMessage = $"Company with id = {request.Id} not found";
+                    response.Status = HttpStatusCode.NotFound;
+                    return response;
                 }
 
                 var companyDto = _mapper.Map<CompanyDTO>(company);
-                return companyDto;
+                response.Data = companyDto;
+                response.Status = HttpStatusCode.OK;
             }
             catch (Exception ex)
             {
+                response.Success = false;
+                response.ErrorMessage = ex.Message;
+                response.Status = HttpStatusCode.InternalServerError;
                 // Log the exception or handle it accordingly
-                throw new Exception("An error occurred while retrieving company by id", ex);
             }
+
+            return response;
         }
 
     }
