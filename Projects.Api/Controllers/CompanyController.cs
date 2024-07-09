@@ -45,5 +45,10 @@ namespace Projects.Api.Controllers
             commend.UpdatedBy = user;
             return Ok(await _mediator.Send(commend));
         }
+        [HttpPut("ActiveCompany/{id}")]
+        public async Task<IActionResult> ActiveInactive(Guid id, ActiveInactiveCompanyCommand commend)
+        {
+            return Ok(await _mediator.Send(commend));
+        }
     }
 }

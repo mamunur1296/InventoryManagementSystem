@@ -1,7 +1,5 @@
 ﻿using MediatR;
-using Microsoft.Extensions.FileProviders;
 using Project.Application.ApiResponse;
-using Project.Application.Exceptions;
 using Project.Domail.Abstractions;
 using Project.Domail.Entities;
 using System.ComponentModel.DataAnnotations;
@@ -31,7 +29,6 @@ namespace Project.Application.Features.CompanyFeatures.Handlers.CommandHandlers
 
         [Required(ErrorMessage = "BIN is required.")]
         public string BIN { get; set; }
-        public bool IsActive { get; set; }
         public string CreatedBy { get; set; }
 
     }
@@ -59,7 +56,6 @@ namespace Project.Application.Features.CompanyFeatures.Handlers.CommandHandlers
                     Contactperson = request.Contactperson,
                     ContactPerNum = request.ContactPerNum,
                     ContactNumber = request.ContactNumber,
-                    IsActive = request.IsActive,
                     BIN = request.BIN,
 
                 };

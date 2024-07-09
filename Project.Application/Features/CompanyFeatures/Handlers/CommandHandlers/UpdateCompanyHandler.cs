@@ -1,6 +1,5 @@
 ﻿using MediatR;
 using Project.Application.ApiResponse;
-using Project.Application.Exceptions;
 using Project.Domail.Abstractions;
 using System.ComponentModel.DataAnnotations;
 using System.Net;
@@ -29,9 +28,7 @@ namespace Project.Application.Features.CompanyFeatures.Handlers.CommandHandlers
 
         [Required(ErrorMessage = "BIN is required.")]
         public string BIN { get; set; }
-        public string DeactiveBy { get; set; }
         public string? UpdatedBy { get; set; }
-        public bool IsActive { get; set; }
 
 
     }
@@ -70,10 +67,7 @@ namespace Project.Application.Features.CompanyFeatures.Handlers.CommandHandlers
                 company.ContactNumber = request.ContactNumber;
                 company.UpdatedBy = request.UpdatedBy;
                 company.UpdateDate = DateTime.Now;
-                company.DeactiveBy = request.DeactiveBy; 
-                company.IsActive = request.IsActive;
-                if(!request.IsActive) company.DeactivatedDate = DateTime.Now;
-                else company.DeactivatedDate = null;
+
 
                 // Perform update operation
                 await _unitOfWorkDb.companyCommandRepository.UpdateAsync(company);
@@ -98,4 +92,4 @@ namespace Project.Application.Features.CompanyFeatures.Handlers.CommandHandlers
 
     }
 }
-//          
+          
