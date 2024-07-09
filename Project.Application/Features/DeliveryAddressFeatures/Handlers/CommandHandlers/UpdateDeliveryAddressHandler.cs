@@ -2,8 +2,10 @@
 using Project.Application.ApiResponse;
 using Project.Application.Exceptions;
 using Project.Domail.Abstractions;
+using Project.Domail.Entities;
 using System.ComponentModel.DataAnnotations;
 using System.Net;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace Project.Application.Features.DeliveryAddressFeatures.Handlers.CommandHandlers
 {
@@ -26,7 +28,10 @@ namespace Project.Application.Features.DeliveryAddressFeatures.Handlers.CommandH
         [RegularExpression("^[0-9]{11}$", ErrorMessage = "Mobile must be 11 digits.")]
         public string? Mobile { get; set; }
 
-        [Required(ErrorMessage = "UpdatedBy is required.")]
+        public bool? IsActive { get; set; }
+        public DateTime? DeactivatedDate { get; set; }
+        public string? DeactiveBy { get; set; }
+        public bool? IsDefault { get; set; }
         public string? UpdatedBy { get; set; }
 
     }
@@ -48,9 +53,15 @@ namespace Project.Application.Features.DeliveryAddressFeatures.Handlers.CommandH
             var deliveryAddress = await _unitOfWorkDb.deliveryAddressQueryRepository.GetByIdAsync(request.Id);
 
             // Check if the delivery address exists
-            if (deliveryAddress == null)
+            
+            if (deliveryAddress == null || deliveryAddress.Id != request.Id)
             {
-                throw new NotFoundException($"Delivery Address with id = {request.Id} not found");
+
+                response.Success = false;
+                response.Data = "An error occurred while updating the Delivery Address";
+                response.ErrorMessage = $"Delivery Address with id = {request.Id} not found";
+                response.Status = HttpStatusCode.NotFound;
+                return response;
             }
 
 
@@ -64,7 +75,11 @@ namespace Project.Application.Features.DeliveryAddressFeatures.Handlers.CommandH
                 deliveryAddress.Phone = request.Phone;
                 deliveryAddress.Mobile = request.Mobile;
                 deliveryAddress.UpdatedBy = request.UpdatedBy;
-
+                deliveryAddress.IsActive = request.IsActive;
+                deliveryAddress.IsDefault= request.IsDefault;
+                deliveryAddress.DeactiveBy = request.DeactiveBy;
+                if ((bool)!deliveryAddress.IsActive) deliveryAddress.DeactivatedDate = DateTime.Now;
+                else deliveryAddress.DeactivatedDate = null;
 
 
 

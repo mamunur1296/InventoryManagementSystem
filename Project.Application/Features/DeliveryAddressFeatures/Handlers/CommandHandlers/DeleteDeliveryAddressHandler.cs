@@ -1,6 +1,5 @@
 ﻿using MediatR;
 using Project.Application.ApiResponse;
-using Project.Application.Exceptions;
 using Project.Domail.Abstractions;
 using System.Net;
 
@@ -31,7 +30,11 @@ namespace Project.Application.Features.DeliveryAddressFeatures.Handlers.CommandH
 
             if (deliveryAddress == null)
             {
-                throw new NotFoundException($"Delivery Address with id = {request.Id} not found");
+                response.Success = false;
+                response.Data = "An error occurred while deleting the Delivery Address";
+                response.ErrorMessage = $"Delivery Address with id = {request.Id} not found";
+                response.Status = HttpStatusCode.NotFound;
+                return response;
             }
             else {
                 try

@@ -29,6 +29,8 @@ namespace Project.Application.Features.CompanyFeatures.Handlers.CommandHandlers
         [Required(ErrorMessage = "BIN is required.")]
         public string BIN { get; set; }
         public string? UpdatedBy { get; set; }
+        public bool IsActive { get; set; }
+        public string DeactiveBy { get; set; }
 
 
     }
@@ -67,7 +69,9 @@ namespace Project.Application.Features.CompanyFeatures.Handlers.CommandHandlers
                 company.ContactNumber = request.ContactNumber;
                 company.UpdatedBy = request.UpdatedBy;
                 company.UpdateDate = DateTime.Now;
-
+                company.IsActive = request.IsActive;
+                if (!request.IsActive) company.DeactivatedDate = DateTime.Now;
+                else company.DeactivatedDate = null;
 
                 // Perform update operation
                 await _unitOfWorkDb.companyCommandRepository.UpdateAsync(company);

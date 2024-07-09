@@ -30,6 +30,7 @@ namespace Project.Application.Features.CompanyFeatures.Handlers.CommandHandlers
         [Required(ErrorMessage = "BIN is required.")]
         public string BIN { get; set; }
         public string CreatedBy { get; set; }
+        public bool IsActive { get; set; }
 
     }
     public class CreateCompanyHandler : IRequestHandler<CreateCompanyCommand, ApiResponse<string>>
@@ -57,6 +58,7 @@ namespace Project.Application.Features.CompanyFeatures.Handlers.CommandHandlers
                     ContactPerNum = request.ContactPerNum,
                     ContactNumber = request.ContactNumber,
                     BIN = request.BIN,
+                    IsActive = request.IsActive,
 
                 };
                 await _unitOfWorkDb.companyCommandRepository.AddAsync(newCompany);

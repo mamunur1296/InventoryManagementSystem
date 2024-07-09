@@ -1,15 +1,16 @@
 ﻿using AutoMapper;
 using MediatR;
+using Project.Application.ApiResponse;
 using Project.Application.DTOs;
-using Project.Application.Interfaces;
 using Project.Domail.Abstractions;
+using System.Net;
 
 namespace Project.Application.Features.DeliveryAddressFeatures.Handlers.QueryHandlers
 {
-    public class GetAllDeliveryAddressQuery : IRequest<IEnumerable<DeliveryAddressDTO>>
+    public class GetAllDeliveryAddressQuery : IRequest<ApiResponse<IEnumerable<DeliveryAddressDTO>>>
     {
     }
-    public class GetAllDeliveryAddressHandler : IRequestHandler<GetAllDeliveryAddressQuery, IEnumerable<DeliveryAddressDTO>>
+    public class GetAllDeliveryAddressHandler : IRequestHandler<GetAllDeliveryAddressQuery, ApiResponse<IEnumerable<DeliveryAddressDTO>>>
     {
         private readonly IUnitOfWorkDb _unitOfWorkDb;
         private readonly IMapper _mapper;
@@ -20,23 +21,27 @@ namespace Project.Application.Features.DeliveryAddressFeatures.Handlers.QueryHan
         }
 
 
-        public async Task<IEnumerable<DeliveryAddressDTO>> Handle(GetAllDeliveryAddressQuery request, CancellationToken cancellationToken)
+        public async Task<ApiResponse<IEnumerable<DeliveryAddressDTO>>> Handle(GetAllDeliveryAddressQuery request, CancellationToken cancellationToken)
         {
+            var response = new ApiResponse<IEnumerable<DeliveryAddressDTO>>();
             try
             {
-                
+                // Get all delivery Address
                 var deliveryAddressList = await _unitOfWorkDb.deliveryAddressQueryRepository.GetAllAsync();
+                // Map delivery Address to DTOs
                 var deliveryAddressDto = deliveryAddressList.Select(item => _mapper.Map<DeliveryAddressDTO>(item));
-                return deliveryAddressDto;
+
+                response.Data = deliveryAddressDto;
+                response.Status = HttpStatusCode.OK;
                
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                response.Success = false;
+                response.ErrorMessage = ex.Message;
+                response.Status = HttpStatusCode.InternalServerError;
             }
-
-            
+            return response;
         }
     }
 }

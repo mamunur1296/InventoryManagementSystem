@@ -19,9 +19,8 @@ namespace Projects.Api.Controllers
         [HttpPost("CreateDeliveryAddress")]
         public async Task<IActionResult> Create(CreateDeliveryAddressCommand commend)
         {
-            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            commend.CreatedBy = userId ?? "Anonymous ";
-            if (commend == null) return BadRequest();
+            var user = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            commend.CreatedBy = user;
             return Ok(await _mediator.Send(commend));
         }
         [HttpGet("getAllDeliveryAddress")]
@@ -42,12 +41,8 @@ namespace Projects.Api.Controllers
         [HttpPut("UpdateDeliveryAddress/{id}")]
         public async Task<IActionResult> Update(Guid id, UpdateDeliveryAddressCommand commend)
         {
-            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            commend.UpdatedBy = userId ?? "Anonymous ";
-            if (id != commend.Id)
-            {
-                return BadRequest();
-            }
+            var user = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            commend.UpdatedBy = user;
             return Ok(await _mediator.Send(commend));
         }
     }

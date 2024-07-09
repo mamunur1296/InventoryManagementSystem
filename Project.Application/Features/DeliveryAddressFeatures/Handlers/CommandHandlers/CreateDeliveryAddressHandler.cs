@@ -23,7 +23,8 @@ namespace Project.Application.Features.DeliveryAddressFeatures.Handlers.CommandH
         [Required(ErrorMessage = "Mobile is required.")]
         [RegularExpression("^[0-9]{11}$", ErrorMessage = "Mobile must be 11 digits.")]
         public string? Mobile { get; set; }
-
+        public bool? IsActive { get; set; }
+        public bool? IsDefault { get; set; }
         public string? CreatedBy { get; set; }
 
     }
@@ -51,8 +52,8 @@ namespace Project.Application.Features.DeliveryAddressFeatures.Handlers.CommandH
                     Phone = request.Phone,
                     Mobile = request.Mobile,
                     Address = request.Address,
-                    IsActive = true,
-                    IsDefault = true,
+                    IsActive = request.IsActive,
+                    IsDefault = request.IsDefault,
                 };
 
                 await _unitOfWorkDb.deliveryAddressCommandRepository.AddAsync(newDelivaryAddress);
@@ -60,7 +61,7 @@ namespace Project.Application.Features.DeliveryAddressFeatures.Handlers.CommandH
 
                 response.Success = true;
                 response.Data = $"Delivery Address id = {newDelivaryAddress.Id} created successfully!";
-                response.Status = HttpStatusCode.OK; // Set status code to 200 (OK)
+                response.Status = HttpStatusCode.Created; // Set status code to 200 (OK)
             }
             catch (Exception ex)
             {
