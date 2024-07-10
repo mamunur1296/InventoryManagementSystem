@@ -1,15 +1,17 @@
 ﻿using AutoMapper;
 using MediatR;
+using Project.Application.ApiResponse;
 using Project.Application.DTOs;
 using Project.Domail.Abstractions;
+using System.Net;
 
 
 namespace Project.Application.Features.ValveFeatures.Handlers.QueryHandlers
 {
-    public class GetAllValveQuery : IRequest<IEnumerable<ValveDTO>>
+    public class GetAllValveQuery : IRequest<ApiResponse<IEnumerable<ValveDTO>>>
     {
     }
-    public class GetAllValveHandler : IRequestHandler<GetAllValveQuery, IEnumerable<ValveDTO>>
+    public class GetAllValveHandler : IRequestHandler<GetAllValveQuery, ApiResponse<IEnumerable<ValveDTO>>>
     {
         private readonly IUnitOfWorkDb _unitOfWorkDb;
         private readonly IMapper _mapper;
@@ -19,19 +21,24 @@ namespace Project.Application.Features.ValveFeatures.Handlers.QueryHandlers
             _mapper = mapper;
         }
  
-        public async Task<IEnumerable<ValveDTO>> Handle(GetAllValveQuery request, CancellationToken cancellationToken)
+        public async Task<ApiResponse<IEnumerable<ValveDTO>>> Handle(GetAllValveQuery request, CancellationToken cancellationToken)
         {
+            var response = new ApiResponse<IEnumerable<ValveDTO>>();
             try
             {
                 var valveList = await _unitOfWorkDb.valverQueryRepository.GetAllAsync();
                 var result = valveList.Select(x => _mapper.Map<ValveDTO>(x));
-                return result;
+                response.Data = result;
+                response.Status = HttpStatusCode.OK;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
 
-                throw;
+                response.Success = false;
+                response.ErrorMessage = ex.Message;
+                response.Status = HttpStatusCode.InternalServerError;
             }
+            return response;
         }
     }
 }

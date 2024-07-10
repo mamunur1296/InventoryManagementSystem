@@ -1,8 +1,8 @@
-﻿using Project.Domail.Abstractions.QueryRepositories;
+﻿using Microsoft.EntityFrameworkCore;
+using Project.Domail.Abstractions.QueryRepositories;
 using Project.Domail.Entities;
 using Project.Infrastructure.DataContext;
 using Project.Infrastructure.Implementation.Query.Base;
-
 
 namespace Project.Infrastructure.Implementation.Query
 {
@@ -14,6 +14,8 @@ namespace Project.Infrastructure.Implementation.Query
         {
             _applicationDbContext = applicationDbContext;
         }
+
+        
         // Implement additional methods specific to ProductQueryRepository here
     }
 }

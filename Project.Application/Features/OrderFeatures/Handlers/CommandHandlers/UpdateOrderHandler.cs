@@ -3,6 +3,7 @@ using MediatR;
 using Project.Application.ApiResponse;
 using Project.Application.Exceptions;
 using Project.Domail.Abstractions;
+using Project.Domail.Entities;
 using System.Net;
 
 namespace Project.Application.Features.OrderFeatures.Handlers.CommandHandlers
@@ -15,6 +16,13 @@ namespace Project.Application.Features.OrderFeatures.Handlers.CommandHandlers
         public Guid ReturnProductId { get; set; }
         public string TransactionNumber { get; set; } 
         public string Comments { get; set; }
+        public bool IsHold { get; set; }
+        public bool IsCancel { get; set; }
+        public bool IsPlaced { get; set; }
+        public bool IsConfirmed { get; set; }
+        public bool IsDispatched { get; set; }
+        public bool IsReadyToDispatch { get; set; }
+        public bool IsDelivered { get; set; }
         public string UpdatedBy { get; set; }
     }
     public class UpdateOrderHandler : IRequestHandler<UpdateOrderCommand, ApiResponse<string>>
@@ -34,11 +42,15 @@ namespace Project.Application.Features.OrderFeatures.Handlers.CommandHandlers
             var order = await _unitOfWorkDb.orderQueryRepository.GetByIdAsync(request.Id);
 
             // Check if the delivery address exists
-            if (order == null)
+            if (order == null || order.Id != request.Id)
             {
-                throw new NotFoundException($"order with id = {request.Id} not found");
-            }
 
+                response.Success = false;
+                response.Data = "An error occurred while updating the order";
+                response.ErrorMessage = $"order with id = {request.Id} not found";
+                response.Status = HttpStatusCode.NotFound;
+                return response;
+            }
 
             try
             {
@@ -51,6 +63,15 @@ namespace Project.Application.Features.OrderFeatures.Handlers.CommandHandlers
                 order.UpdatedBy = request.UpdatedBy;
                 order.Comments = request.Comments;
                 order.TransactionNumber = request.TransactionNumber;
+                order.IsDispatched = request.IsDispatched;
+                order.UpdateDate = DateTime.Now;
+                order.IsCancel= request.IsCancel;
+                order.IsHold= request.IsHold;
+                order.IsDelivered = request.IsDelivered;
+                order.IsDispatched= request.IsDispatched;
+                order.IsConfirmed= request.IsConfirmed;
+                order.IsPlaced= request.IsPlaced;
+                order.IsReadyToDispatch = request.IsReadyToDispatch;
 
 
 

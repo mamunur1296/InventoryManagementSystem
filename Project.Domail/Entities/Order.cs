@@ -1,5 +1,4 @@
 ﻿using Project.Domail.Entities.Base;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Project.Domail.Entities
 {
@@ -13,8 +12,8 @@ namespace Project.Domail.Entities
         public Guid ReturnProductId { get; set; }
         public bool IsPlaced { get; set; }
         public bool IsConfirmed { get; set; }
-        public string TransactionNumber { get; set; } //
-        public string  Comments { get; set; }//
+        public string TransactionNumber { get; set; } 
+        public string  Comments { get; set; }
         public bool IsDispatched { get; set; }
         public bool IsReadyToDispatch { get; set; }
         public bool IsDelivered { get; set; }

@@ -263,6 +263,10 @@ namespace Project.Infrastructure.Services
             return result.Succeeded;
         }
 
-       
+        public async Task<bool> IsUserExistsAsync(string userId)
+        {
+            var user = await _userManager.FindByIdAsync(userId);
+            return user != null;
+        }
     }
 }

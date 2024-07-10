@@ -1,11 +1,13 @@
 ﻿using AutoMapper;
 using MediatR;
+using Project.Application.ApiResponse;
 using Project.Application.DTOs;
 using Project.Domail.Abstractions;
+using System.Net;
 
 namespace Project.Application.Features.ProductSizeFeatures.Handlers.QueryHandlers
 {
-    public class GetProductSizeByIdQuery : IRequest<ProductSizeDTO>
+    public class GetProductSizeByIdQuery : IRequest<ApiResponse<ProductSizeDTO>>
     {
         public GetProductSizeByIdQuery(Guid id)
         {
@@ -14,7 +16,7 @@ namespace Project.Application.Features.ProductSizeFeatures.Handlers.QueryHandler
 
         public Guid Id { get; private set; }
     }
-    public class GetProductSizeByIdHandler : IRequestHandler<GetProductSizeByIdQuery, ProductSizeDTO>
+    public class GetProductSizeByIdHandler : IRequestHandler<GetProductSizeByIdQuery, ApiResponse<ProductSizeDTO>>
     {
         private readonly IUnitOfWorkDb _unitOfWorkDb;
         private readonly IMapper _mapper;
@@ -25,19 +27,30 @@ namespace Project.Application.Features.ProductSizeFeatures.Handlers.QueryHandler
             _mapper = mapper;
         }
        
-        public async Task<ProductSizeDTO> Handle(GetProductSizeByIdQuery request, CancellationToken cancellationToken)
+        public async Task<ApiResponse<ProductSizeDTO>> Handle(GetProductSizeByIdQuery request, CancellationToken cancellationToken)
         {
+            var response = new ApiResponse<ProductSizeDTO>();
             try
             {
                 var productSize = await _unitOfWorkDb.productSizeQueryRepository.GetByIdAsync(request.Id);
+                if (productSize == null)
+                {
+                    response.Success = false;
+                    response.ErrorMessage = $"product Size with id = {request.Id} not found";
+                    response.Status = HttpStatusCode.NotFound;
+                    return response;
+                }
                 var newProductSize = _mapper.Map<ProductSizeDTO>(productSize);
-                return newProductSize;
+                response.Data = newProductSize;
+                response.Status = HttpStatusCode.OK;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                response.Success = false;
+                response.ErrorMessage = ex.Message;
+                response.Status = HttpStatusCode.InternalServerError;
             }
+            return response;
         }
     }
 }

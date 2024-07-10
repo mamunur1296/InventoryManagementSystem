@@ -68,7 +68,7 @@ namespace Project.Application.Features.TraderFeatures.Handlers.CommandHandlers
                 await _unitOfWorkDb.SaveAsync();
                 response.Success = true;
                 response.Data = $"Trader id = {newTrader.Id} Created Successfully!";
-                response.Status = HttpStatusCode.OK; // Set status code to 200 (OK)
+                response.Status = HttpStatusCode.Created; // Set status code to 200 (OK)
             }
             catch (Exception ex)
             {

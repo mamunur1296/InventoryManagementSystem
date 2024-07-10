@@ -42,11 +42,16 @@ namespace Project.Application.Features.ProductDiscuntFeatures.Handlers.CommandHa
             var productDiscount = await _unitOfWorkDb.productDiscuntQueryRepository.GetByIdAsync(request.Id);
 
             // Check if the delivery address exists
-            if (productDiscount == null)
+        
+            if (productDiscount == null || productDiscount.Id != request.Id)
             {
-                throw new NotFoundException($"product Discount with id = {request.Id} not found");
-            }
 
+                response.Success = false;
+                response.Data = "An error occurred while updating the product Discount ";
+                response.ErrorMessage = $"product Discount with id = {request.Id} not found";
+                response.Status = HttpStatusCode.NotFound;
+                return response;
+            }
 
             try
             {

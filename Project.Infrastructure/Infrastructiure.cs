@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Project.Application.Interfaces;
+using Project.Application.Utilities;
 using Project.Domail.Abstractions;
 using Project.Infrastructure.DataContext;
 using Project.Infrastructure.Implementation;
@@ -38,6 +39,7 @@ namespace Project.Infrastructiure
             });
             services.AddScoped<IUnitOfWorkDb, UnitOfWorkDb>();
             services.AddScoped<IIdentityService, IdentityService>();
+            services.AddScoped<IUtilities, Utilities>();
             return services;
         }
     }

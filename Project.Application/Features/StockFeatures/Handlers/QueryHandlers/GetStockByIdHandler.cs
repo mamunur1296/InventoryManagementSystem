@@ -1,12 +1,14 @@
 ﻿using AutoMapper;
 using MediatR;
+using Project.Application.ApiResponse;
 using Project.Application.DTOs;
 using Project.Domail.Abstractions;
+using System.Net;
 
 
 namespace Project.Application.Features.StockFeatures.Handlers.QueryHandlers
 {
-    public class GetStockByIdQuery : IRequest<StockDTO>
+    public class GetStockByIdQuery : IRequest<ApiResponse<StockDTO>>
     {
         public GetStockByIdQuery(Guid id)
         {
@@ -16,7 +18,7 @@ namespace Project.Application.Features.StockFeatures.Handlers.QueryHandlers
         public Guid Id { get; private set; }
 
     }
-    public class GetStockByIdHandler : IRequestHandler<GetStockByIdQuery, StockDTO>
+    public class GetStockByIdHandler : IRequestHandler<GetStockByIdQuery, ApiResponse<StockDTO>>
     {
         private readonly IUnitOfWorkDb _unitOfWorkDb;
         private readonly IMapper _mapper;
@@ -26,19 +28,30 @@ namespace Project.Application.Features.StockFeatures.Handlers.QueryHandlers
             _unitOfWorkDb = unitOfWorkDb;
             _mapper = mapper;
         }
-        public async Task<StockDTO> Handle(GetStockByIdQuery request, CancellationToken cancellationToken)
+        public async Task<ApiResponse<StockDTO>> Handle(GetStockByIdQuery request, CancellationToken cancellationToken)
         {
+            var response = new ApiResponse<StockDTO>();
             try
             {
                 var stock = await _unitOfWorkDb.stockQueryRepository.GetByIdAsync(request.Id);
+                if (stock == null)
+                {
+                    response.Success = false;
+                    response.ErrorMessage = $"stock with id = {request.Id} not found";
+                    response.Status = HttpStatusCode.NotFound;
+                    return response;
+                }
                 var newStock = _mapper.Map<StockDTO>(stock);
-                return newStock;
+                response.Data = newStock;
+                response.Status = HttpStatusCode.OK;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                response.Success = false;
+                response.ErrorMessage = ex.Message;
+                response.Status = HttpStatusCode.InternalServerError;
             }
+            return response;
         }
     }
 }

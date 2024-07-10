@@ -2,9 +2,9 @@
 
 namespace Project.Application.DTOs
 {
-    public class ProductDTO
+    public class ProductDTO : BaseDTOs
     {
-        public Guid Id { get; set; }
+
         public Guid CompanyId { get; set; }
         public string Name { get; set; }
         public Guid ProdSizeId { get; set; }

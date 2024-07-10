@@ -16,6 +16,7 @@ namespace Project.Application.Interfaces
         Task<(string userId, string FirstName, string LastName, string UserName, string email, IList<string> roles)> GetUserDetailsByUserNameAsync(string userName);
         Task<string> GetUserNameAsync(string userId);
         Task<bool> DeleteUserAsync(string userId);
+        Task<bool> IsUserExistsAsync(string userId);
         Task<bool> IsUniqueUserName(string userName);
         Task<List<(string id, string FirstName, string LastName,string Phone, string userName, string email)>> GetAllUsersAsync();
         Task<List<(string id, string userName, string email, IList<string> roles)>> GetAllUsersDetailsAsync();

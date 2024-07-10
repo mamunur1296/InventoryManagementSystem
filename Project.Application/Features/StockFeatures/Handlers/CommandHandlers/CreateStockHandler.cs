@@ -51,7 +51,7 @@ namespace Project.Application.Features.StockFeatures.Handlers.CommandHandlers
 
                 response.Success = true;
                 response.Data = $" Stock  id = {newStock.Id} created successfully!";
-                response.Status = HttpStatusCode.OK; // Set status code to 200 (OK)
+                response.Status = HttpStatusCode.Created; // Set status code to 200 (OK)
             }
             catch (Exception ex)
             {

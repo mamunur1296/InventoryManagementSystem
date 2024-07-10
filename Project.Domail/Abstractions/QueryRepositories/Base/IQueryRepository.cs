@@ -4,6 +4,7 @@
     {
         Task<IEnumerable<T>> GetAllAsync();
         Task<T> GetByIdAsync(Guid id);
+        Task<bool> IsInExistsAsync(Guid id);
         // Generic repository for all if any
     }
 }

@@ -2,6 +2,7 @@
 using Project.Application.ApiResponse;
 using Project.Application.Exceptions;
 using Project.Domail.Abstractions;
+using Project.Domail.Entities;
 using System.Net;
 
 
@@ -30,9 +31,14 @@ namespace Project.Application.Features.TraderFeatures.Handlers.CommandHandlers
             var response = new ApiResponse<string>();
             var trader = await _unitOfWorkDb.traderQueryRepository.GetByIdAsync(request.Id);
 
+           
             if (trader == null)
             {
-                throw new NotFoundException($"trader with id = {request.Id} not found");
+                response.Success = false;
+                response.Data = "An error occurred while deleting the trader";
+                response.ErrorMessage = $"trader with id = {request.Id} not found";
+                response.Status = HttpStatusCode.NotFound;
+                return response;
             }
             else
             {

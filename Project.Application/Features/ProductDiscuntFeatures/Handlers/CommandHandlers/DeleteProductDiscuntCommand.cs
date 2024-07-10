@@ -31,9 +31,14 @@ namespace Project.Application.Features.ProductDiscuntFeatures.Handlers.CommandHa
             var response = new ApiResponse<string>();
             var productDiscount = await _unitOfWorkDb.productDiscuntQueryRepository.GetByIdAsync(request.id);
 
+            
             if (productDiscount == null)
             {
-                throw new NotFoundException($"product Discount with id = {request.id} not found");
+                response.Success = false;
+                response.Data = "An error occurred while deleting the product Discount";
+                response.ErrorMessage = $"product Discount with id = {request.id} not found";
+                response.Status = HttpStatusCode.NotFound;
+                return response;
             }
             else
             {

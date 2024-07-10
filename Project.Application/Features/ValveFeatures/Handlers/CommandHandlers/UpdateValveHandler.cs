@@ -3,6 +3,7 @@ using MediatR;
 using Project.Application.ApiResponse;
 using Project.Application.Exceptions;
 using Project.Domail.Abstractions;
+using Project.Domail.Entities;
 using System.ComponentModel.DataAnnotations;
 using System.Net;
 
@@ -36,14 +37,19 @@ namespace Project.Application.Features.ValveFeatures.Handlers.CommandHandlers
 
             var valve = await _unitOfWorkDb.valverQueryRepository.GetByIdAsync(request.Id);
 
+
             if (valve == null || valve.Id != request.Id)
             {
-                throw new NotFoundException($"valve with id = {request.Id} not found");
-            }
 
+                response.Success = false;
+                response.Data = "An error occurred while updating the valve  ";
+                response.ErrorMessage = $"valve with id = {request.Id} not found";
+                response.Status = HttpStatusCode.NotFound;
+                return response;
+            }
             try
             {
-                // Update company properties
+                // Update valve properties
                 valve.Name = request.Name;
                 valve.Unit = request.Unit;
                 valve.UpdatedBy = request.UpdatedBy;
@@ -52,7 +58,7 @@ namespace Project.Application.Features.ValveFeatures.Handlers.CommandHandlers
                 await _unitOfWorkDb.valveCommandRepository.UpdateAsync(valve);
                 await _unitOfWorkDb.SaveAsync();
 
-                // Map the updated company to your DTO model if needed
+                // Map the updated valve to your DTO model if needed
                 response.Success = true;
                 response.Data = $"valve with id = {valve.Id} updated successfully";
                 response.Status = HttpStatusCode.OK;
@@ -61,7 +67,7 @@ namespace Project.Application.Features.ValveFeatures.Handlers.CommandHandlers
             {
                 // Log the exception or handle it accordingly
                 response.Success = false;
-                response.Data = "An error occurred while updating the trader";
+                response.Data = "An error occurred while updating the valve";
                 response.ErrorMessage = ex.Message;
                 response.Status = HttpStatusCode.InternalServerError;
             }

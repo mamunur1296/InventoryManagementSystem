@@ -2,6 +2,7 @@
 using Project.Application.ApiResponse;
 using Project.Application.Exceptions;
 using Project.Domail.Abstractions;
+using Project.Domail.Entities;
 using System.ComponentModel.DataAnnotations;
 using System.Net;
 
@@ -45,11 +46,16 @@ namespace Project.Application.Features.ProductFeatures.Handlers.CommandHandlers
             var product = await _unitOfWorkDb.productQueryRepository.GetByIdAsync(request.Id);
 
             // Check if the delivery address exists
-            if (product == null)
+            
+            if (product == null || product.Id != request.Id)
             {
-                throw new NotFoundException($"product  with id = {request.Id} not found");
-            }
 
+                response.Success = false;
+                response.Data = "An error occurred while updating the product  ";
+                response.ErrorMessage = $"product  with id = {request.Id} not found";
+                response.Status = HttpStatusCode.NotFound;
+                return response;
+            }
 
             try
             {

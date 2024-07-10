@@ -2,6 +2,7 @@
 using Project.Application.ApiResponse;
 using Project.Application.Exceptions;
 using Project.Domail.Abstractions;
+using Project.Domail.Entities;
 using System.Net;
 
 
@@ -30,9 +31,14 @@ namespace Project.Application.Features.StockFeatures.Handlers.CommandHandlers
             var response = new ApiResponse<string>();
             var stock = await _unitOfWorkDb.stockQueryRepository.GetByIdAsync(request.Id);
 
+            
             if (stock == null)
             {
-                throw new NotFoundException($"stock with id = {request.Id} not found");
+                response.Success = false;
+                response.Data = "An error occurred while deleting the stock";
+                response.ErrorMessage = $"stock with id = {request.Id} not found";
+                response.Status = HttpStatusCode.NotFound;
+                return response;
             }
             else
             {

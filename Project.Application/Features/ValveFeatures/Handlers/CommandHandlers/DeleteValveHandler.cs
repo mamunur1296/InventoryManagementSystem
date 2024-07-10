@@ -31,7 +31,11 @@ namespace Project.Application.Features.ValveFeatures.Handlers.CommandHandlers
 
             if (valve == null)
             {
-                throw new NotFoundException($"valve with id = {request.Id} not found");
+                response.Success = false;
+                response.Data = "An error occurred while deleting the valve";
+                response.ErrorMessage = $"valve with id = {request.Id} not found";
+                response.Status = HttpStatusCode.NotFound;
+                return response;
             }
             else
             {

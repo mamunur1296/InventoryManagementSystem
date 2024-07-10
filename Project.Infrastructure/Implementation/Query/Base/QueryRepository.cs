@@ -21,5 +21,10 @@ namespace Project.Infrastructure.Implementation.Query.Base
         {
             return await _dbSet.FindAsync(id);
         }
+
+        public async Task<bool> IsInExistsAsync(Guid id)
+        {
+            return await _dbSet.AnyAsync(e => EF.Property<Guid>(e, "Id") == id);
+        }
     }
 }

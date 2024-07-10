@@ -1,14 +1,16 @@
 ﻿using AutoMapper;
 using MediatR;
+using Project.Application.ApiResponse;
 using Project.Application.DTOs;
 using Project.Domail.Abstractions;
+using System.Net;
 
 namespace Project.Application.Features.ProductSizeFeatures.Handlers.QueryHandlers
 {
-    public class GetAllProductSizeQuery : IRequest<IEnumerable<ProductSizeDTO>>
+    public class GetAllProductSizeQuery : IRequest<ApiResponse<IEnumerable<ProductSizeDTO>>>
     {
     }
-    public class GetAllProductSizeHandler : IRequestHandler<GetAllProductSizeQuery, IEnumerable<ProductSizeDTO>>
+    public class GetAllProductSizeHandler : IRequestHandler<GetAllProductSizeQuery, ApiResponse<IEnumerable<ProductSizeDTO>>>
     {
         private readonly IUnitOfWorkDb _unitOfWorkDb;
         private readonly IMapper _mapper;
@@ -19,19 +21,23 @@ namespace Project.Application.Features.ProductSizeFeatures.Handlers.QueryHandler
         }
 
 
-        public async Task<IEnumerable<ProductSizeDTO>> Handle(GetAllProductSizeQuery request, CancellationToken cancellationToken)
+        public async Task<ApiResponse<IEnumerable<ProductSizeDTO>>> Handle(GetAllProductSizeQuery request, CancellationToken cancellationToken)
         {
+            var response = new ApiResponse<IEnumerable<ProductSizeDTO>>();
             try
             {
                 var productSizesList = await _unitOfWorkDb.productSizeQueryRepository.GetAllAsync();
                 var restult = productSizesList.Select(x => _mapper.Map<ProductSizeDTO>(x));
-                return restult;
+                response.Data = restult;
+                response.Status = HttpStatusCode.OK;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                response.Success = false;
+                response.ErrorMessage = ex.Message;
+                response.Status = HttpStatusCode.InternalServerError;
             }
+            return response;
         }
     }
 }

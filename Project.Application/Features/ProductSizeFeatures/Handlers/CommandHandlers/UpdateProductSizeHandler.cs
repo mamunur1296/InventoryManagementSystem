@@ -2,6 +2,7 @@
 using Project.Application.ApiResponse;
 using Project.Application.Exceptions;
 using Project.Domail.Abstractions;
+using Project.Domail.Entities;
 using System.ComponentModel.DataAnnotations;
 using System.Net;
 
@@ -29,21 +30,26 @@ namespace Project.Application.Features.ProductSizeFeatures.Handlers.CommandHandl
             // Initialize response object
             var response = new ApiResponse<string>();
 
-            // Retrieve the delivery address by id
+            // Retrieve the productSize by id
             var productSize = await _unitOfWorkDb.productSizeQueryRepository.GetByIdAsync(request.Id);
 
-            // Check if the delivery address exists
-            if (productSize == null)
-            {
-                throw new NotFoundException($"product Size  with id = {request.Id} not found");
-            }
+            // Check if the productSize exists
 
+            if (productSize == null || productSize.Id != request.Id)
+            {
+
+                response.Success = false;
+                response.Data = "An error occurred while updating the productSize  ";
+                response.ErrorMessage = $"product Size  with id = {request.Id} not found";
+                response.Status = HttpStatusCode.NotFound;
+                return response;
+            }
 
             try
             {
 
 
-                // Update delivery address properties
+                // Update productSize properties
                 productSize.UpdatedBy = request.UpdatedBy;
                 productSize.Size = request.Size;
                 productSize.Unit = request.Unit;

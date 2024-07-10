@@ -3,6 +3,7 @@ using MediatR;
 using Project.Application.ApiResponse;
 using Project.Application.Exceptions;
 using Project.Domail.Abstractions;
+using Project.Domail.Entities;
 using System.ComponentModel.DataAnnotations;
 using System.Net;
 
@@ -47,21 +48,26 @@ namespace Project.Application.Features.RetailerFeatures.Handlers.CommandHandlers
             // Initialize response object
             var response = new ApiResponse<string>();
 
-            // Retrieve the delivery address by id
+            // Retrieve the retailer by id
             var retailer = await _unitOfWorkDb.retailerQueryRepository.GetByIdAsync(request.Id);
 
-            // Check if the delivery address exists
-            if (retailer == null)
+            // Check if the retailer exists
+            
+            if (retailer == null || retailer.Id != request.Id)
             {
-                throw new NotFoundException($"retailer  with id = {request.Id} not found");
-            }
 
+                response.Success = false;
+                response.Data = "An error occurred while updating the retailer  ";
+                response.ErrorMessage = $"retailer  with id = {request.Id} not found";
+                response.Status = HttpStatusCode.NotFound;
+                return response;
+            }
 
             try
             {
 
 
-                // Update delivery address properties
+                // Update retailer properties
                 retailer.UpdatedBy = request.UpdatedBy;
                 retailer.BIN = request.BIN;
                 retailer.Name = request.Name;

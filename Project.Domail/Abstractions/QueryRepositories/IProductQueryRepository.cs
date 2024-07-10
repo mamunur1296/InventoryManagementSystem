@@ -4,6 +4,6 @@ namespace Project.Domail.Abstractions.QueryRepositories
 {
     public interface IProductQueryRepository : IQueryRepository<Product>
     {
-        // Add specific Query methods here if needed
+        // Add specific Query methods here if neede
     }
 }

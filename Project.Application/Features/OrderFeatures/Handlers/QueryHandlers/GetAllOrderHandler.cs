@@ -1,15 +1,17 @@
 ﻿using AutoMapper;
 using MediatR;
+using Project.Application.ApiResponse;
 using Project.Application.DTOs;
 using Project.Domail.Abstractions;
-using Project.Domail.Entities;
+using System.Net;
+
 
 namespace Project.Application.Features.OrderFeatures.Handlers.QueryHandlers
 {
-    public class GetAllOrderQuery : IRequest<IEnumerable<OrderDTO>>
+    public class GetAllOrderQuery : IRequest<ApiResponse<IEnumerable<OrderDTO>>>
     {
     }
-    public class GetAllOrderHandler : IRequestHandler<GetAllOrderQuery, IEnumerable<OrderDTO>>
+    public class GetAllOrderHandler : IRequestHandler<GetAllOrderQuery, ApiResponse<IEnumerable<OrderDTO>>>
     {
         private readonly IUnitOfWorkDb _unitOfWorkDb;
         private readonly IMapper _mapper;
@@ -19,19 +21,29 @@ namespace Project.Application.Features.OrderFeatures.Handlers.QueryHandlers
             _mapper = mapper;
         }
 
-        public async Task<IEnumerable<OrderDTO>> Handle(GetAllOrderQuery request, CancellationToken cancellationToken)
+        public async Task<ApiResponse<IEnumerable<OrderDTO>>> Handle(GetAllOrderQuery request, CancellationToken cancellationToken)
         {
+            var response = new ApiResponse<IEnumerable<OrderDTO>>();
             try
             {
+                
+                
+                // Get all orders
                 var orders = await _unitOfWorkDb.orderQueryRepository.GetAllAsync();
+                // Map orders to DTOs
                 var ordersDto = orders.Select(item => _mapper.Map<OrderDTO>(item));
-                return ordersDto;
+
+                response.Data = ordersDto;
+                response.Status = HttpStatusCode.OK;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
 
-                throw;
+                response.Success = false;
+                response.ErrorMessage = ex.Message;
+                response.Status = HttpStatusCode.InternalServerError;
             }
+            return response;
         }
 
     }

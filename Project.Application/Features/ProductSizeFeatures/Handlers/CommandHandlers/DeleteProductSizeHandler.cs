@@ -2,6 +2,7 @@
 using Project.Application.ApiResponse;
 using Project.Application.Exceptions;
 using Project.Domail.Abstractions;
+using Project.Domail.Entities;
 using System.Net;
 
 namespace Project.Application.Features.ProductSizeFeatures.Handlers.CommandHandlers
@@ -29,9 +30,14 @@ namespace Project.Application.Features.ProductSizeFeatures.Handlers.CommandHandl
             var response = new ApiResponse<string>();
             var productSize = await _unitOfWorkDb.productSizeQueryRepository.GetByIdAsync(request.Id);
 
+            
             if (productSize == null)
             {
-                throw new NotFoundException($"product Size  with id = {request.Id} not found");
+                response.Success = false;
+                response.Data = "An error occurred while deleting the product Size";
+                response.ErrorMessage = $"product Size  with id = {request.Id} not found";
+                response.Status = HttpStatusCode.NotFound;
+                return response;
             }
             else
             {

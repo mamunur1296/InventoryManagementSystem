@@ -2,6 +2,7 @@
 using Project.Application.ApiResponse;
 using Project.Application.Exceptions;
 using Project.Domail.Abstractions;
+using Project.Domail.Entities;
 using System.Net;
 
 namespace Project.Application.Features.ProdReturnFeatures.Handlers.CommandHandlers
@@ -30,9 +31,14 @@ namespace Project.Application.Features.ProdReturnFeatures.Handlers.CommandHandle
             var response = new ApiResponse<string>();
             var productReturn = await _unitOfWorkDb.prodReturnQueryRepository.GetByIdAsync(request.id);
 
+            
             if (productReturn == null)
             {
-                throw new NotFoundException($"product Return with id = {request.id} not found");
+                response.Success = false;
+                response.Data = "An error occurred while deleting the product Return";
+                response.ErrorMessage = $"product Return with id = {request.id} not found";
+                response.Status = HttpStatusCode.NotFound;
+                return response;
             }
             else
             {

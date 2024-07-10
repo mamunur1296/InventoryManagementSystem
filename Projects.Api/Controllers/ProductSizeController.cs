@@ -38,10 +38,6 @@ namespace Projects.Api.Controllers
         [HttpPut("UpdateProductSize/{id}")]
         public async Task<IActionResult> Update(Guid id, UpdateProductSizeCommand commend)
         {
-            if (id != commend.Id)
-            {
-                return BadRequest();
-            }
             return Ok(await _mediator.Send(commend));
         }
     }

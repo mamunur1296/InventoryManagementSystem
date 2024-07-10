@@ -2,6 +2,7 @@
 using Project.Application.ApiResponse;
 using Project.Application.Exceptions;
 using Project.Domail.Abstractions;
+using Project.Domail.Entities;
 using System.ComponentModel.DataAnnotations;
 using System.Net;
 
@@ -37,21 +38,25 @@ namespace Project.Application.Features.StockFeatures.Handlers.CommandHandlers
             // Initialize response object
             var response = new ApiResponse<string>();
 
-            // Retrieve the delivery address by id
+            // Retrieve the stock by id
             var stock = await _unitOfWorkDb.stockQueryRepository.GetByIdAsync(request.Id);
 
-            // Check if the delivery address exists
-            if (stock == null)
+            // Check if the stock exists
+          
+            if (stock == null || stock.Id != request.Id)
             {
-                throw new NotFoundException($"stock  with id = {request.Id} not found");
+
+                response.Success = false;
+                response.Data = "An error occurred while updating the stock  ";
+                response.ErrorMessage = $"stock  with id = {request.Id} not found";
+                response.Status = HttpStatusCode.NotFound;
+                return response;
             }
-
-
             try
             {
 
 
-                // Update delivery address properties
+                // Update stock properties
                 stock.UpdatedBy = request.UpdatedBy;
                 stock.ProductId = request.ProductId;
                 stock.TraderId = request.TraderId;

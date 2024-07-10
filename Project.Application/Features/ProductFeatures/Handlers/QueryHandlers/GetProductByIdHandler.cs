@@ -1,12 +1,15 @@
 ﻿using AutoMapper;
 using MediatR;
+using Project.Application.ApiResponse;
 using Project.Application.DTOs;
 using Project.Domail.Abstractions;
+using Project.Domail.Entities;
+using System.Net;
 
 
 namespace Project.Application.Features.ProductFeatures.Handlers.QueryHandlers
 {
-    public class GetProductByIdQuery : IRequest<ProductDTO>
+    public class GetProductByIdQuery : IRequest<ApiResponse<ProductDTO>>
     {
         public GetProductByIdQuery(Guid id)
         {
@@ -15,7 +18,7 @@ namespace Project.Application.Features.ProductFeatures.Handlers.QueryHandlers
 
         public Guid id { get; private set; }
     }
-    public class GetProductByIdHandler : IRequestHandler<GetProductByIdQuery, ProductDTO>
+    public class GetProductByIdHandler : IRequestHandler<GetProductByIdQuery, ApiResponse<ProductDTO>>
     {
         private readonly IUnitOfWorkDb _unitOfWorkDb;
         private readonly IMapper _mapper;
@@ -26,19 +29,31 @@ namespace Project.Application.Features.ProductFeatures.Handlers.QueryHandlers
             _mapper = mapper;
         }
   
-        public async Task<ProductDTO> Handle(GetProductByIdQuery request, CancellationToken cancellationToken)
+        public async Task<ApiResponse<ProductDTO>> Handle(GetProductByIdQuery request, CancellationToken cancellationToken)
         {
+            var response = new ApiResponse<ProductDTO>();
             try
             {
                 var product = await _unitOfWorkDb.productQueryRepository.GetByIdAsync(request.id);
+                if (product == null)
+                {
+                    response.Success = false;
+                    response.ErrorMessage = $"product  with id = {request.id} not found";
+                    response.Status = HttpStatusCode.NotFound;
+                    return response;
+                }
                 var newProduct = _mapper.Map<ProductDTO>(product);
-                return newProduct;
-            }
-            catch (Exception)
-            {
+                response.Data = newProduct;
+                response.Status = HttpStatusCode.OK;
 
-                throw;
             }
+            catch (Exception ex)
+            {
+                response.Success = false;
+                response.ErrorMessage = ex.Message;
+                response.Status = HttpStatusCode.InternalServerError;
+            }
+            return response;
         }
     }
 }

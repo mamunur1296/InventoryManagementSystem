@@ -53,7 +53,7 @@ namespace Project.Application.Features.ProductDiscuntFeatures.Handlers.CommandHa
 
                 response.Success = true;
                 response.Data = $" Product Discount id = {newProductDiscunt.Id} created successfully!";
-                response.Status = HttpStatusCode.OK; // Set status code to 200 (OK)
+                response.Status = HttpStatusCode.Created; // Set status code to 200 (OK)
             }
             catch (Exception ex)
             {

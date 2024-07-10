@@ -78,6 +78,7 @@ namespace Project.Application.Features.DeliveryAddressFeatures.Handlers.CommandH
                 deliveryAddress.IsActive = request.IsActive;
                 deliveryAddress.IsDefault= request.IsDefault;
                 deliveryAddress.DeactiveBy = request.DeactiveBy;
+                deliveryAddress.UpdateDate= DateTime.Now;
                 if ((bool)!deliveryAddress.IsActive) deliveryAddress.DeactivatedDate = DateTime.Now;
                 else deliveryAddress.DeactivatedDate = null;
 

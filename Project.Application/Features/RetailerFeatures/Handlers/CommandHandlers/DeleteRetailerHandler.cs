@@ -2,6 +2,7 @@
 using Project.Application.ApiResponse;
 using Project.Application.Exceptions;
 using Project.Domail.Abstractions;
+using Project.Domail.Entities;
 using System.Net;
 
 namespace Project.Application.Features.RetailerFeatures.Handlers.CommandHandlers
@@ -28,9 +29,14 @@ namespace Project.Application.Features.RetailerFeatures.Handlers.CommandHandlers
             var response = new ApiResponse<string>();
             var retailer = await _unitOfWorkDb.retailerQueryRepository.GetByIdAsync(request.Id);
 
+            
             if (retailer == null)
             {
-                throw new NotFoundException($"retailer with id = {request.Id} not found");
+                response.Success = false;
+                response.Data = "An error occurred while deleting the retailer";
+                response.ErrorMessage = $"retailer with id = {request.Id} not found";
+                response.Status = HttpStatusCode.NotFound;
+                return response;
             }
             else
             {

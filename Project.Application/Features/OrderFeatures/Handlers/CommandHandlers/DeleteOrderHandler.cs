@@ -2,6 +2,7 @@
 using Project.Application.ApiResponse;
 using Project.Application.Exceptions;
 using Project.Domail.Abstractions;
+using Project.Domail.Entities;
 using System.Net;
 
 namespace Project.Application.Features.OrderFeatures.Handlers.CommandHandlers
@@ -32,7 +33,11 @@ namespace Project.Application.Features.OrderFeatures.Handlers.CommandHandlers
 
             if (order == null)
             {
-                throw new NotFoundException($"order with id = {request.id} not found");
+                response.Success = false;
+                response.Data = "An error occurred while deleting the order";
+                response.ErrorMessage = $"order with id = {request.id} not found";
+                response.Status = HttpStatusCode.NotFound;
+                return response;
             }
             else
             {
