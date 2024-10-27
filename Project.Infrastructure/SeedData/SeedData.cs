@@ -24,26 +24,29 @@ public static class SeedData
             }
         }
 
-        //// Seed a default admin user
-        //var adminUser = new ApplicationUser
-        //{
-        //    UserName = "admin@admin.com",
-        //    Email = "admin@admin.com",
-        //    EmailConfirmed = true
-        //};
+        // Seed a default admin user
+        var adminUser = new ApplicationUser
+        {
+            UserName = "admin@123",
+            Email = "admin@gmail.com",
+            FirstName = "Super",
+            LastName = "Admin",
+            PhoneNumber = "01711223344",
+           
+        };
 
-        //string adminPassword = "Admin@123";
+        string adminPassword = "admin@123";
 
-        //var user = await userManager.FindByEmailAsync(adminUser.Email);
+        var user = await userManager.FindByEmailAsync(adminUser.Email);
 
-        //if (user == null)
-        //{
-        //    var createAdminUser = await userManager.CreateAsync(adminUser, adminPassword);
-        //    if (createAdminUser.Succeeded)
-        //    {
-        //        // Assign the "Admin" role to the admin user
-        //        await userManager.AddToRoleAsync(adminUser, "Admin");
-        //    }
-        //}
+        if (user == null)
+        {
+            var createAdminUser = await userManager.CreateAsync(adminUser, adminPassword);
+            if (createAdminUser.Succeeded)
+            {
+                // Assign the "Admin" role to the admin user
+                await userManager.AddToRoleAsync(adminUser, "Admin");
+            }
+        }
     }
 }
