@@ -13,7 +13,6 @@ public static class SeedData
         // Seed roles
         string[] roleNames = { "Admin", "User" };
         IdentityResult roleResult;
-
         foreach (var roleName in roleNames)
         {
             var roleExist = await roleManager.RoleExistsAsync(roleName);

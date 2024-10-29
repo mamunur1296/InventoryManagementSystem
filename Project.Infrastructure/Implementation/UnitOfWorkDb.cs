@@ -54,6 +54,10 @@ namespace Project.Infrastructure.Implementation
 
         public IProductDiscuntQueryRepository productDiscuntQueryRepository { get; private set; }
 
+        public IPurchaseCommandRepository purchaseCommandRepository { get; private set; }
+
+        public IPurchaseQueryRepository purchaseQueryRepository { get; private set; }
+
         public UnitOfWorkDb(ApplicationDbContext applicationDbContext)
         {
             _applicationDbContext = applicationDbContext;
@@ -79,6 +83,8 @@ namespace Project.Infrastructure.Implementation
             valverQueryRepository = new ValveQueryRepository(applicationDbContext);
             productDiscuntCommandRepository = new ProductDiscuntCommandRepository(applicationDbContext);
             productDiscuntQueryRepository = new ProductDiscuntQueryRepository(applicationDbContext);
+            purchaseCommandRepository = new PurchaseCommandRepository(applicationDbContext);
+            purchaseQueryRepository=new PurchaseQueryRepository(applicationDbContext);
 
         }
 

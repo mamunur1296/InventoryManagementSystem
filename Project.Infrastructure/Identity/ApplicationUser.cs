@@ -19,6 +19,7 @@ namespace Project.Infrastructure.Identity
         public string? DeactiveBy { get; set; }
         public string? TIN { get; set; }
         public bool? IsBlocked { get; set; }
+        public Guid ? TraderId { get; set; }
         // Navigation properties
         public virtual ICollection<DeliveryAddress>? DeliveryAddresses { get; set; }
         public virtual ICollection<Order>? Orders { get; set; }

@@ -19,6 +19,9 @@ namespace Project.Infrastructure.DataContext
         public DbSet<Stock> ? stacks {  get; set; }
         public DbSet<Trader> ? traders { get; set; }
         public DbSet<Valve> ? valves { get; set; }
+        public DbSet<OrderDetail> orderDetail { get; set; }
+        public DbSet<Purchase> purchases { get; set; }
+        public DbSet<PurchaseDetail> purchaseDetails { get; set; }
         public DbSet<ProductDiscunt> ? productDiscunts { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -29,8 +32,29 @@ namespace Project.Infrastructure.DataContext
                 .HasForeignKey(s => s.TraderId)
                 .OnDelete(DeleteBehavior.NoAction); // Specify ON DELETE NO ACTION
 
+            modelBuilder.Entity<OrderDetail>()
+                .HasOne(od => od.Order)
+                .WithMany()
+                .HasForeignKey(od => od.OrderID)
+                .OnDelete(DeleteBehavior.Cascade);  // Cascade delete on OrderID
 
+            modelBuilder.Entity<OrderDetail>()
+                .HasOne(od => od.Product)
+                .WithMany()
+                .HasForeignKey(od => od.ProductID)
+                .OnDelete(DeleteBehavior.NoAction);
             modelBuilder.Entity<IdentityUserLogin<string>>();
+            modelBuilder.Entity<PurchaseDetail>()
+                .HasOne(pd => pd.Product)
+                .WithMany()
+                .HasForeignKey(pd => pd.ProductID)
+                .OnDelete(DeleteBehavior.NoAction); // No cascade on ProductID
+
+            modelBuilder.Entity<PurchaseDetail>()
+                .HasOne(pd => pd.Purchase)
+                .WithMany(p => p.PurchaseDetails)
+                .HasForeignKey(pd => pd.PurchaseID)
+                .OnDelete(DeleteBehavior.Cascade); // Cascade on PurchaseID
         }
     }
     

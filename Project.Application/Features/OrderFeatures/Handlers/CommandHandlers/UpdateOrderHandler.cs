@@ -16,6 +16,13 @@ namespace Project.Application.Features.OrderFeatures.Handlers.CommandHandlers
         public string TransactionNumber { get; set; } 
         public string Comments { get; set; }
         public string UpdatedBy { get; set; }
+        public bool IsHold { get; set; }
+        public bool IsCancel { get; set; }
+        public bool IsPlaced { get; set; }
+        public bool IsConfirmed { get; set; }
+        public bool IsDispatched { get; set; }
+        public bool IsReadyToDispatch { get; set; }
+        public bool IsDelivered { get; set; }
     }
     public class UpdateOrderHandler : IRequestHandler<UpdateOrderCommand, ApiResponse<string>>
     {

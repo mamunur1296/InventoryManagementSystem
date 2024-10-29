@@ -16,6 +16,7 @@ namespace Project.Application.DTOs
         public string LastName { get; set; }
         public string? UserImg { get; set; }
         public bool? IsActive { get; set; }
+        public Guid? TraderId { get; set; }
         public DateTime? DeactivatedDate { get; set; }
         public string? DeactiveBy { get; set; }
         public string? TIN { get; set; }

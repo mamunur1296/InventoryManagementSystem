@@ -19,4 +19,9 @@
     <ProjectReference Include="..\Project.Domail\Project.Domail.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Features\PurchaseFeatures\CommandHandlers\" />
+    <Folder Include="Features\PurchaseFeatures\QueryHandlers\" />
+  </ItemGroup>
+
 </Project>

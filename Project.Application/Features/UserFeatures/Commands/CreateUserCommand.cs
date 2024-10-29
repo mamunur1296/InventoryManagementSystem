@@ -13,6 +13,7 @@ namespace Project.Application.Features.UserFeatures.Commands
         public string Email { get; set; }
         public string PhoneNumber { get; set; }
         public string Password { get; set; }
+        public Guid TraderId { get; set; }
         public string ConfirmationPassword { get; set; }
         public List<string> Roles { get; set; }
     }
@@ -32,7 +33,7 @@ namespace Project.Application.Features.UserFeatures.Commands
             {
                 if(request.Password == request.ConfirmationPassword)
                 {
-                    var result = await _identityService.CreateUserAsync(request.UserName, request.Password, request.Email, request.FirstName, request.LaststName, request.PhoneNumber, request.Roles);
+                    var result = await _identityService.CreateUserAsync(request.UserName, request.Password, request.Email, request.FirstName, request.LaststName, request.PhoneNumber,request.TraderId, request.Roles);
                     if (result.isSucceed)
                     {
                         response.Success = true;

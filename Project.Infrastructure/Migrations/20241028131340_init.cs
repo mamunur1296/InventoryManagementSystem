@@ -278,6 +278,30 @@ namespace Project.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "purchases",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    PurchaseDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CompanyId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    TotalAmount = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false),
+                    CreationDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    UpdateDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    UpdatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_purchases", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_purchases_companies_CompanyId",
+                        column: x => x.CompanyId,
+                        principalTable: "companies",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "traders",
                 columns: table => new
                 {
@@ -416,7 +440,7 @@ namespace Project.Infrastructure.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    ProductId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ProductId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     DiscountedPrice = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     IsActive = table.Column<bool>(type: "bit", nullable: false),
                     ValidTill = table.Column<DateTime>(type: "datetime2", nullable: false),
@@ -432,6 +456,36 @@ namespace Project.Infrastructure.Migrations
                         name: "FK_productDiscunts_products_ProductId",
                         column: x => x.ProductId,
                         principalTable: "products",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "purchaseDetails",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    PurchaseID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ProductID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Quantity = table.Column<int>(type: "int", nullable: false),
+                    UnitPrice = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false),
+                    Discount = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false),
+                    CreationDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    UpdateDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    UpdatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_purchaseDetails", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_purchaseDetails_products_ProductID",
+                        column: x => x.ProductID,
+                        principalTable: "products",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_purchaseDetails_purchases_PurchaseID",
+                        column: x => x.PurchaseID,
+                        principalTable: "purchases",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -470,6 +524,37 @@ namespace Project.Infrastructure.Migrations
                         name: "FK_stacks_traders_TraderId1",
                         column: x => x.TraderId1,
                         principalTable: "traders",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "orderDetail",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    OrderID = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    ProductID = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    UnitPrice = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false),
+                    Quantity = table.Column<int>(type: "int", nullable: false),
+                    Discount = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false),
+                    CreationDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    UpdateDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    UpdatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_orderDetail", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_orderDetail_orders_OrderID",
+                        column: x => x.OrderID,
+                        principalTable: "orders",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_orderDetail_products_ProductID",
+                        column: x => x.ProductID,
+                        principalTable: "products",
                         principalColumn: "Id");
                 });
 
@@ -518,6 +603,16 @@ namespace Project.Infrastructure.Migrations
                 column: "ApplicationUserId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_orderDetail_OrderID",
+                table: "orderDetail",
+                column: "OrderID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_orderDetail_ProductID",
+                table: "orderDetail",
+                column: "ProductID");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_orders_ApplicationUserId",
                 table: "orders",
                 column: "ApplicationUserId");
@@ -551,6 +646,21 @@ namespace Project.Infrastructure.Migrations
                 name: "IX_products_ProdValveId",
                 table: "products",
                 column: "ProdValveId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_purchaseDetails_ProductID",
+                table: "purchaseDetails",
+                column: "ProductID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_purchaseDetails_PurchaseID",
+                table: "purchaseDetails",
+                column: "PurchaseID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_purchases_CompanyId",
+                table: "purchases",
+                column: "CompanyId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_stacks_ProductId",
@@ -594,13 +704,16 @@ namespace Project.Infrastructure.Migrations
                 name: "deliveryAddresses");
 
             migrationBuilder.DropTable(
-                name: "orders");
+                name: "orderDetail");
 
             migrationBuilder.DropTable(
                 name: "prodReturns");
 
             migrationBuilder.DropTable(
                 name: "productDiscunts");
+
+            migrationBuilder.DropTable(
+                name: "purchaseDetails");
 
             migrationBuilder.DropTable(
                 name: "railers");
@@ -612,22 +725,28 @@ namespace Project.Infrastructure.Migrations
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
+                name: "orders");
+
+            migrationBuilder.DropTable(
+                name: "purchases");
+
+            migrationBuilder.DropTable(
+                name: "traders");
+
+            migrationBuilder.DropTable(
                 name: "AspNetUsers");
 
             migrationBuilder.DropTable(
                 name: "products");
 
             migrationBuilder.DropTable(
-                name: "traders");
+                name: "companies");
 
             migrationBuilder.DropTable(
                 name: "productSizes");
 
             migrationBuilder.DropTable(
                 name: "valves");
-
-            migrationBuilder.DropTable(
-                name: "companies");
         }
     }
 }

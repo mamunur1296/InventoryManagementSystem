@@ -1,5 +1,7 @@
-﻿
+﻿using InventoryApi.DTOs;
 using Microsoft.Extensions.DependencyInjection;
+using Project.Application.DTOs;
+using Project.Application.Interfaces;
 using Project.Application.Mapper;
 namespace Project.Application
 {
@@ -26,8 +28,8 @@ namespace Project.Application
                 configuration.RegisterServicesFromAssembly(assembly));
 
             //object value = services.AddValidatorsFromAssembly(assembly);
-            
 
+            
             return services;
         }
     }

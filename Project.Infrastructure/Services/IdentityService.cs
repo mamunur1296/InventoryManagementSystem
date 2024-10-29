@@ -44,7 +44,7 @@ namespace Project.Infrastructure.Services
 
 
         // Return multiple value
-        public async Task<(bool isSucceed, string userId)> CreateUserAsync(string userName, string password, string email, string FirstName, string LastName, string phoneNumber, List<string> roles)
+        public async Task<(bool isSucceed, string userId)> CreateUserAsync(string userName, string password, string email, string FirstName, string LastName, string phoneNumber,Guid TraderId, List<string> roles)
         {
             var user = new ApplicationUser()
             {
@@ -53,6 +53,7 @@ namespace Project.Infrastructure.Services
                 UserName = userName,
                 Email = email,
                 PhoneNumber = phoneNumber,
+                TraderId= TraderId,
             };
 
             var result = await _userManager.CreateAsync(user, password);

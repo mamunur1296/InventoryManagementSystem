@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using InventoryApi.DTOs;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -38,6 +39,8 @@ namespace Project.Infrastructiure
             });
             services.AddScoped<IUnitOfWorkDb, UnitOfWorkDb>();
             services.AddScoped<IIdentityService, IdentityService>();
+            services.AddScoped<IBaseServices<PurchaseDTOs>, PurchaseService>();
+            services.AddScoped<IPurchaseServices, PurchaseService>();
             return services;
         }
     }
