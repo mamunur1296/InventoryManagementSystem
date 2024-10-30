@@ -49,11 +49,11 @@ namespace Project.Application.Features.OrderFeatures.Handlers.CommandHandlers
                     ReturnProductId = request.ReturnProductId,
                     TransactionNumber = request.TransactionNumber,
                     Comments = request.Comments,
-                    IsHold = true,
+                    IsHold = false,
                     IsCancel = false,
                     IsDelivered = false,
                     IsConfirmed = false,
-                    IsPlaced = false,
+                    IsPlaced = true,
                     IsDispatched = false,
                     IsReadyToDispatch = false,
                 };

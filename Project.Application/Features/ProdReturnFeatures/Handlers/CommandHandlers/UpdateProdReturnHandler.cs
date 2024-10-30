@@ -21,6 +21,7 @@ namespace Project.Application.Features.ProdReturnFeatures.Handlers.CommandHandle
         public Guid ProdValveId { get; set; }
         [Required]
         public string UpdatedBy { get; set; }
+        public bool IsConfirmedOrder { get; set; }
 
     }
     public class UpdateProdReturnHandler : IRequestHandler<UpdateProdReturnCommand, ApiResponse<string>>
@@ -58,6 +59,7 @@ namespace Project.Application.Features.ProdReturnFeatures.Handlers.CommandHandle
                 productReturn.ProductId = request.ProductId;
                 productReturn.ProdValveId = request.ProdValveId;
                 productReturn.ProdSizeId = request.ProdSizeId;
+                productReturn.IsConfirmedOrder= request.IsConfirmedOrder;   
 
 
 

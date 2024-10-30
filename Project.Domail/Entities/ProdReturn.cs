@@ -12,7 +12,7 @@ namespace Project.Domail.Entities
         public Guid ProdSizeId { get; set; }
         public Guid ProdValveId { get; set; }
 
-
+        public bool IsConfirmedOrder { get; set; }
         // Navigation property
         public virtual Product Product { get; set; }
 

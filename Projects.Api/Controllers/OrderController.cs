@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Project.Application.DTOs;
 using Project.Application.Features.OrderFeatures.Handlers.CommandHandlers;
 using Project.Application.Features.OrderFeatures.Handlers.QueryHandlers;
 
@@ -20,11 +21,42 @@ namespace Projects.Api.Controllers
         {
             return Ok(await _mediator.Send(commend));
         }
+        [HttpPost("ConfirmOrder")]
+        public async Task<IActionResult> ConfirmOrder(CreateConfirmOrderComment commend)
+        {
+            return Ok(await _mediator.Send(commend));
+        }
         [HttpGet("getAllOrder")]
         public async Task<IActionResult> getAllCustomer()
         {
             return Ok(await _mediator.Send(new GetAllOrderQuery()));
         }
+        [HttpGet("getAllIsPlasedOrder")]
+        public async Task<IActionResult> getAllIsPlasedOrder()
+        {
+            return Ok(await _mediator.Send(new GetAllIsPlasedOrderQuery()));
+        }
+        [HttpGet("getAllIsConfirmedOrder")]
+        public async Task<IActionResult> getAllIsConfirmedOrder()
+        {
+            return Ok(await _mediator.Send(new GetAllIsConfirmedOrderQuery()));
+        }
+        [HttpGet("getAllIsRadyToDispatchOrder")]
+        public async Task<IActionResult> getAllIsRadyToDispatchOrder()
+        {
+            return Ok(await _mediator.Send(new GetAllIsRadyToDispatchOrderQuery()));
+        }
+        [HttpGet("getAllIsDispatchOrder")]
+        public async Task<IActionResult> getAllIsDispatchOrder()
+        {
+            return Ok(await _mediator.Send(new GetAllIsDispatchOrderQuery()));
+        }
+        [HttpGet("getAllIsDelevarateOrder")]
+        public async Task<IActionResult> getAllIsDelevarateOrder()
+        {
+            return Ok(await _mediator.Send(new GetAllIsDelevarateOrderQuery()));
+        }
+       
         [HttpGet("getOrder/{id}")]
         public async Task<IActionResult> getCustomer(Guid id)
         {

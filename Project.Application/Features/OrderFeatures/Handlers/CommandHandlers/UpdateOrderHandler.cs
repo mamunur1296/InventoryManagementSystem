@@ -27,6 +27,7 @@ namespace Project.Application.Features.OrderFeatures.Handlers.CommandHandlers
     public class UpdateOrderHandler : IRequestHandler<UpdateOrderCommand, ApiResponse<string>>
     {
         private readonly IUnitOfWorkDb _unitOfWorkDb;
+        
         public UpdateOrderHandler(IUnitOfWorkDb unitOfWorkDb)
         {
             _unitOfWorkDb = unitOfWorkDb;
@@ -58,7 +59,21 @@ namespace Project.Application.Features.OrderFeatures.Handlers.CommandHandlers
                 order.UpdatedBy = request.UpdatedBy;
                 order.Comments = request.Comments;
                 order.TransactionNumber = request.TransactionNumber;
+                order.IsDelivered = request.IsDelivered;
+                order.IsPlaced = request.IsPlaced;
+                order.IsHold = request.IsHold;
+                order.IsConfirmed = request.IsConfirmed;
+                order.IsReadyToDispatch = request.IsReadyToDispatch;
+                order.IsDispatched = request.IsDispatched;
+                order.IsCancel = request.IsCancel;
 
+
+
+
+                if (order.IsDelivered)
+                {
+                    var UpdateORder = await _unitOfWorkDb.orderCommandRepository.UpdateFinalOrder(order);
+                }
 
 
 

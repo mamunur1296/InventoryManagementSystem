@@ -19,6 +19,7 @@ namespace Project.Application.Features.ProdReturnFeatures.Handlers.CommandHandle
         public Guid ProdValveId { get; set; }
         [Required]
         public string CreatedBy { get; set; }
+        public bool IsConfirmedOrder { get; set; }
 
 
     }
@@ -45,7 +46,8 @@ namespace Project.Application.Features.ProdReturnFeatures.Handlers.CommandHandle
                     ProdSizeId = request.ProdSizeId,
                     ProductId = request.ProductId,
                     Name=request.Name,
-                    ProdValveId=request.ProdValveId
+                    ProdValveId=request.ProdValveId,
+                    IsConfirmedOrder= false,
 
                 };
 

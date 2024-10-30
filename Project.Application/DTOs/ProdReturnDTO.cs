@@ -11,6 +11,7 @@ namespace Project.Application.DTOs
         public Guid ProdValveId { get; set; }
         public string CreatedBy { get; set; }
         public string UpdatedBy { get; set; }
+        public bool IsConfirmedOrder { get; set; }
         public virtual Product Product { get; set; }
     }
 }

@@ -129,7 +129,7 @@ namespace Project.Infrastructure.Services
                 var user = await _userManager.FindByIdAsync(parsedUserId.ToString());
                 if (user == null || user.TraderId == null)
                 {
-                    throw new ValidationException("User or Trader ID not found.");
+                    throw new NotFoundException("User or Trader ID not found.");
                 }
 
                 var traderId = user.TraderId.Value;
@@ -213,7 +213,7 @@ namespace Project.Infrastructure.Services
             catch (Exception ex)
             {
                 await transaction.RollbackAsync();
-                throw new ValidationException($"An error occurred during the purchase: {ex.Message}");
+                throw new Exception(ex.Message);
             }
         }
 

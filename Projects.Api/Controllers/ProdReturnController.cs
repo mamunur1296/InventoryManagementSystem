@@ -26,6 +26,11 @@ namespace Projects.Api.Controllers
         {
             return Ok(await _mediator.Send(new GetAllProdReturnQuery()));
         }
+        [HttpGet("getAllConfirmCustomer")]
+        public async Task<IActionResult> getAllConfirmCustomer()
+        {
+            return Ok(await _mediator.Send(new GetAllConfirmProdReturnQuery()));
+        }
         [HttpGet("getProdReturn/{id}")]
         public async Task<IActionResult> getCustomer(Guid id)
         {
