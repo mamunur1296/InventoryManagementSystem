@@ -12,8 +12,8 @@ using Project.Infrastructure.DataContext;
 namespace Project.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20241029034720_addTraderId")]
-    partial class addTraderId
+    [Migration("20241030144755_init")]
+    partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -206,7 +206,7 @@ namespace Project.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("companies");
+                    b.ToTable("Companies");
                 });
 
             modelBuilder.Entity("Project.Domail.Entities.DeliveryAddress", b =>
@@ -261,7 +261,7 @@ namespace Project.Infrastructure.Migrations
 
                     b.HasIndex("ApplicationUserId");
 
-                    b.ToTable("deliveryAddresses");
+                    b.ToTable("DeliveryAddresses");
                 });
 
             modelBuilder.Entity("Project.Domail.Entities.Order", b =>
@@ -329,7 +329,7 @@ namespace Project.Infrastructure.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("orders");
+                    b.ToTable("Orders");
                 });
 
             modelBuilder.Entity("Project.Domail.Entities.OrderDetail", b =>
@@ -373,7 +373,7 @@ namespace Project.Infrastructure.Migrations
 
                     b.HasIndex("ProductID");
 
-                    b.ToTable("orderDetail");
+                    b.ToTable("OrderDetails");
                 });
 
             modelBuilder.Entity("Project.Domail.Entities.ProdReturn", b =>
@@ -387,6 +387,9 @@ namespace Project.Infrastructure.Migrations
 
                     b.Property<DateTime?>("CreationDate")
                         .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsConfirmedOrder")
+                        .HasColumnType("bit");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -411,7 +414,7 @@ namespace Project.Infrastructure.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("prodReturns");
+                    b.ToTable("ProdReturns");
                 });
 
             modelBuilder.Entity("Project.Domail.Entities.Product", b =>
@@ -461,7 +464,7 @@ namespace Project.Infrastructure.Migrations
 
                     b.HasIndex("ProdValveId");
 
-                    b.ToTable("products");
+                    b.ToTable("Products");
                 });
 
             modelBuilder.Entity("Project.Domail.Entities.ProductDiscunt", b =>
@@ -498,7 +501,7 @@ namespace Project.Infrastructure.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("productDiscunts");
+                    b.ToTable("ProductDiscounts");
                 });
 
             modelBuilder.Entity("Project.Domail.Entities.ProductSize", b =>
@@ -530,7 +533,7 @@ namespace Project.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("productSizes");
+                    b.ToTable("ProductSizes");
                 });
 
             modelBuilder.Entity("Project.Domail.Entities.Purchase", b =>
@@ -565,7 +568,7 @@ namespace Project.Infrastructure.Migrations
 
                     b.HasIndex("CompanyId");
 
-                    b.ToTable("purchases");
+                    b.ToTable("Purchases");
                 });
 
             modelBuilder.Entity("Project.Domail.Entities.PurchaseDetail", b =>
@@ -609,7 +612,7 @@ namespace Project.Infrastructure.Migrations
 
                     b.HasIndex("PurchaseID");
 
-                    b.ToTable("purchaseDetails");
+                    b.ToTable("PurchaseDetails");
                 });
 
             modelBuilder.Entity("Project.Domail.Entities.Retailer", b =>
@@ -660,7 +663,7 @@ namespace Project.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("railers");
+                    b.ToTable("Retailers");
                 });
 
             modelBuilder.Entity("Project.Domail.Entities.Stock", b =>
@@ -707,7 +710,7 @@ namespace Project.Infrastructure.Migrations
 
                     b.HasIndex("TraderId1");
 
-                    b.ToTable("stacks");
+                    b.ToTable("Stocks");
                 });
 
             modelBuilder.Entity("Project.Domail.Entities.Trader", b =>
@@ -763,7 +766,7 @@ namespace Project.Infrastructure.Migrations
 
                     b.HasIndex("CompanyId");
 
-                    b.ToTable("traders");
+                    b.ToTable("Traders");
                 });
 
             modelBuilder.Entity("Project.Domail.Entities.Valve", b =>
@@ -795,7 +798,7 @@ namespace Project.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("valves");
+                    b.ToTable("Valves");
                 });
 
             modelBuilder.Entity("Project.Infrastructure.Identity.ApplicationUser", b =>
@@ -1080,7 +1083,7 @@ namespace Project.Infrastructure.Migrations
                     b.HasOne("Project.Domail.Entities.Trader", "Trader")
                         .WithMany()
                         .HasForeignKey("TraderId")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("Project.Domail.Entities.Trader", null)

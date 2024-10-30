@@ -144,7 +144,7 @@ namespace Project.Infrastructure.Services
                     TotalAmount = 0 // Set the initial total amount to 0
                 };
 
-                await _context.purchases.AddAsync(newPurchase);
+                await _context.Purchases.AddAsync(newPurchase);
 
                 // Initialize a list to hold the purchase details
                 var purchaseDetails = new List<PurchaseDetail>();
@@ -170,21 +170,21 @@ namespace Project.Infrastructure.Services
                     purchaseDetails.Add(newPurchaseDetail);
                 }
 
-                await _context.purchaseDetails.AddRangeAsync(purchaseDetails);
+                await _context.PurchaseDetails.AddRangeAsync(purchaseDetails);
                 newPurchase.TotalAmount = totalAmount;
 
                 // Update the stock for each product
                 foreach (var productDto in entitys.Products)
                 {
-                    var product = await _context.products.FindAsync(productDto.ProductID);
+                    var product = await _context.Products.FindAsync(productDto.ProductID);
                     if (product != null)
                     {
-                        var existingStock = await _context.stacks.FirstOrDefaultAsync(s => s.ProductId == product.Id);
+                        var existingStock = await _context.Stocks.FirstOrDefaultAsync(s => s.ProductId == product.Id);
 
                         if (existingStock != null)
                         {
                             existingStock.Quantity += productDto.Quantity;
-                            _context.stacks.Update(existingStock);
+                            _context.Stocks.Update(existingStock);
                         }
                         else
                         {
@@ -200,7 +200,7 @@ namespace Project.Infrastructure.Services
                                 CreatedBy = "System"
                             };
 
-                            await _context.stacks.AddAsync(newStock);
+                            await _context.Stocks.AddAsync(newStock);
                         }
                     }
                 }

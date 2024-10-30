@@ -35,7 +35,7 @@ namespace Project.Infrastructure.Implementation.Command
                     var productId = Guid.Parse(kvp.Key) ; // This is the Guid key
                     var quantity = kvp.Value; // This is the int value
 
-                    var product = await _applicationDbContext.products.FindAsync(productId);
+                    var product = await _applicationDbContext.Products.FindAsync(productId);
                     if (product == null)
                     {
                         throw new InvalidOperationException($"Product with ID {productId} does not exist.");
@@ -50,7 +50,7 @@ namespace Project.Infrastructure.Implementation.Command
                         IsConfirmedOrder = false
                     };
 
-                    await _applicationDbContext.prodReturns.AddAsync(returnProduct);
+                    await _applicationDbContext.ProdReturns.AddAsync(returnProduct);
                     returnProducts.Add(returnProduct);
                 }
 
@@ -92,7 +92,7 @@ namespace Project.Infrastructure.Implementation.Command
                 }
 
 
-                await _applicationDbContext.orders.AddRangeAsync(orders);
+                await _applicationDbContext.Orders.AddRangeAsync(orders);
 
                 await _applicationDbContext.SaveChangesAsync();
                 await transaction.CommitAsync();
@@ -132,7 +132,7 @@ namespace Project.Infrastructure.Implementation.Command
             try
             {
                 // Retrieve the associated return product by the ReturnProductId from the order
-                var returnProduct = await _applicationDbContext.prodReturns.FindAsync(item.ReturnProductId);
+                var returnProduct = await _applicationDbContext.ProdReturns.FindAsync(item.ReturnProductId);
 
                 if (returnProduct == null)
                 {
@@ -143,13 +143,13 @@ namespace Project.Infrastructure.Implementation.Command
                 returnProduct.IsConfirmedOrder = true;
 
                 // Update the return product in the repository
-                _applicationDbContext.prodReturns.Update(returnProduct);
+                _applicationDbContext.ProdReturns.Update(returnProduct);
 
                 // Save the changes to the return product
                 await _applicationDbContext.SaveChangesAsync();
 
                 // Retrieve the existing stock for the product
-                var existingStock = await _applicationDbContext.stacks
+                var existingStock = await _applicationDbContext.Stocks
                     .FirstOrDefaultAsync(st => st.ProductId == item.ProductId);
 
                 if (existingStock == null)
@@ -164,7 +164,7 @@ namespace Project.Infrastructure.Implementation.Command
                 existingStock.Quantity -= quantity;
 
                 // Update the stock in the repository
-                _applicationDbContext.stacks.Update(existingStock);
+                _applicationDbContext.Stocks.Update(existingStock);
 
                 // Save the changes to the stock
                 await _applicationDbContext.SaveChangesAsync();

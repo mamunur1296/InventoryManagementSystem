@@ -40,6 +40,7 @@ namespace Project.Infrastructure.Migrations
                     DeactiveBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     TIN = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     IsBlocked = table.Column<bool>(type: "bit", nullable: true),
+                    TraderId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -61,7 +62,7 @@ namespace Project.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "companies",
+                name: "Companies",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -80,11 +81,11 @@ namespace Project.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_companies", x => x.Id);
+                    table.PrimaryKey("PK_Companies", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
-                name: "productSizes",
+                name: "ProductSizes",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -98,11 +99,11 @@ namespace Project.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_productSizes", x => x.Id);
+                    table.PrimaryKey("PK_ProductSizes", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
-                name: "railers",
+                name: "Retailers",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -121,11 +122,11 @@ namespace Project.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_railers", x => x.Id);
+                    table.PrimaryKey("PK_Retailers", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
-                name: "valves",
+                name: "Valves",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -139,7 +140,7 @@ namespace Project.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_valves", x => x.Id);
+                    table.PrimaryKey("PK_Valves", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -249,7 +250,7 @@ namespace Project.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "deliveryAddresses",
+                name: "DeliveryAddresses",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -269,21 +270,21 @@ namespace Project.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_deliveryAddresses", x => x.Id);
+                    table.PrimaryKey("PK_DeliveryAddresses", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_deliveryAddresses_AspNetUsers_ApplicationUserId",
+                        name: "FK_DeliveryAddresses_AspNetUsers_ApplicationUserId",
                         column: x => x.ApplicationUserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
-                name: "purchases",
+                name: "Purchases",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     PurchaseDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    CompanyId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CompanyId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     TotalAmount = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false),
                     CreationDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     UpdateDate = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -292,17 +293,16 @@ namespace Project.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_purchases", x => x.Id);
+                    table.PrimaryKey("PK_Purchases", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_purchases_companies_CompanyId",
+                        name: "FK_Purchases_Companies_CompanyId",
                         column: x => x.CompanyId,
-                        principalTable: "companies",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalTable: "Companies",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
-                name: "traders",
+                name: "Traders",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -322,17 +322,17 @@ namespace Project.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_traders", x => x.Id);
+                    table.PrimaryKey("PK_Traders", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_traders_companies_CompanyId",
+                        name: "FK_Traders_Companies_CompanyId",
                         column: x => x.CompanyId,
-                        principalTable: "companies",
+                        principalTable: "Companies",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "products",
+                name: "Products",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -350,40 +350,40 @@ namespace Project.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_products", x => x.Id);
+                    table.PrimaryKey("PK_Products", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_products_companies_CompanyId",
+                        name: "FK_Products_Companies_CompanyId",
                         column: x => x.CompanyId,
-                        principalTable: "companies",
+                        principalTable: "Companies",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_products_productSizes_ProdSizeId",
+                        name: "FK_Products_ProductSizes_ProdSizeId",
                         column: x => x.ProdSizeId,
-                        principalTable: "productSizes",
+                        principalTable: "ProductSizes",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_products_valves_ProdValveId",
+                        name: "FK_Products_Valves_ProdValveId",
                         column: x => x.ProdValveId,
-                        principalTable: "valves",
+                        principalTable: "Valves",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "orders",
+                name: "Orders",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     ProductId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ReturnProductId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    TransactionNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     IsHold = table.Column<bool>(type: "bit", nullable: false),
                     IsCancel = table.Column<bool>(type: "bit", nullable: false),
-                    ReturnProductId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     IsPlaced = table.Column<bool>(type: "bit", nullable: false),
                     IsConfirmed = table.Column<bool>(type: "bit", nullable: false),
-                    TransactionNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Comments = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     IsDispatched = table.Column<bool>(type: "bit", nullable: false),
                     IsReadyToDispatch = table.Column<bool>(type: "bit", nullable: false),
@@ -396,22 +396,22 @@ namespace Project.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_orders", x => x.Id);
+                    table.PrimaryKey("PK_Orders", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_orders_AspNetUsers_ApplicationUserId",
+                        name: "FK_Orders_AspNetUsers_ApplicationUserId",
                         column: x => x.ApplicationUserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_orders_products_ProductId",
+                        name: "FK_Orders_Products_ProductId",
                         column: x => x.ProductId,
-                        principalTable: "products",
+                        principalTable: "Products",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "prodReturns",
+                name: "ProdReturns",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -419,6 +419,7 @@ namespace Project.Infrastructure.Migrations
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     ProdSizeId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     ProdValveId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    IsConfirmedOrder = table.Column<bool>(type: "bit", nullable: false),
                     CreationDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     UpdateDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -426,17 +427,17 @@ namespace Project.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_prodReturns", x => x.Id);
+                    table.PrimaryKey("PK_ProdReturns", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_prodReturns_products_ProductId",
+                        name: "FK_ProdReturns_Products_ProductId",
                         column: x => x.ProductId,
-                        principalTable: "products",
+                        principalTable: "Products",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "productDiscunts",
+                name: "ProductDiscounts",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -451,16 +452,16 @@ namespace Project.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_productDiscunts", x => x.Id);
+                    table.PrimaryKey("PK_ProductDiscounts", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_productDiscunts_products_ProductId",
+                        name: "FK_ProductDiscounts_Products_ProductId",
                         column: x => x.ProductId,
-                        principalTable: "products",
+                        principalTable: "Products",
                         principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
-                name: "purchaseDetails",
+                name: "PurchaseDetails",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -476,22 +477,22 @@ namespace Project.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_purchaseDetails", x => x.Id);
+                    table.PrimaryKey("PK_PurchaseDetails", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_purchaseDetails_products_ProductID",
+                        name: "FK_PurchaseDetails_Products_ProductID",
                         column: x => x.ProductID,
-                        principalTable: "products",
+                        principalTable: "Products",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_purchaseDetails_purchases_PurchaseID",
+                        name: "FK_PurchaseDetails_Purchases_PurchaseID",
                         column: x => x.PurchaseID,
-                        principalTable: "purchases",
+                        principalTable: "Purchases",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "stacks",
+                name: "Stocks",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -508,27 +509,28 @@ namespace Project.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_stacks", x => x.Id);
+                    table.PrimaryKey("PK_Stocks", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_stacks_products_ProductId",
+                        name: "FK_Stocks_Products_ProductId",
                         column: x => x.ProductId,
-                        principalTable: "products",
+                        principalTable: "Products",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_stacks_traders_TraderId",
+                        name: "FK_Stocks_Traders_TraderId",
                         column: x => x.TraderId,
-                        principalTable: "traders",
-                        principalColumn: "Id");
+                        principalTable: "Traders",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_stacks_traders_TraderId1",
+                        name: "FK_Stocks_Traders_TraderId1",
                         column: x => x.TraderId1,
-                        principalTable: "traders",
+                        principalTable: "Traders",
                         principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
-                name: "orderDetail",
+                name: "OrderDetails",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -544,17 +546,17 @@ namespace Project.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_orderDetail", x => x.Id);
+                    table.PrimaryKey("PK_OrderDetails", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_orderDetail_orders_OrderID",
+                        name: "FK_OrderDetails_Orders_OrderID",
                         column: x => x.OrderID,
-                        principalTable: "orders",
+                        principalTable: "Orders",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_orderDetail_products_ProductID",
+                        name: "FK_OrderDetails_Products_ProductID",
                         column: x => x.ProductID,
-                        principalTable: "products",
+                        principalTable: "Products",
                         principalColumn: "Id");
                 });
 
@@ -598,88 +600,88 @@ namespace Project.Infrastructure.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_deliveryAddresses_ApplicationUserId",
-                table: "deliveryAddresses",
+                name: "IX_DeliveryAddresses_ApplicationUserId",
+                table: "DeliveryAddresses",
                 column: "ApplicationUserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_orderDetail_OrderID",
-                table: "orderDetail",
+                name: "IX_OrderDetails_OrderID",
+                table: "OrderDetails",
                 column: "OrderID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_orderDetail_ProductID",
-                table: "orderDetail",
+                name: "IX_OrderDetails_ProductID",
+                table: "OrderDetails",
                 column: "ProductID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_orders_ApplicationUserId",
-                table: "orders",
+                name: "IX_Orders_ApplicationUserId",
+                table: "Orders",
                 column: "ApplicationUserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_orders_ProductId",
-                table: "orders",
+                name: "IX_Orders_ProductId",
+                table: "Orders",
                 column: "ProductId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_prodReturns_ProductId",
-                table: "prodReturns",
+                name: "IX_ProdReturns_ProductId",
+                table: "ProdReturns",
                 column: "ProductId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_productDiscunts_ProductId",
-                table: "productDiscunts",
+                name: "IX_ProductDiscounts_ProductId",
+                table: "ProductDiscounts",
                 column: "ProductId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_products_CompanyId",
-                table: "products",
+                name: "IX_Products_CompanyId",
+                table: "Products",
                 column: "CompanyId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_products_ProdSizeId",
-                table: "products",
+                name: "IX_Products_ProdSizeId",
+                table: "Products",
                 column: "ProdSizeId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_products_ProdValveId",
-                table: "products",
+                name: "IX_Products_ProdValveId",
+                table: "Products",
                 column: "ProdValveId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_purchaseDetails_ProductID",
-                table: "purchaseDetails",
+                name: "IX_PurchaseDetails_ProductID",
+                table: "PurchaseDetails",
                 column: "ProductID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_purchaseDetails_PurchaseID",
-                table: "purchaseDetails",
+                name: "IX_PurchaseDetails_PurchaseID",
+                table: "PurchaseDetails",
                 column: "PurchaseID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_purchases_CompanyId",
-                table: "purchases",
+                name: "IX_Purchases_CompanyId",
+                table: "Purchases",
                 column: "CompanyId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_stacks_ProductId",
-                table: "stacks",
+                name: "IX_Stocks_ProductId",
+                table: "Stocks",
                 column: "ProductId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_stacks_TraderId",
-                table: "stacks",
+                name: "IX_Stocks_TraderId",
+                table: "Stocks",
                 column: "TraderId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_stacks_TraderId1",
-                table: "stacks",
+                name: "IX_Stocks_TraderId1",
+                table: "Stocks",
                 column: "TraderId1");
 
             migrationBuilder.CreateIndex(
-                name: "IX_traders_CompanyId",
-                table: "traders",
+                name: "IX_Traders_CompanyId",
+                table: "Traders",
                 column: "CompanyId");
         }
 
@@ -701,52 +703,52 @@ namespace Project.Infrastructure.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "deliveryAddresses");
+                name: "DeliveryAddresses");
 
             migrationBuilder.DropTable(
-                name: "orderDetail");
+                name: "OrderDetails");
 
             migrationBuilder.DropTable(
-                name: "prodReturns");
+                name: "ProdReturns");
 
             migrationBuilder.DropTable(
-                name: "productDiscunts");
+                name: "ProductDiscounts");
 
             migrationBuilder.DropTable(
-                name: "purchaseDetails");
+                name: "PurchaseDetails");
 
             migrationBuilder.DropTable(
-                name: "railers");
+                name: "Retailers");
 
             migrationBuilder.DropTable(
-                name: "stacks");
+                name: "Stocks");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
-                name: "orders");
+                name: "Orders");
 
             migrationBuilder.DropTable(
-                name: "purchases");
+                name: "Purchases");
 
             migrationBuilder.DropTable(
-                name: "traders");
+                name: "Traders");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
 
             migrationBuilder.DropTable(
-                name: "products");
+                name: "Products");
 
             migrationBuilder.DropTable(
-                name: "companies");
+                name: "Companies");
 
             migrationBuilder.DropTable(
-                name: "productSizes");
+                name: "ProductSizes");
 
             migrationBuilder.DropTable(
-                name: "valves");
+                name: "Valves");
         }
     }
 }
