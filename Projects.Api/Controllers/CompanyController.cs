@@ -18,6 +18,16 @@ namespace Projects.Api.Controllers
             _mediator = mediator;
         }
         [HttpPost("CreateCompany")]
+
+
+
+
+
+
+
+
+
+
         public async Task<IActionResult> Create(CreateCompanyCommand commend)
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
