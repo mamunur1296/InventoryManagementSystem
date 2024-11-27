@@ -104,7 +104,7 @@ namespace Project.Infrastructure.Services
             return result;
         }
 
-        public async Task<bool> PurchaseProduct(PurchaseItemDTOs entitys)
+        public async Task<(bool,string id)> PurchaseProduct(PurchaseItemDTOs entitys)
         {
             // Validate the input data
             if (entitys == null || entitys.Products == null || !entitys.Products.Any())
@@ -208,7 +208,7 @@ namespace Project.Infrastructure.Services
                 await _context.SaveChangesAsync();
                 await transaction.CommitAsync();
 
-                return true;
+                return (true, newPurchase.Id.ToString());
             }
             catch (Exception ex)
             {
@@ -217,7 +217,28 @@ namespace Project.Infrastructure.Services
             }
         }
 
+        public async Task<Purchase> PurchaseDetail(string id)
+        {
+            // Parse the string ID to a GUID
+            if (!Guid.TryParse(id, out var purchaseId))
+            {
+                throw new ArgumentException("Invalid ID format", nameof(id));
+            }
 
+            var purchase = await _context.Purchases
+                .Include(p => p.Company) 
+                .Include(p => p.PurchaseDetails)
+                .ThenInclude(pd=>pd.Product)
+                .FirstOrDefaultAsync(p => p.Id == purchaseId); 
+
+            // Handle the case where the purchase is not found
+            if (purchase == null)
+            {
+                throw new NotFoundException($"Purchase with ID {id} not found.");
+            }
+
+            return purchase;
+        }
 
 
     }

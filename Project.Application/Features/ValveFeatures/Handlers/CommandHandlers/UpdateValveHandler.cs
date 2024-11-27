@@ -2,6 +2,7 @@
 using MediatR;
 using Project.Application.ApiResponse;
 using Project.Application.Exceptions;
+using Project.Application.Interfaces;
 using Project.Domail.Abstractions;
 using System.ComponentModel.DataAnnotations;
 using System.Net;
@@ -23,13 +24,15 @@ namespace Project.Application.Features.ValveFeatures.Handlers.CommandHandlers
     {
         private readonly IUnitOfWorkDb _unitOfWorkDb;
         private readonly IMapper _mapper;
-        public UpdateValveHandler(IUnitOfWorkDb unitOfWorkDb, IMapper mapper)
+        private readonly ILogInUserServices _loginService;
+        public UpdateValveHandler(IUnitOfWorkDb unitOfWorkDb, IMapper mapper, ILogInUserServices loginService)
         {
             _unitOfWorkDb = unitOfWorkDb;
             _mapper = mapper;
+            _loginService = loginService;
         }
 
- 
+
         public async Task<ApiResponse<string>> Handle(UpdateValveCommand request, CancellationToken cancellationToken)
         {
             var response = new ApiResponse<string>();
@@ -46,7 +49,7 @@ namespace Project.Application.Features.ValveFeatures.Handlers.CommandHandlers
                 // Update company properties
                 valve.Name = request.Name;
                 valve.Unit = request.Unit;
-                valve.UpdatedBy = request.UpdatedBy;
+                valve.UpdatedBy = await _loginService.GetUserName();
 
                 // Perform update operation
                 await _unitOfWorkDb.valveCommandRepository.UpdateAsync(valve);

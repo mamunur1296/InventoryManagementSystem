@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using Project.Application.ApiResponse;
+using Project.Application.Interfaces;
 using Project.Domail.Abstractions;
 using Project.Domail.Entities;
 using System.ComponentModel.DataAnnotations;
@@ -28,10 +29,11 @@ namespace Project.Application.Features.ProductFeatures.Handlers.CommandHandlers
     public class CreateProductHandler : IRequestHandler<CreateProductCommand, ApiResponse<string>>
     {
         private readonly IUnitOfWorkDb _unitOfWorkDb;
-
-        public CreateProductHandler(IUnitOfWorkDb unitOfWorkDb)
+        private readonly ILogInUserServices _loginService;
+        public CreateProductHandler(IUnitOfWorkDb unitOfWorkDb, ILogInUserServices loginService)
         {
             _unitOfWorkDb = unitOfWorkDb;
+            _loginService = loginService;
         }
 
         public async Task<ApiResponse<string>> Handle(CreateProductCommand request, CancellationToken cancellationToken)
@@ -66,7 +68,7 @@ namespace Project.Application.Features.ProductFeatures.Handlers.CommandHandlers
                 {
                     Id = Guid.NewGuid(),
                     CreationDate = DateTime.Now.Date,
-                    CreatedBy = request.CreatedBy,
+                    CreatedBy = await _loginService.GetUserName(),
                     Name = request.Name,
                     ProdSizeId = request.ProdSizeId,
                     ProdValveId = request.ProdValveId,

@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Project.Application.ApiResponse;
 using Project.Application.Exceptions;
+using Project.Application.Interfaces;
 using Project.Domail.Abstractions;
 using System.ComponentModel.DataAnnotations;
 using System.Net;
@@ -20,9 +21,11 @@ namespace Project.Application.Features.ProductSizeFeatures.Handlers.CommandHandl
     public class UpdateProductSizeHandler : IRequestHandler<UpdateProductSizeCommand, ApiResponse<string>>
     {
         private readonly IUnitOfWorkDb _unitOfWorkDb;
-        public UpdateProductSizeHandler(IUnitOfWorkDb unitOfWorkDb)
+        private readonly ILogInUserServices _loginService;
+        public UpdateProductSizeHandler(IUnitOfWorkDb unitOfWorkDb, ILogInUserServices loginService)
         {
             _unitOfWorkDb = unitOfWorkDb;
+            _loginService = loginService;
         }
         public async Task<ApiResponse<string>> Handle(UpdateProductSizeCommand request, CancellationToken cancellationToken)
         {
@@ -44,7 +47,7 @@ namespace Project.Application.Features.ProductSizeFeatures.Handlers.CommandHandl
 
 
                 // Update delivery address properties
-                productSize.UpdatedBy = request.UpdatedBy;
+                productSize.UpdatedBy = await _loginService.GetUserName();
                 productSize.Size = request.Size;
                 productSize.Unit = request.Unit;
 

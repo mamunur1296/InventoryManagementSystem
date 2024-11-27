@@ -18,7 +18,7 @@ namespace Project.Infrastructure.Implementation.Command
             _applicationDbContext = applicationDbContext;
         }
 
-        public async Task<bool> ConfirmOrder(Guid userId, Dictionary<string, int> itemQuantities)
+        public async Task<(bool, string Tnumber)> ConfirmOrder(Guid userId, Dictionary<string, int> itemQuantities)
         {
             if (userId == Guid.Empty || itemQuantities == null || !itemQuantities.Any())
                 throw new ArgumentException("Invalid arguments for order confirmation.");
@@ -97,13 +97,13 @@ namespace Project.Infrastructure.Implementation.Command
                 await _applicationDbContext.SaveChangesAsync();
                 await transaction.CommitAsync();
 
-                return true;
+                return (true, transactionNumber);
             }
             catch (Exception ex)
             {
                 await transaction.RollbackAsync();
                 Console.Error.WriteLine($"Transaction failed: {ex.Message}");
-                return false;
+                return (false, null);
             }
         }
 

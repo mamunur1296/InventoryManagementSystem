@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using Project.Application.ApiResponse;
+using Project.Application.Interfaces;
 using Project.Domail.Abstractions;
 using Project.Domail.Entities;
 using System.ComponentModel.DataAnnotations;
@@ -30,11 +31,12 @@ namespace Project.Application.Features.DeliveryAddressFeatures.Handlers.CommandH
     public class CreateDeliveryAddressHandler : IRequestHandler<CreateDeliveryAddressCommand, ApiResponse<string>>
     {
         private readonly IUnitOfWorkDb _unitOfWorkDb;
+        private readonly ILogInUserServices _loginService;
 
-        public CreateDeliveryAddressHandler(IUnitOfWorkDb unitOfWorkDb)
+        public CreateDeliveryAddressHandler(IUnitOfWorkDb unitOfWorkDb, ILogInUserServices loginService)
         {
             _unitOfWorkDb = unitOfWorkDb;
-            
+            _loginService = loginService;
         }
         public async Task<ApiResponse<string>> Handle(CreateDeliveryAddressCommand request, CancellationToken cancellationToken)
         {
@@ -46,7 +48,7 @@ namespace Project.Application.Features.DeliveryAddressFeatures.Handlers.CommandH
                 {
                     Id = Guid.NewGuid(),
                     CreationDate = DateTime.Now.Date,
-                    CreatedBy = request.CreatedBy,
+                    CreatedBy = await _loginService.GetUserName(),
                     UserId = request.UserId,
                     Phone = request.Phone,
                     Mobile = request.Mobile,

@@ -31,6 +31,11 @@ namespace Projects.Api.Controllers
         {
             return Ok(await _mediator.Send(new GetAllOrderQuery()));
         }
+        [HttpGet("getTotalOrder")]
+        public async Task<IActionResult> getTotalCustomer()
+        {
+            return Ok(await _mediator.Send(new GetTotalOrderQuery()));
+        }
         [HttpGet("getAllIsPlasedOrder")]
         public async Task<IActionResult> getAllIsPlasedOrder()
         {

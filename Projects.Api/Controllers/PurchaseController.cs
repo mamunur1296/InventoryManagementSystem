@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Project.Application.ApiResponse;
 using Project.Application.DTOs;
 using Project.Application.Interfaces;
+using Project.Domail.Entities;
 using System.Net;
 
 namespace Projects.Api.Controllers
@@ -37,14 +38,14 @@ namespace Projects.Api.Controllers
         [HttpPost("Purchase")]
         public async Task<IActionResult> Purchase(PurchaseItemDTOs model)
         {
-            var result = await _purchaseServices.PurchaseProduct(model);
+            var (result,id) = await _purchaseServices.PurchaseProduct(model);
             if (result)
             {
                 return StatusCode((int)HttpStatusCode.Created, new ApiResponse<string>
                 {
                     Success = true,
                     Status = HttpStatusCode.Created,
-                    Data = " Purchase successfully !!."
+                    Data = id
                 });
             }
             return StatusCode((int)HttpStatusCode.BadRequest, result);
@@ -72,6 +73,16 @@ namespace Projects.Api.Controllers
                     Status = HttpStatusCode.OK,
                     ErrorMessage = "Purchase  get   successfully !!."
                 });
+            }
+            return StatusCode((int)HttpStatusCode.BadRequest, result);
+        }
+        [HttpGet("Details/{id}")]
+        public async Task<IActionResult> getDetailsById(string id)
+        {
+            var result = await _purchaseServices.PurchaseDetail(id);
+            if (result != null)
+            {
+                return StatusCode((int)HttpStatusCode.OK, result);
             }
             return StatusCode((int)HttpStatusCode.BadRequest, result);
         }

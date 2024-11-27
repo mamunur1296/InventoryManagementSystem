@@ -2,6 +2,7 @@
 using MediatR;
 using Project.Application.ApiResponse;
 using Project.Application.Exceptions;
+using Project.Application.Interfaces;
 using Project.Domail.Abstractions;
 using System.Net;
 
@@ -27,10 +28,11 @@ namespace Project.Application.Features.OrderFeatures.Handlers.CommandHandlers
     public class UpdateOrderHandler : IRequestHandler<UpdateOrderCommand, ApiResponse<string>>
     {
         private readonly IUnitOfWorkDb _unitOfWorkDb;
-        
-        public UpdateOrderHandler(IUnitOfWorkDb unitOfWorkDb)
+        private readonly ILogInUserServices _loginService;
+        public UpdateOrderHandler(IUnitOfWorkDb unitOfWorkDb, ILogInUserServices loginService)
         {
             _unitOfWorkDb = unitOfWorkDb;
+            _loginService = loginService;
         }
 
         public async Task<ApiResponse<string>> Handle(UpdateOrderCommand request, CancellationToken cancellationToken)
@@ -56,7 +58,7 @@ namespace Project.Application.Features.OrderFeatures.Handlers.CommandHandlers
                 order.UserId = request.UserId;
                 order.ProductId=request.ProductId;
                 order.ReturnProductId = request.ReturnProductId;
-                order.UpdatedBy = request.UpdatedBy;
+                order.UpdatedBy = await _loginService.GetUserName();
                 order.Comments = request.Comments;
                 order.TransactionNumber = request.TransactionNumber;
                 order.IsDelivered = request.IsDelivered;

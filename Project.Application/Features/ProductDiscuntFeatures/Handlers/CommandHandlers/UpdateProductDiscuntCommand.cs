@@ -2,6 +2,7 @@
 using Project.Application.ApiResponse;
 using Project.Application.Exceptions;
 using Project.Application.Features.ProdReturnFeatures.Handlers.CommandHandlers;
+using Project.Application.Interfaces;
 using Project.Domail.Abstractions;
 using System.ComponentModel.DataAnnotations;
 using System.Net;
@@ -27,9 +28,11 @@ namespace Project.Application.Features.ProductDiscuntFeatures.Handlers.CommandHa
     public class UpdateProductDiscuntHandler : IRequestHandler<UpdateProductDiscuntCommand, ApiResponse<string>>
     {
         private readonly IUnitOfWorkDb _unitOfWorkDb;
-        public UpdateProductDiscuntHandler(IUnitOfWorkDb unitOfWorkDb)
+        private readonly ILogInUserServices _loginService;
+        public UpdateProductDiscuntHandler(IUnitOfWorkDb unitOfWorkDb, ILogInUserServices loginService)
         {
             _unitOfWorkDb = unitOfWorkDb;
+            _loginService = loginService;
         }
 
 
@@ -53,7 +56,7 @@ namespace Project.Application.Features.ProductDiscuntFeatures.Handlers.CommandHa
 
 
                 // Update delivery address properties
-                productDiscount.UpdatedBy = request.UpdatedBy;
+                productDiscount.UpdatedBy = await _loginService.GetUserName();
                 productDiscount.ProductId = request.ProductId;
                 productDiscount.ValidTill = request.ValidTill;
                 productDiscount.IsActive = request.IsActive;

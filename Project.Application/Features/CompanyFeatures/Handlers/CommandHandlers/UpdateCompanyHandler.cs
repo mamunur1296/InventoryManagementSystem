@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Project.Application.ApiResponse;
 using Project.Application.Exceptions;
+using Project.Application.Interfaces;
 using Project.Domail.Abstractions;
 using System.ComponentModel.DataAnnotations;
 using System.Net;
@@ -36,10 +37,11 @@ namespace Project.Application.Features.CompanyFeatures.Handlers.CommandHandlers
     public class UpdateCompanyHandler : IRequestHandler<UpdateCompanyCommand, ApiResponse<string>>
     {
         private readonly IUnitOfWorkDb _unitOfWorkDb;
-        public UpdateCompanyHandler(IUnitOfWorkDb unitOfWorkDb)
+        private readonly ILogInUserServices _loginService;
+        public UpdateCompanyHandler(IUnitOfWorkDb unitOfWorkDb, ILogInUserServices loginService)
         {
             _unitOfWorkDb = unitOfWorkDb;
-           
+            _loginService = loginService;
         }
 
         public async Task<ApiResponse<string>> Handle(UpdateCompanyCommand request, CancellationToken cancellationToken)
@@ -61,7 +63,7 @@ namespace Project.Application.Features.CompanyFeatures.Handlers.CommandHandlers
                 company.Contactperson = request.Contactperson;
                 company.ContactPerNum = request.ContactPerNum;
                 company.ContactNumber = request.ContactNumber;
-                company.UpdatedBy = request.UpdatedBy;
+                company.UpdatedBy = await _loginService.GetUserName();
 
                 // Perform update operation
                 await _unitOfWorkDb.companyCommandRepository.UpdateAsync(company);

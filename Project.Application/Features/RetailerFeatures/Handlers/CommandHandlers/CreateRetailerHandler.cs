@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using MediatR;
 using Project.Application.ApiResponse;
+using Project.Application.Interfaces;
 using Project.Domail.Abstractions;
 using Project.Domail.Entities;
 using System.ComponentModel.DataAnnotations;
@@ -36,11 +37,13 @@ namespace Project.Application.Features.RetailerFeatures.Handlers.CommandHandlers
     {
         private readonly IUnitOfWorkDb _unitOfWorkDb;
         private readonly IMapper _mapper;
+        private readonly ILogInUserServices _loginService;
 
-        public CreateRetailerHandler(IUnitOfWorkDb unitOfWorkDb, IMapper mapper)
+        public CreateRetailerHandler(IUnitOfWorkDb unitOfWorkDb, IMapper mapper, ILogInUserServices loginService)
         {
             _unitOfWorkDb = unitOfWorkDb;
             _mapper = mapper;
+            _loginService = loginService;
         }
         public async Task<ApiResponse<string>> Handle(CreateRetailerCommand request, CancellationToken cancellationToken)
         {
@@ -52,7 +55,7 @@ namespace Project.Application.Features.RetailerFeatures.Handlers.CommandHandlers
                 {
                     Id = Guid.NewGuid(),
                     CreationDate = DateTime.Now.Date,
-                    CreatedBy = request.CreatedBy,
+                    CreatedBy = await _loginService.GetUserName(),
                     Name = request.Name,
                     Contactperson = request.Contactperson,
                     ContactPerNum = request.ContactPerNum,

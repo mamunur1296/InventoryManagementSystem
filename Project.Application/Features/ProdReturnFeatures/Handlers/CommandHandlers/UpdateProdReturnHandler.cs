@@ -2,6 +2,7 @@
 using MediatR;
 using Project.Application.ApiResponse;
 using Project.Application.Exceptions;
+using Project.Application.Interfaces;
 using Project.Domail.Abstractions;
 using System.ComponentModel.DataAnnotations;
 using System.Net;
@@ -27,9 +28,11 @@ namespace Project.Application.Features.ProdReturnFeatures.Handlers.CommandHandle
     public class UpdateProdReturnHandler : IRequestHandler<UpdateProdReturnCommand, ApiResponse<string>>
     {
         private readonly IUnitOfWorkDb _unitOfWorkDb;
-        public UpdateProdReturnHandler(IUnitOfWorkDb unitOfWorkDb)
+        private readonly ILogInUserServices _loginService;
+        public UpdateProdReturnHandler(IUnitOfWorkDb unitOfWorkDb, ILogInUserServices loginService)
         {
             _unitOfWorkDb = unitOfWorkDb;
+            _loginService = loginService;
         }
 
 
@@ -55,7 +58,7 @@ namespace Project.Application.Features.ProdReturnFeatures.Handlers.CommandHandle
                 // Update delivery address properties
 
                 productReturn.Name = request.Name;
-                productReturn.UpdatedBy = request.UpdatedBy;
+                productReturn.UpdatedBy = await _loginService.GetUserName();
                 productReturn.ProductId = request.ProductId;
                 productReturn.ProdValveId = request.ProdValveId;
                 productReturn.ProdSizeId = request.ProdSizeId;

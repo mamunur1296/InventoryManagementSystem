@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using Project.Application.ApiResponse;
+using Project.Application.Interfaces;
 using Project.Domail.Abstractions;
 using Project.Domail.Entities;
 using System.ComponentModel.DataAnnotations;
@@ -22,12 +23,14 @@ namespace Project.Application.Features.StockFeatures.Handlers.CommandHandlers
     public class CreateStockHandler : IRequestHandler<CreateStockCommand, ApiResponse<string>>
     {
         private readonly IUnitOfWorkDb _unitOfWorkDb;
+        private readonly ILogInUserServices _loginService;
 
-        public CreateStockHandler(IUnitOfWorkDb unitOfWorkDb)
+        public CreateStockHandler(IUnitOfWorkDb unitOfWorkDb, ILogInUserServices loginService)
         {
             _unitOfWorkDb = unitOfWorkDb;
+            _loginService = loginService;
         }
- 
+
         public async Task<ApiResponse<string>> Handle(CreateStockCommand request, CancellationToken cancellationToken)
         {
             var response = new ApiResponse<string>();
@@ -38,7 +41,7 @@ namespace Project.Application.Features.StockFeatures.Handlers.CommandHandlers
                 {
                     Id = Guid.NewGuid(),
                     CreationDate = DateTime.Now.Date,
-                    CreatedBy = request.CreatedBy,
+                    CreatedBy = await _loginService.GetUserName(),
                     ProductId = request.ProductId,
                     Quantity = request.Quantity,
                     TraderId= request.TraderId,

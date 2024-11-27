@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using Project.Application.ApiResponse;
+using Project.Application.Interfaces;
 using Project.Domail.Abstractions;
 using Project.Domail.Entities;
 using System.ComponentModel.DataAnnotations;
@@ -20,10 +21,11 @@ namespace Project.Application.Features.ValveFeatures.Handlers.CommandHandlers
     public class CreateValveHandler : IRequestHandler<CreateValveCommand, ApiResponse<string>>
     {
         private readonly IUnitOfWorkDb _unitOfWorkDb;
-
-        public CreateValveHandler(IUnitOfWorkDb unitOfWorkDb)
+        private readonly ILogInUserServices _loginService;
+        public CreateValveHandler(IUnitOfWorkDb unitOfWorkDb, ILogInUserServices loginService)
         {
             _unitOfWorkDb = unitOfWorkDb;
+            _loginService = loginService;
         }
 
 
@@ -50,7 +52,7 @@ namespace Project.Application.Features.ValveFeatures.Handlers.CommandHandlers
                 {
                     Id = Guid.NewGuid(),
                     CreationDate = DateTime.Now.Date,
-                    CreatedBy = request.CreatedBy,
+                    CreatedBy = await _loginService.GetUserName(),
                     Name = request.Name,
                     Unit = request.Unit,
                     IsActive = true,

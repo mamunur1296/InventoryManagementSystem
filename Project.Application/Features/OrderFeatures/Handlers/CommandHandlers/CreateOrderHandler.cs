@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using Project.Application.ApiResponse;
+using Project.Application.Interfaces;
 using Project.Domail.Abstractions;
 using Project.Domail.Entities;
 using System.ComponentModel.DataAnnotations;
@@ -23,12 +24,12 @@ namespace Project.Application.Features.OrderFeatures.Handlers.CommandHandlers
     public class CreateOrderHandler : IRequestHandler<CreateOrderCommand, ApiResponse<string>>
     {
         private readonly IUnitOfWorkDb _unitOfWorkDb;
-      
+        private readonly ILogInUserServices _loginService;
 
-        public CreateOrderHandler(IUnitOfWorkDb unitOfWorkDb)
+        public CreateOrderHandler(IUnitOfWorkDb unitOfWorkDb, ILogInUserServices loginService)
         {
             _unitOfWorkDb = unitOfWorkDb;
-           
+            _loginService = loginService;
         }
 
 
@@ -43,7 +44,7 @@ namespace Project.Application.Features.OrderFeatures.Handlers.CommandHandlers
                 {
                     Id = Guid.NewGuid(),
                     CreationDate = DateTime.Now.Date,
-                    CreatedBy = request.CreatedBy,
+                    CreatedBy = await _loginService.GetUserName(),
                     UserId = request.UserId,
                     ProductId = request.ProductId,
                     ReturnProductId = request.ReturnProductId,

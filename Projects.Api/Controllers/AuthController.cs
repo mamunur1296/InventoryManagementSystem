@@ -14,10 +14,6 @@ namespace Projects.Api.Controllers
         {
             _mediator = mediator;
         }
-
-
-
-
         [HttpPost("Login")]
         public async Task<IActionResult> Login([FromBody] AuthCommand command)
         {

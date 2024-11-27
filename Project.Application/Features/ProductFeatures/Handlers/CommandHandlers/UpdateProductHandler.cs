@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Project.Application.ApiResponse;
 using Project.Application.Exceptions;
+using Project.Application.Interfaces;
 using Project.Domail.Abstractions;
 using System.ComponentModel.DataAnnotations;
 using System.Net;
@@ -31,9 +32,11 @@ namespace Project.Application.Features.ProductFeatures.Handlers.CommandHandlers
     public class UpdateProductHandler : IRequestHandler<UpdateProductCommand, ApiResponse<string>>
     {
         private readonly IUnitOfWorkDb _unitOfWorkDb;
-        public UpdateProductHandler(IUnitOfWorkDb unitOfWorkDb)
+        private readonly ILogInUserServices _loginService;
+        public UpdateProductHandler(IUnitOfWorkDb unitOfWorkDb, ILogInUserServices loginService)
         {
             _unitOfWorkDb = unitOfWorkDb;
+            _loginService = loginService;
         }
 
         public async Task<ApiResponse<string>> Handle(UpdateProductCommand request, CancellationToken cancellationToken)
@@ -58,7 +61,7 @@ namespace Project.Application.Features.ProductFeatures.Handlers.CommandHandlers
                 // Update delivery address properties
 
                 product.Name = request.Name;
-                product.UpdatedBy = request.UpdatedBy;
+                product.UpdatedBy = await _loginService.GetUserName();
                 product.CompanyId = request.CompanyId;
                 product.ProdValveId = request.ProdValveId;
                 product.ProdSizeId = request.ProdSizeId;

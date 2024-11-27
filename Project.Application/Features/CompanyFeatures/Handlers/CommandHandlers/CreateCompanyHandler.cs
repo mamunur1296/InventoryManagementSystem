@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using Project.Application.ApiResponse;
+using Project.Application.Interfaces;
 using Project.Domail.Abstractions;
 using Project.Domail.Entities;
 using System.ComponentModel.DataAnnotations;
@@ -36,10 +37,12 @@ namespace Project.Application.Features.CompanyFeatures.Handlers.CommandHandlers
     public class CreateCompanyHandler : IRequestHandler<CreateCompanyCommand, ApiResponse<string>>
     {
         private readonly IUnitOfWorkDb _unitOfWorkDb;
+        private readonly ILogInUserServices _loginService;
 
-        public CreateCompanyHandler(IUnitOfWorkDb unitOfWorkDb)
+        public CreateCompanyHandler(IUnitOfWorkDb unitOfWorkDb, ILogInUserServices loginService)
         {
             _unitOfWorkDb = unitOfWorkDb;
+            _loginService = loginService;
         }
         public async Task<ApiResponse<string>> Handle(CreateCompanyCommand request, CancellationToken cancellationToken)
         {
@@ -52,7 +55,7 @@ namespace Project.Application.Features.CompanyFeatures.Handlers.CommandHandlers
                 {
                     Id = Guid.NewGuid(),
                     CreationDate = DateTime.Now.Date,
-                    CreatedBy = request.CreatedBy,
+                    CreatedBy = await _loginService.GetUserName(),
                     Name = request.Name,
                     Contactperson = request.Contactperson,
                     ContactPerNum = request.ContactPerNum,

@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using Project.Application.ApiResponse;
+using Project.Application.Interfaces;
 using Project.Domail.Abstractions;
 using Project.Domail.Entities;
 using System.ComponentModel.DataAnnotations;
@@ -36,10 +37,12 @@ namespace Project.Application.Features.TraderFeatures.Handlers.CommandHandlers
     public class CreateTraderHandler : IRequestHandler<CreateTraderCommand, ApiResponse<string>>
     {
         private readonly IUnitOfWorkDb _unitOfWorkDb;
+        private readonly ILogInUserServices _loginService;
 
-        public CreateTraderHandler(IUnitOfWorkDb unitOfWorkDb)
+        public CreateTraderHandler(IUnitOfWorkDb unitOfWorkDb, ILogInUserServices loginService)
         {
             _unitOfWorkDb = unitOfWorkDb;
+            _loginService = loginService;
         }
 
 
@@ -54,7 +57,7 @@ namespace Project.Application.Features.TraderFeatures.Handlers.CommandHandlers
                 {
                     Id = Guid.NewGuid(),
                     CreationDate = DateTime.Now.Date,
-                    CreatedBy = request.CreatedBy,
+                    CreatedBy = await _loginService.GetUserName(),
                     Name = request.Name,
                     Contactperson = request.Contactperson,
                     ContactPerNum = request.ContactPerNum,

@@ -45,11 +45,7 @@ namespace Project.Application.Features.CompanyFeatures.Handlers.CommandHandlers
             }
             catch (Exception ex)
             {
-                // Log the exception or handle it accordingly
-                response.Success = false;
-                response.Data = "An error occurred while deleting the company";
-                response.ErrorMessage = ex.Message;
-                response.Status = HttpStatusCode.InternalServerError;
+                throw new NotFoundException(ex.Message);
             }
 
             return response;

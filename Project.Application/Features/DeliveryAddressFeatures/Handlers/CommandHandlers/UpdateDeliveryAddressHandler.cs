@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Project.Application.ApiResponse;
 using Project.Application.Exceptions;
+using Project.Application.Interfaces;
 using Project.Domail.Abstractions;
 using System.ComponentModel.DataAnnotations;
 using System.Net;
@@ -33,10 +34,11 @@ namespace Project.Application.Features.DeliveryAddressFeatures.Handlers.CommandH
     public class UpdateDeliveryAddressHandler : IRequestHandler<UpdateDeliveryAddressCommand, ApiResponse<string>>
     {
         private readonly IUnitOfWorkDb _unitOfWorkDb;
-        public UpdateDeliveryAddressHandler(IUnitOfWorkDb unitOfWorkDb)
+        private readonly ILogInUserServices _loginService;
+        public UpdateDeliveryAddressHandler(IUnitOfWorkDb unitOfWorkDb, ILogInUserServices loginService)
         {
             _unitOfWorkDb = unitOfWorkDb;
-            
+            _loginService = loginService;
         }
 
         public async Task<ApiResponse<string>> Handle(UpdateDeliveryAddressCommand request, CancellationToken cancellationToken)
@@ -63,7 +65,7 @@ namespace Project.Application.Features.DeliveryAddressFeatures.Handlers.CommandH
                 deliveryAddress.Address = request.Address;
                 deliveryAddress.Phone = request.Phone;
                 deliveryAddress.Mobile = request.Mobile;
-                deliveryAddress.UpdatedBy = request.UpdatedBy;
+                deliveryAddress.UpdatedBy = await _loginService.GetUserName();
 
 
 

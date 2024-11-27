@@ -2,6 +2,7 @@
 using MediatR;
 using Project.Application.ApiResponse;
 using Project.Application.Exceptions;
+using Project.Application.Interfaces;
 using Project.Domail.Abstractions;
 using System.ComponentModel.DataAnnotations;
 using System.Net;
@@ -37,6 +38,7 @@ namespace Project.Application.Features.RetailerFeatures.Handlers.CommandHandlers
     {
         private readonly IUnitOfWorkDb _unitOfWorkDb;
         private readonly IMapper _mapper;
+        private readonly ILogInUserServices _loginService;
         public UpdateRetailerHandler(IUnitOfWorkDb unitOfWorkDb, IMapper mapper)
         {
             _unitOfWorkDb = unitOfWorkDb;
@@ -62,7 +64,7 @@ namespace Project.Application.Features.RetailerFeatures.Handlers.CommandHandlers
 
 
                 // Update delivery address properties
-                retailer.UpdatedBy = request.UpdatedBy;
+                retailer.UpdatedBy = await _loginService.GetUserName();
                 retailer.BIN = request.BIN;
                 retailer.Name = request.Name;
                 retailer.Contactperson = request.Contactperson;

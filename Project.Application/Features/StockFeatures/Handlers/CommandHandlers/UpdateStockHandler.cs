@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Project.Application.ApiResponse;
 using Project.Application.Exceptions;
+using Project.Application.Interfaces;
 using Project.Domail.Abstractions;
 using System.ComponentModel.DataAnnotations;
 using System.Net;
@@ -24,10 +25,11 @@ namespace Project.Application.Features.StockFeatures.Handlers.CommandHandlers
     public class UpdateStockHandler : IRequestHandler<UpdateStockCommand, ApiResponse<string>>
     {
         private readonly IUnitOfWorkDb _unitOfWorkDb;
-
-        public UpdateStockHandler(IUnitOfWorkDb unitOfWorkDb)
+        private readonly ILogInUserServices _loginService;
+        public UpdateStockHandler(IUnitOfWorkDb unitOfWorkDb, ILogInUserServices loginService)
         {
             _unitOfWorkDb = unitOfWorkDb;
+            _loginService = loginService;
         }
 
 
@@ -52,7 +54,7 @@ namespace Project.Application.Features.StockFeatures.Handlers.CommandHandlers
 
 
                 // Update delivery address properties
-                stock.UpdatedBy = request.UpdatedBy;
+                stock.UpdatedBy = await _loginService.GetUserName();
                 stock.ProductId = request.ProductId;
                 stock.TraderId = request.TraderId;
                 stock.Quantity = request.Quantity;

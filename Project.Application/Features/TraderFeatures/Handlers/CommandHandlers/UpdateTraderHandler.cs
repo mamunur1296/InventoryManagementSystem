@@ -1,11 +1,10 @@
 ﻿using MediatR;
 using Project.Application.ApiResponse;
 using Project.Application.Exceptions;
+using Project.Application.Interfaces;
 using Project.Domail.Abstractions;
 using System.ComponentModel.DataAnnotations;
 using System.Net;
-
-
 namespace Project.Application.Features.TraderFeatures.Handlers.CommandHandlers
 {
     public class UpdateTraderCommand : IRequest<ApiResponse<string>>
@@ -37,9 +36,11 @@ namespace Project.Application.Features.TraderFeatures.Handlers.CommandHandlers
     public class UpdateTraderHandler : IRequestHandler<UpdateTraderCommand, ApiResponse<string>>
     {
         private readonly IUnitOfWorkDb _unitOfWorkDb;
-        public UpdateTraderHandler(IUnitOfWorkDb unitOfWorkDb)
+        private readonly ILogInUserServices _loginService;
+        public UpdateTraderHandler(IUnitOfWorkDb unitOfWorkDb, ILogInUserServices loginService)
         {
             _unitOfWorkDb = unitOfWorkDb;
+            _loginService = loginService;
         }
 
         public async Task<ApiResponse<string>> Handle(UpdateTraderCommand request, CancellationToken cancellationToken)
@@ -62,7 +63,7 @@ namespace Project.Application.Features.TraderFeatures.Handlers.CommandHandlers
                 trader.ContactPerNum = request.ContactPerNum;
                 trader.ContactNumber = request.ContactNumber;
                 trader.CompanyId= request.CompanyId;
-                trader.UpdatedBy = request.UpdatedBy;
+                trader.UpdatedBy = await _loginService.GetUserName();
 
                 // Perform update operation
                 await _unitOfWorkDb.traderCommandRepository.UpdateAsync(trader);
