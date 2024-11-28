@@ -146,7 +146,6 @@ using (var scope = app.Services.CreateScope())
     SeedData.Initialize(services).Wait();
 }
 
-
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {

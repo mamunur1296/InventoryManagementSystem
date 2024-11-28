@@ -39,10 +39,11 @@ namespace Project.Application.Features.RetailerFeatures.Handlers.CommandHandlers
         private readonly IUnitOfWorkDb _unitOfWorkDb;
         private readonly IMapper _mapper;
         private readonly ILogInUserServices _loginService;
-        public UpdateRetailerHandler(IUnitOfWorkDb unitOfWorkDb, IMapper mapper)
+        public UpdateRetailerHandler(IUnitOfWorkDb unitOfWorkDb, IMapper mapper, ILogInUserServices loginService)
         {
             _unitOfWorkDb = unitOfWorkDb;
             _mapper = mapper;
+            _loginService = loginService;
         }
         public async Task<ApiResponse<string>> Handle(UpdateRetailerCommand request, CancellationToken cancellationToken)
         {
