@@ -1,6 +1,5 @@
-﻿using MediatR;
-using Microsoft.EntityFrameworkCore;
-using Project.Domail.Abstractions;
+﻿using Microsoft.EntityFrameworkCore;
+using Project.Application.Interfaces;
 using Project.Domail.Abstractions.CommandRepositories;
 using Project.Domail.Entities;
 using Project.Infrastructure.DataContext;
@@ -12,10 +11,12 @@ namespace Project.Infrastructure.Implementation.Command
     public class OrderCommandRepository : CommandRepository<Order>, IOrderCommandRepository
     {
         private readonly ApplicationDbContext _applicationDbContext;
+        private readonly ILogInUserServices _logInUserServices;
 
-        public OrderCommandRepository(ApplicationDbContext applicationDbContext) : base(applicationDbContext)
+        public OrderCommandRepository(ApplicationDbContext applicationDbContext, ILogInUserServices logInUserServices) : base(applicationDbContext)
         {
             _applicationDbContext = applicationDbContext;
+            _logInUserServices = logInUserServices;
         }
 
         public async Task<(bool, string Tnumber)> ConfirmOrder(Guid userId, Dictionary<string, int> itemQuantities)
@@ -47,7 +48,10 @@ namespace Project.Infrastructure.Implementation.Command
                         Name = product.Name,
                         ProdSizeId = product.ProdSizeId,
                         ProdValveId = product.ProdValveId,
-                        IsConfirmedOrder = false
+                        IsConfirmedOrder = false,
+                        CreatedBy = await _logInUserServices.GetUserName(),
+                        CreationDate= DateTime.Now,
+
                     };
 
                     await _applicationDbContext.ProdReturns.AddAsync(returnProduct);
@@ -71,6 +75,8 @@ namespace Project.Infrastructure.Implementation.Command
                             ReturnProductId = returnProduct.Id,
                             TransactionNumber = transactionNumber,
                             Comments = quantity.ToString() ,
+                            CreatedBy = await _logInUserServices.GetUserName(),
+                            CreationDate = DateTime.Now,
                             IsHold = false,
                             IsCancel = false,
                             IsDelivered = false,
@@ -78,6 +84,7 @@ namespace Project.Infrastructure.Implementation.Command
                             IsPlaced = true,
                             IsDispatched = false,
                             IsReadyToDispatch = false,
+
                         };
 
                         orders.Add(order);

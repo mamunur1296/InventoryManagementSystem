@@ -10,6 +10,7 @@ using Project.Domail.Abstractions;
 using Project.Domail.Entities;
 using Project.Infrastructure.DataContext;
 using Project.Infrastructure.Identity;
+using System.Security.Claims;
 
 namespace Project.Infrastructure.Services
 {
@@ -28,12 +29,17 @@ namespace Project.Infrastructure.Services
             _httpContextAccessor = httpContextAccessor;
             _userManager = userManager;
         }
+        private async Task<string> GetUserName()
+        {
+            return _httpContextAccessor.HttpContext?.User?.FindFirst(ClaimTypes.Name)?.Value ?? "Null";
+        }
         public async Task<bool> CreateAsync(PurchaseDTOs entity)
         {
             var newBranch = new Purchase
             {
                 Id = Guid.NewGuid(),
-                CreationDate = DateTime.Now, 
+                CreationDate = DateTime.Now,
+                CreatedBy = await GetUserName(),
                 PurchaseDate = DateTime.Now,
                 CompanyId = entity.CompanyId,
                 TotalAmount = entity.TotalAmount,
@@ -54,7 +60,7 @@ namespace Project.Infrastructure.Services
             // Update properties with validation
             // item.CartID = string.IsNullOrWhiteSpace(entity.CartID) ? item.CartID : entity.CartID.Trim();
 
-
+            item.UpdatedBy = await GetUserName();
             item.CompanyId = entity.CompanyId;
             item.TotalAmount = entity.TotalAmount;
             // Perform update operation
@@ -139,6 +145,7 @@ namespace Project.Infrastructure.Services
                 {
                     Id = Guid.NewGuid(),
                     CreationDate = DateTime.UtcNow,
+                    CreatedBy = await GetUserName(),
                     PurchaseDate = DateTime.UtcNow,
                     CompanyId = entitys.CompanyId,
                     TotalAmount = 0 // Set the initial total amount to 0
@@ -165,6 +172,7 @@ namespace Project.Infrastructure.Services
                         Quantity = productDto.Quantity,
                         UnitPrice = productDto.Price,
                         Discount = productDto.Discount,
+                        CreatedBy = await GetUserName()
                     };
 
                     purchaseDetails.Add(newPurchaseDetail);
@@ -197,7 +205,7 @@ namespace Project.Infrastructure.Services
                                 IsQC = true,
                                 IsActive = true,
                                 CreationDate = DateTime.UtcNow,
-                                CreatedBy = "System"
+                                CreatedBy = await GetUserName()
                             };
 
                             await _context.Stocks.AddAsync(newStock);

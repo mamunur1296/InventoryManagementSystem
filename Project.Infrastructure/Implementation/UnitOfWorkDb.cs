@@ -1,4 +1,5 @@
-﻿using Project.Domail.Abstractions;
+﻿using Project.Application.Interfaces;
+using Project.Domail.Abstractions;
 using Project.Domail.Abstractions.CommandRepositories;
 using Project.Domail.Abstractions.QueryRepositories;
 using Project.Infrastructure.DataContext;
@@ -10,6 +11,7 @@ namespace Project.Infrastructure.Implementation
     public class UnitOfWorkDb : IUnitOfWorkDb
     {
         private readonly ApplicationDbContext _applicationDbContext;
+        private readonly ILogInUserServices _logInUserServices;
 
         public IProductSizeCommandRepository productSizeCommandRepository { get; private set; }
 
@@ -58,10 +60,10 @@ namespace Project.Infrastructure.Implementation
 
         public IPurchaseQueryRepository purchaseQueryRepository { get; private set; }
 
-        public UnitOfWorkDb(ApplicationDbContext applicationDbContext)
+        public UnitOfWorkDb(ApplicationDbContext applicationDbContext, ILogInUserServices logInUserServices)
         {
             _applicationDbContext = applicationDbContext;
-            productSizeQueryRepository= new ProductSizeQueryRepository(applicationDbContext);
+            productSizeQueryRepository = new ProductSizeQueryRepository(applicationDbContext);
             productSizeCommandRepository = new ProductSizeCommandRepository(applicationDbContext);
             retailerCommandRepository = new RetailerCommandRepository(applicationDbContext);
             retailerQueryRepository = new RetailerQueryRepository(applicationDbContext);
@@ -69,11 +71,11 @@ namespace Project.Infrastructure.Implementation
             companyrQueryRepository = new CompanyQueryRepository(applicationDbContext);
             deliveryAddressCommandRepository = new DeliveryAddressCommandRepository(applicationDbContext);
             deliveryAddressQueryRepository = new DeliveryAddressQueryRepository(applicationDbContext);
-            orderCommandRepository = new OrderCommandRepository(applicationDbContext);
+            orderCommandRepository = new OrderCommandRepository(applicationDbContext, logInUserServices);
             orderQueryRepository = new OrderQueryRepository(applicationDbContext);
             prodReturnCommandRepository = new ProdReturnCommandRepository(applicationDbContext);
             prodReturnQueryRepository = new ProdReturnQueryRepository(applicationDbContext);
-            productCommandRepository = new ProductCommandRepository(applicationDbContext);  
+            productCommandRepository = new ProductCommandRepository(applicationDbContext);
             productQueryRepository = new ProductQueryRepository(applicationDbContext);
             stockCommandRepository = new StockCommandRepository(applicationDbContext);
             stockQueryRepository = new StockQueryRepository(applicationDbContext);
@@ -84,8 +86,8 @@ namespace Project.Infrastructure.Implementation
             productDiscuntCommandRepository = new ProductDiscuntCommandRepository(applicationDbContext);
             productDiscuntQueryRepository = new ProductDiscuntQueryRepository(applicationDbContext);
             purchaseCommandRepository = new PurchaseCommandRepository(applicationDbContext);
-            purchaseQueryRepository=new PurchaseQueryRepository(applicationDbContext);
-
+            purchaseQueryRepository = new PurchaseQueryRepository(applicationDbContext);
+            _logInUserServices = logInUserServices;
         }
 
 
