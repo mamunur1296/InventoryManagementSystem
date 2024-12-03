@@ -5,6 +5,7 @@ namespace Project.Domail.Abstractions.QueryRepositories
 {
     public interface IOrderQueryRepository : IQueryRepository<Order>
     {
+        Task<Order>  GetOrderReportById(Guid Id);
         // Add specific Query methods here if needed
     }
 }

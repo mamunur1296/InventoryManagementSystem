@@ -8,6 +8,7 @@ namespace Project.Application.Mapper
     {
         public CompanyMappingProfile() {
             CreateMap<Company, CompanyDTO>().ReverseMap();
+            CreateMap<Order, OrderReportDTOs>().ReverseMap();
         }
     }
 }

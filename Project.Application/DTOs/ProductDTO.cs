@@ -14,6 +14,7 @@ namespace Project.Application.DTOs
         public string CreatedBy { get; set; }
         public string UpdatedBy { get; set; }
         public bool IsActive { get; set; }
+        public int? IsStock { get; set; }
         public virtual Company Company { get; set; }
         public virtual ProductSize Size { get; set; }
         public virtual Valve Valve { get; set; }

@@ -46,8 +46,6 @@ namespace Project.Application.Features.OrderFeatures.Handlers.CommandHandlers
                     CreationDate = DateTime.Now.Date,
                     CreatedBy = await _loginService.GetUserName(),
                     UserId = request.UserId,
-                    ProductId = request.ProductId,
-                    ReturnProductId = request.ReturnProductId,
                     TransactionNumber = request.TransactionNumber,
                     Comments = request.Comments,
                     IsHold = false,

@@ -1,14 +1,7 @@
 ﻿using MediatR;
 using Project.Application.ApiResponse;
 using Project.Domail.Abstractions;
-using Project.Domail.Entities;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
 using System.Net;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Project.Application.Features.OrderFeatures.Handlers.CommandHandlers
 {

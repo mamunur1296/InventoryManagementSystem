@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Project.Infrastructure.DataContext;
 
@@ -11,9 +12,10 @@ using Project.Infrastructure.DataContext;
 namespace Project.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241130055921_chagneOrder")]
+    partial class chagneOrder
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -969,16 +971,19 @@ namespace Project.Infrastructure.Migrations
                         .WithMany("Orders")
                         .HasForeignKey("ApplicationUserId");
 
-                    b.HasOne("Project.Domail.Entities.Product", null)
+                    b.HasOne("Project.Domail.Entities.Product", "Product")
                         .WithMany("Orders")
                         .HasForeignKey("ProductId");
+
+                    b.Navigation("Product");
                 });
 
             modelBuilder.Entity("Project.Domail.Entities.OrderDetail", b =>
                 {
                     b.HasOne("Project.Domail.Entities.Order", "Order")
-                        .WithMany("PurchaseDetails")
-                        .HasForeignKey("OrderID");
+                        .WithMany()
+                        .HasForeignKey("OrderID")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("Project.Domail.Entities.Product", "Product")
                         .WithMany()
@@ -1104,11 +1109,6 @@ namespace Project.Infrastructure.Migrations
                     b.Navigation("Products");
 
                     b.Navigation("Traders");
-                });
-
-            modelBuilder.Entity("Project.Domail.Entities.Order", b =>
-                {
-                    b.Navigation("PurchaseDetails");
                 });
 
             modelBuilder.Entity("Project.Domail.Entities.Product", b =>

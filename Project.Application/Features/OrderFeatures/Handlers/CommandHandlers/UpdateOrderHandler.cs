@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using MediatR;
+﻿using MediatR;
 using Project.Application.ApiResponse;
 using Project.Application.Exceptions;
 using Project.Application.Interfaces;
@@ -56,8 +55,6 @@ namespace Project.Application.Features.OrderFeatures.Handlers.CommandHandlers
 
                 // Update delivery address properties
                 order.UserId = request.UserId;
-                order.ProductId=request.ProductId;
-                order.ReturnProductId = request.ReturnProductId;
                 order.UpdatedBy = await _loginService.GetUserName();
                 order.Comments = request.Comments;
                 order.TransactionNumber = request.TransactionNumber;

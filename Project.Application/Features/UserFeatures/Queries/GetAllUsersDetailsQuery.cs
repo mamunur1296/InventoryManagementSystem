@@ -21,7 +21,7 @@ namespace Project.Application.Features.UserFeatures.Queries
         public async Task<List<UserDetailsDTO>> Handle(GetAllUsersDetailsQuery request, CancellationToken cancellationToken)
         {
             var users = await _identityService.GetAllUsersAsync();
-            var userDetails = users.Select(x => new UserDetailsDTO()
+            var userDetails = users.Where(u=>u.userName != "admin@123").Select(x => new UserDetailsDTO()
             {
                 Id = x.id,
                 Email = x.email,

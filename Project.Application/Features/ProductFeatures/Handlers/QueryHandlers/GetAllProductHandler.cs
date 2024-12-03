@@ -22,9 +22,32 @@ namespace Project.Application.Features.ProductFeatures.Handlers.QueryHandlers
         {
             try
             {
+                // Fetch data from repositories
                 var productList = await _unitOfWorkDb.productQueryRepository.GetAllAsync();
-                var result = productList.Select(x => _mapper.Map<ProductDTO>(x));
-                return result;
+                var stockList = await _unitOfWorkDb.stockQueryRepository.GetAllAsync();
+
+                // Combine the product and stock data
+                var combinedResult = productList.Select(product =>
+                {
+                    var stock = stockList.FirstOrDefault(s => s.ProductId == product.Id);
+
+                    return new ProductDTO
+                    {
+                        Id = product.Id,
+                        CompanyId = product.CompanyId,
+                        Name = product.Name,
+                        ProdSizeId = product.ProdSizeId,
+                        ProdValveId = product.ProdValveId,
+                        ProdImage = product?.ProdImage,
+                        ProdPrice = product.ProdPrice,
+                        CreatedBy = product?.CreatedBy,
+                        UpdatedBy = product?.UpdatedBy,
+                        IsActive = product.IsActive,
+                        IsStock = stock?.Quantity ?? 0
+                    };
+                });
+
+                return combinedResult;
             }
             catch (Exception)
             {

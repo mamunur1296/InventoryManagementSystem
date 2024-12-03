@@ -50,13 +50,6 @@ namespace Project.Infrastructure.DataContext
                 .HasForeignKey(s => s.TraderId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            // OrderDetail relationships
-            modelBuilder.Entity<OrderDetail>()
-                .HasOne(od => od.Order)
-                .WithMany()
-                .HasForeignKey(od => od.OrderID)
-                .OnDelete(DeleteBehavior.Cascade);
-
             modelBuilder.Entity<OrderDetail>()
                 .HasOne(od => od.Product)
                 .WithMany()

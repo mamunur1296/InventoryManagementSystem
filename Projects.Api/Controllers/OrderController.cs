@@ -1,6 +1,5 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Project.Application.DTOs;
 using Project.Application.Features.OrderFeatures.Handlers.CommandHandlers;
 using Project.Application.Features.OrderFeatures.Handlers.QueryHandlers;
 
@@ -66,6 +65,11 @@ namespace Projects.Api.Controllers
         public async Task<IActionResult> getCustomer(Guid id)
         {
             return Ok(await _mediator.Send(new GetOrderByIdQuery(id)));
+        }
+        [HttpGet("getReport/{id}")]
+        public async Task<IActionResult> getReport(Guid id)
+        {
+            return Ok(await _mediator.Send(new GetOrderDetailsByIdQuery(id)));
         }
         [HttpDelete("DeleteOrder/{id}")]
         public async Task<IActionResult> DeleteCustomer(Guid id)
